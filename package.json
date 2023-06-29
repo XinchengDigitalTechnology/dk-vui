@@ -1,12 +1,12 @@
 {
   "name": "dk-vui",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "dk-vui",
   "private": false,
   "author": "blryli",
   "license": "MIT",
   "main": "dist/dk-vui.umd.js",
-  "module": "dist/dk-vui.js",
+  "module": "dist/dk-vui.mjs",
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode prod",

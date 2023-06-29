@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import DKVui from '../packges'
+import DKVui from '../packages'
 import App from './App.vue'
 
 import VXETable from 'vxe-table'
