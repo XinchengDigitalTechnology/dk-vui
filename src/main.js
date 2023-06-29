@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import DKUi from '../packges'
+import DKVui from '../packges'
 import App from './App.vue'
 
 import VXETable from 'vxe-table'
@@ -11,6 +11,6 @@ import 'element-plus/dist/index.css'
 const app = createApp(App)
 app.use(VXETable)
 app.use(ElementPlus)
-app.use(DKUi)
+app.use(DKVui)
 
 app.mount('#app')

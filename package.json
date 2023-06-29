@@ -1,21 +1,12 @@
 {
   "name": "dk-vui",
-  "version": "0.0.1",
-  "type": "module",
+  "version": "0.0.2",
+  "description": "dk-vui",
   "private": false,
   "author": "blryli",
   "license": "MIT",
-  "main": "./dist/dk-vui.umd.js",
-  "module": "./dist/dk-vui.js",
-  "exports": {
-    ".": {
-      "import": "./dist/dk-vui.js",
-      "require": "./dist/dk-vui.umd.js"
-    }
-  },
-  "files": [
-    "./dist/*"
-  ],
+  "main": "dist/dk-vui.umd.js",
+  "module": "/dist/dk-vui.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode prod",

@@ -13,7 +13,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
           registry-url: https://registry.npmjs.org/ # 如果不配置将影响publish
 
-      - name: 安装yarn
+      - name: 安装pnpm
         run: npm i -g pnpm
 
       - name: 安装依赖
