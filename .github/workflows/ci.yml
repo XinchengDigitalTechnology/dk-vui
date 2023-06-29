@@ -2,7 +2,8 @@ name: npm to dk-vui and create release
 on: [push]
 jobs:
   build-publish-release
-  	runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
+    
     steps:
     - name: Checkout
       uses: actions/checkout@v2 # 先检出代码
