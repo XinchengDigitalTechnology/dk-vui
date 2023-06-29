@@ -1,0 +1,94 @@
+.vx-table {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  &__form {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    box-shadow: 0 1px 0 0 rgba($color: #EFF3FE, $alpha: 1.0);
+
+    &-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      width: 100%;
+    }
+
+    &-handle {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .el-button+.el-button {
+      margin: 0;
+    }
+  }
+
+  &__toolbar {
+    width: 100%;
+    padding: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .el-button {
+      margin: 0;
+    }
+  }
+
+  &__content {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    flex-direction: column;
+    margin-top: 0;
+    padding: 2px 10px;
+    padding-bottom: 25px;
+    position: relative;
+    box-sizing: border-box;
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: row-reverse;
+    padding: 5px 10px;
+    border: 1px solid #e6e8eb;
+    border-top: 0;
+    margin-bottom: 10px;
+  }
+
+  // 覆盖vxe-table样式
+  .vxe-checkbox .vxe-checkbox--icon,
+  .vxe-custom--option .vxe-checkbox--icon,
+  .vxe-export--panel-column-option .vxe-checkbox--icon,
+  .vxe-table--filter-option .vxe-checkbox--icon,
+  .vxe-table--render-default .vxe-cell--checkbox .vxe-checkbox--icon{
+    font-weight: 100;
+  }
+  .vxe-buttons--wrapper{
+    gap: 10px;
+    .el-button{
+      margin: 0;
+    }
+  }
+}
+.vxe-radio .vxe-radio--icon, .vxe-table--render-default .vxe-cell--radio .vxe-radio--icon{
+  font-weight: 100;
+  font-size: 1.1em;
+}
+body{
+  .is--checked.vxe-radio, .is--checked.vxe-radio .vxe-radio--icon, .vxe-table--render-default .is--checked.vxe-cell--radio, .vxe-table--render-default .is--checked.vxe-cell--radio .vxe-radio--icon{
+    color: var(--el-color-primary);
+    &:hover{
+      color: var(--el-color-primary);
+    }
+  }
+}
+body > .vxe-select--panel{
+  z-index: 5000!important;
+}

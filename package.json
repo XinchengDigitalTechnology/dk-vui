@@ -1,0 +1,44 @@
+{
+  "name": "dk-ui",
+  "version": "0.0.1",
+  "type": "module",
+  "private": false,
+  "author": "blryli",
+  "license": "MIT",
+  "main": "./dist/dk-ui.umd.js",
+  "module": "./dist/dk-ui.js",
+  "exports": {
+    ".": {
+      "import": "./dist/dk-ui.js",
+      "require": "./dist/dk-ui.umd.js"
+    }
+  },
+  "files": [
+    "./dist/*"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --mode prod",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blryli/dk-ui.git"
+  },
+  "bugs": {
+    "url": "https://github.com/blryli/dk-ui/issues"
+  },
+  "homepage": "https://blryli.github.com/dk-ui",
+  "dependencies": {
+    "vue": "^3.2.47"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.1.0",
+    "unplugin-auto-import": "^0.16.4",
+    "vite": "^4.3.9",
+    "element-plus": "^2.3.7",
+    "sass": "^1.63.6",
+    "vxe-table": "^4.4.2",
+    "xe-utils": "^3.5.11"
+  }
+}
