@@ -1,6 +1,6 @@
 {
   "name": "dk-vui",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "dk-vui",
   "private": false,
   "author": "blryli",
@@ -25,10 +25,11 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
-    "unplugin-auto-import": "^0.16.4",
-    "vite": "^4.3.9",
     "element-plus": "^2.3.7",
     "sass": "^1.63.6",
+    "unplugin-auto-import": "^0.16.4",
+    "vite": "^4.3.9",
+    "vite-plugin-vue-setup-extend": "^0.4.0",
     "vxe-table": "^4.4.2",
     "xe-utils": "^3.5.11"
   }

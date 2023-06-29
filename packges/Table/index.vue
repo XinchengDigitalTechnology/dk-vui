@@ -1,4 +1,4 @@
-<script lang="jsx" setup>
+<script lang="jsx" setup name="VTable">
 import XEUtils from 'xe-utils'
 import { gridConfig } from "./config";
 

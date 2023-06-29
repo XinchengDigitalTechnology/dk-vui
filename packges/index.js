@@ -1,12 +1,23 @@
-// 全局组件自动注册
-const componentField = import.meta.globEager('./**/index.vue')
+import Page from './Page/index.vue'
+import Table from './Table/index.vue'
+import Group from './Group/index.vue'
+
+
+const components = [
+  Page,
+  Table,
+  Group,
+]
+
+const install = (app) => {
+  components.forEach(component => {
+    app.component(component.name, component)
+  })
+}
 
 export default {
-  install(App) {
-    for (const [key, comp] of Object.entries(componentField)) {
-      const name = 'V' + key.replace('./', '').replace('/index.vue', '')
-      const component = comp.default
-      App.component(name, component)
-    }
-  }
+  install,
+  Page,
+  Table,
+  Group,
 }

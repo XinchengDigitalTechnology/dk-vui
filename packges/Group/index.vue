@@ -1,8 +1,14 @@
-<template>
+<template name="VGroup">
   <div class="v-group">
     <slot />
   </div>
 </template>
+
+<script>
+export default {
+  name: 'VGroup'
+}
+</script>
 
 <style lang="scss">
 .v-group {

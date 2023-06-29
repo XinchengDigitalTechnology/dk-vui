@@ -1,4 +1,4 @@
-<script setup>
+<script setup name="VPage">
 // 分为列表页和表单页，默认是列表页
 const full = defineProps({
   edit: Boolean, // 是否是表单页
@@ -56,7 +56,8 @@ const leftSlot = useSlots().left
       content: '';
     }
   }
-  .v-title{
+
+  .v-title {
     font-weight: bold;
     border-left: 2px solid var(--el-color-primary);
     padding-left: 10px;
