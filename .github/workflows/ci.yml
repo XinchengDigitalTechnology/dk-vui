@@ -3,28 +3,28 @@ on: [push]
 jobs:
   build-publish-release
   	runs-on: ubuntu-latest
-    
     steps:
-      - uses: actions/checkout@v2 # 先检出代码
+    - name: Checkout
+      uses: actions/checkout@v2 # 先检出代码
         
-      - name: 初始化node环境
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
-          registry-url: https://registry.npmjs.org/ # 如果不配置将影响publish
-          
-      - name: 安装yarn
-        run: npm i -g pnpm
-       
-      - name: 安装依赖
-        run: pnpm i
+    - name: 初始化node环境
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+        registry-url: https://registry.npmjs.org/ # 如果不配置将影响publish
+        
+    - name: 安装yarn
+      run: npm i -g pnpm
       
-       - name: 编译部署ui
-        run: pnpm build
-        
-      - name: publish # 向npm publish 代码 请遵循npm规范.
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.ACCESS_TOKEN}} # 该token是 npm的token 获取npm token请查看 步骤2 的创建 npm token 和 将npm token 放入github的 secrets下
-        run: npm publish
-      # 到这如果全部成功，那么我们就成功的将代码发布到了npm
+    - name: 安装依赖
+      run: pnpm i
+    
+      - name: 编译部署ui
+      run: pnpm build
+      
+    - name: publish # 向npm publish 代码 请遵循npm规范.
+      env:
+        NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}} # 该token是 npm的token 获取npm token请查看 步骤2 的创建 npm token 和 将npm token 放入github的 secrets下
+      run: npm publish
+    # 到这如果全部成功，那么我们就成功的将代码发布到了npm
 
