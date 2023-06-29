@@ -22,7 +22,7 @@ export default defineConfig({
     },
     lib: {
       entry: './packges/index.js',
-      name: 'dk-ui'
+      name: 'dk-vui'
     }
   },
   css: {

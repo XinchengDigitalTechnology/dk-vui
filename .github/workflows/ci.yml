@@ -1,4 +1,4 @@
-name: npm to dk-ui and create release
+name: npm to dk-vui and create release
 on: [push]
 jobs:
   build-publish-release

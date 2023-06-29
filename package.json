@@ -1,16 +1,16 @@
 {
-  "name": "dk-ui",
+  "name": "dk-vui",
   "version": "0.0.1",
   "type": "module",
   "private": false,
   "author": "blryli",
   "license": "MIT",
-  "main": "./dist/dk-ui.umd.js",
-  "module": "./dist/dk-ui.js",
+  "main": "./dist/dk-vui.umd.js",
+  "module": "./dist/dk-vui.js",
   "exports": {
     ".": {
-      "import": "./dist/dk-ui.js",
-      "require": "./dist/dk-ui.umd.js"
+      "import": "./dist/dk-vui.js",
+      "require": "./dist/dk-vui.umd.js"
     }
   },
   "files": [
@@ -23,12 +23,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/blryli/dk-ui.git"
+    "url": "https://github.com/blryli/dk-vui.git"
   },
   "bugs": {
-    "url": "https://github.com/blryli/dk-ui/issues"
+    "url": "https://github.com/blryli/dk-vui/issues"
   },
-  "homepage": "https://blryli.github.com/dk-ui",
+  "homepage": "https://blryli.github.com/dk-vui",
   "dependencies": {
     "vue": "^3.2.47"
   },
