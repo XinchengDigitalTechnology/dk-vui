@@ -1,6 +1,6 @@
-import Page from './Page/index.vue'
-import Table from './Table/index.vue'
-import Group from './Group/index.vue'
+import Page from './Page'
+import Table from './Table'
+import Group from './Group'
 
 
 const components = [
@@ -11,7 +11,7 @@ const components = [
 
 const install = (app) => {
   components.forEach(component => {
-    app.component(component.name, component)
+    app.use(component)
   })
 }
 

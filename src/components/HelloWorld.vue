@@ -52,7 +52,7 @@
 const tableRef = ref(null)
 
 const create = table => {
-  console.log('tableRef.value', tableRef.value.loadData)
+  console.log('tableRef.value', tableRef.value)
 }
 // 模拟分页接口
 const findPageList = (pageNum, pageSize) => {
@@ -75,7 +75,7 @@ const findPageList = (pageNum, pageSize) => {
       ]
       resolve({
         total: list.length,
-        result: list.slice((pageNum - 1) * pageSize, pageNum * pageSize)
+        data: list.slice((pageNum - 1) * pageSize, pageNum * pageSize)
       })
     }, 100)
   })
