@@ -20,7 +20,7 @@
   },
   "homepage": "https://blryli.github.com/dk-vui",
   "dependencies": {
-    "vue": "^3.2.47"
+    "vue": "3.2.45"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.1.0",
