@@ -86,12 +86,12 @@ const gridRef = ref()
 const query = () => {
   gridRef?.value.commitProxy('query')
 }
-const handleReset = () => {
+const resetAndQuery = () => {
   resetForm()
   query()
 }
 // 暴露属性及方法
-defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, $table: gridRef })
+defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, resetAndQuery, $table: gridRef })
 </script>
 
 <template>
@@ -100,8 +100,10 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, $
       <div class="vx-table__form-content">
         <slot name="form" v-bind="{ form }" />
         <div class="vx-table__form-handle">
-          <el-button type="primary" @click="query">查询</el-button>
-          <el-button @click="handleReset">重置</el-button>
+          <slot name="form_handle">
+            <el-button type="primary" @click="query">查询</el-button>
+            <el-button @click="resetAndQuery">重置</el-button>
+          </slot>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@ lockfileVersion: '6.0'
 
 dependencies:
   vue:
-    specifier: ^3.2.45
+    specifier: 3.2.45
     version: 3.2.45
 
 devDependencies:
