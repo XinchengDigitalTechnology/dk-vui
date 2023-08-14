@@ -1,12 +1,14 @@
 import Page from './Page'
 import Table from './Table'
 import Group from './Group'
+import Button from './Button'
 
 
 const components = [
   Page,
   Table,
   Group,
+  Button,
 ]
 
 const install = (app) => {
@@ -20,4 +22,5 @@ export default {
   Page,
   Table,
   Group,
+  Button,
 }
