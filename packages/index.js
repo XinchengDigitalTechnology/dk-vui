@@ -2,6 +2,7 @@ import Page from './Page'
 import Table from './Table'
 import Group from './Group'
 import Button from './Button'
+import Auth from './Auth'
 
 
 const components = [
@@ -9,6 +10,7 @@ const components = [
   Table,
   Group,
   Button,
+  Auth,
 ]
 
 const install = (app) => {
@@ -23,4 +25,5 @@ export default {
   Table,
   Group,
   Button,
+  Auth,
 }
