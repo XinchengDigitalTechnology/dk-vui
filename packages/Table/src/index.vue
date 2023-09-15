@@ -102,17 +102,22 @@ const { scrollHideForm } = attrs
 const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + offsetHeight.value - 4 : attrs.height)
 const hideHeight = computed(() => headerHeight.value - (toolbarHeight.value + 15))
 
+let timer = null
 const handleScroll = async({ scrollTop, isY }) => {
   if (!scrollHideForm) return
   if (isY) {
     offsetHeight.value = Math.min(scrollTop, hideHeight.value)
-    if (scrollTop < 10) {
-      await 1
-      offsetHeight.value = 0
-    }
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      const endTop = gridRef?.value.getScroll().scrollTop
+      if(endTop === 0) {
+        offsetHeight.value = 0
+      }
+      clearTimeout(timer)
+    }, 100);
   }
 }
-const throttleScorll = XEUtils.throttle(handleScroll, 20)
+const throttleScorll = XEUtils.throttle(handleScroll, 10)
 const pageChange = () => {
   if (!scrollHideForm) return
   setTimeout(() => {

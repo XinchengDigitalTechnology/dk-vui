@@ -88,8 +88,8 @@ const tableOptins = reactive({
   ],
   pagerConfig: {
     pageNum: 1,
-    pageSize: 100,
-    pageSizes: [100, 500, 1000, 5000, 10000]
+    pageSize: 50,
+    pageSizes: [50, 100, 500, 1000, 5000, 10000]
   },
   proxyConfig: {
     ajax: {

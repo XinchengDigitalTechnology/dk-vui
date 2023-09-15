@@ -4,7 +4,7 @@ import Group from './Group'
 import Button from './Button'
 import Auth from './Auth'
 import directive from './directives'
-import {gridConfig} from './Table/src/config'
+import { gridConfig } from './Table/src/config'
 
 
 const components = [
@@ -20,12 +20,11 @@ const install = (app, options) => {
   components.forEach(component => {
     app.use(component)
   })
-  if(options) {
-    if(options.scrollHideForm === true) {
+  if (options) {
+    if (options.scrollHideForm === true) {
       gridConfig.scrollHideForm = true
     }
   }
-  console.log('gridConfig', gridConfig)
 }
 
 export default {

@@ -10,7 +10,6 @@ const ob = new ResizeObserver((entries) => {
 /** 监听dom大小变化 */
 export default {
   mounted(el, binding) {
-    console.log('el', el)
     map.set(el, binding.value)
     ob.observe(el)
   },
