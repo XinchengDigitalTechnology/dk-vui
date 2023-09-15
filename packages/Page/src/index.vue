@@ -1,6 +1,6 @@
 <script setup name="VPage">
 // 分为列表页和表单页，默认是列表页
-const full = defineProps({
+defineProps({
   edit: Boolean, // 是否是表单页
 })
 const leftSlot = useSlots().left
@@ -8,8 +8,15 @@ const leftSlot = useSlots().left
 </script>
 
 <template>
-  <div class="v-page" :class="{ 'is--full': !full }">
-    <slot v-if="edit" />
+  <div class="v-page" :class="{ 'is--full': !edit }">
+    <template v-if="edit">
+      <slot />
+      <el-affix position="bottom" :offset="0" class="w-full">
+        <div class="v-page__footer">
+          <slot name="footer" />
+        </div>
+      </el-affix>
+    </template>
     <div v-else class="v-page__body" :class="{ 'is--left': leftSlot }">
       <div class="v-page__body-left" v-if="leftSlot">
         <slot name="left"></slot>
@@ -55,6 +62,16 @@ const leftSlot = useSlots().left
     &::after {
       content: '';
     }
+  }
+  &__footer{
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 8px 15px;
+    border: 1px solid #e8eaec;
+    border-bottom: 0;
+    border-radius: 6px 6px 0 0;
+    overflow: hidden;
   }
 
   .v-title {

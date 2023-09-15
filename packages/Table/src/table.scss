@@ -5,6 +5,10 @@
   flex-direction: column;
   position: relative;
 
+  &__header{
+    overflow: hidden;
+  }
+
   &__form {
     display: flex;
     gap: 8px;
@@ -52,7 +56,6 @@
     flex-direction: column;
     margin-top: 0;
     padding: 2px 10px;
-    padding-bottom: 25px;
     position: relative;
     box-sizing: border-box;
   }
@@ -64,6 +67,28 @@
     border: 1px solid #e6e8eb;
     border-top: 0;
     margin-bottom: 10px;
+  }
+
+  &--to-top{
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background-color: #999;
+    right: 10px;
+    bottom: 70px;
+    z-index: 10;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all .2;
+    opacity: .4;
+    &:hover{
+      opacity: .8;
+    }
+    .el-icon{
+      color: #fff;
+    }
   }
 
   // 覆盖vxe-table样式

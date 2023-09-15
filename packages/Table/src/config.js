@@ -1,5 +1,6 @@
 export const gridConfig = {
   height: 'auto',
+  scrollHideForm: false,
   showOverflow: 'tooltip', // 单元格溢出显示 tooltip
   showHeaderOverflow: 'tooltip', // 表头溢出显示 tooltip
   columnConfig: { resizable: true }, // 列宽可拖动
@@ -10,11 +11,6 @@ export const gridConfig = {
   },
   tooltipConfig: {
     enterable: true
-  },
-  toolbarConfig: {
-    slots: {
-      buttons: 'toolbar_btns'
-    }
   },
   pagerConfig: {
     pageNum: 1,

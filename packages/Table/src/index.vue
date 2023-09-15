@@ -1,6 +1,7 @@
 <script lang="jsx" setup name="VTable">
 import XEUtils from 'xe-utils'
 import { gridConfig } from "./config";
+import { ArrowUpBold } from '@element-plus/icons-vue';
 
 // 插槽处理
 let slots = computed(() => Object.keys(useSlots()))
@@ -90,33 +91,93 @@ const resetAndQuery = () => {
   resetForm()
   query()
 }
+
+// 表格滚动隐藏搜索及操作区
+const headerHeight = ref()
+const toolbarHeight = ref()
+const contentRef = ref()
+const contentHeight = ref()
+const offsetHeight = ref(0)
+const { scrollHideForm } = attrs
+const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + offsetHeight.value - 4 : attrs.height)
+const hideHeight = computed(() => headerHeight.value - (toolbarHeight.value + 15))
+
+const handleScroll = async({ scrollTop, isY }) => {
+  if (!scrollHideForm) return
+  if (isY) {
+    offsetHeight.value = Math.min(scrollTop, hideHeight.value)
+    if (scrollTop < 10) {
+      await 1
+      offsetHeight.value = 0
+    }
+  }
+}
+const throttleScorll = XEUtils.throttle(handleScroll, 20)
+const pageChange = () => {
+  if (!scrollHideForm) return
+  setTimeout(() => {
+    offsetHeight.value = 0
+  }, 200);
+}
+
+const headerResize = async ({ height }) => {
+  if (!scrollHideForm) return
+  headerHeight.value = height
+  offsetHeight.value = 0
+  gridRef?.value.clearScroll()
+  await 1
+  contentHeight.value = contentRef?.value.offsetHeight
+}
+
+const tableLoad = ({ height }) => {
+  if (!scrollHideForm) return
+  contentHeight.value = height
+}
+
+const toolbarResize = ({ height }) => {
+  if (!scrollHideForm) return
+  toolbarHeight.value = height
+}
+
+const toTop = () => {
+  gridRef?.value.scrollTo(null, 0)
+}
+
 // 暴露属性及方法
 defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, resetAndQuery, $table: gridRef })
 </script>
 
 <template>
   <div class="vx-table">
-    <div v-if="slots.includes('form')" class="vx-table__form">
-      <div class="vx-table__form-content">
-        <slot name="form" v-bind="{ form }" />
-        <div class="vx-table__form-handle">
-          <slot name="form_handle">
-            <el-button type="primary" @click="query">查询</el-button>
-            <el-button @click="resetAndQuery">重置</el-button>
-          </slot>
+    <div class="vx-table__header" :style="{ height: `${offsetHeight ? (headerHeight - offsetHeight) + 'px' : 'auto'}` }">
+      <div v-dom-resize="headerResize" :style="{ transform: `translateY(${-offsetHeight + 'px'})` }">
+        <div v-if="slots.includes('form')" class="vx-table__form">
+          <div class="vx-table__form-content">
+            <slot name="form" v-bind="{ form }" />
+            <div class="vx-table__form-handle">
+              <slot name="form_handle">
+                <el-button type="primary" @click="query">查询</el-button>
+                <el-button @click="resetAndQuery">重置</el-button>
+              </slot>
+            </div>
+          </div>
+        </div>
+        <div class="vx-table__toolbar" v-dom-resize="toolbarResize">
+          <slot name="toolbar_btns" />
         </div>
       </div>
     </div>
-    <div class="vx-table__content">
-      <vxe-grid ref="gridRef" v-bind="attrs">
-        <template v-for="name in slots.filter(d => d !== 'form')" #[name]>
+    <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
+      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="throttleScorll" @page-change="pageChange">
+        <template v-for="name in slots.filter(d => d !== 'form' && d !== 'toolbar_btns')" #[name]>
           <slot :name="name"></slot>
         </template>
       </vxe-grid>
+      <div v-if="offsetHeight && offsetHeight === hideHeight" class="vx-table--to-top" @click="toTop">
+        <el-icon><ArrowUpBold /></el-icon>
+      </div>
     </div>
   </div>
 </template>
 
-<style lang="scss">
-@import './table.scss';
-</style>
+<style lang="scss">@import './table.scss';</style>
