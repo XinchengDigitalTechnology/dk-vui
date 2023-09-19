@@ -47,7 +47,7 @@
   </VPage>
 </template>
 
-<script setup name="Index">
+<script setup lang="jsx" name="Index">
 
 const tableRef = ref(null)
 
@@ -68,6 +68,7 @@ const findPageList = (pageNum, pageSize) => {
   })
 }
 const tableOptins = reactive({
+  id: 'id',
   formConfig: {
     data: {
       base: '', // 基础类型
@@ -77,20 +78,207 @@ const tableOptins = reactive({
       sizeRange: { type: 'sizeRange1' }, // 组合+范围
     }
   },
-  rowConfig: { height: 60 },
+  scrollY: {enabled: true, gt: 0},
+  rowConfig: { height: 140 },
   columns: [
     { type: 'checkbox', width: 50 },
     { type: 'seq', width: 60 },
-    { field: 'name', title: 'Name' },
-    { field: 'nickname', title: 'Nickname' },
-    { field: 'role', title: 'Role' },
-    { field: 'address', title: 'Address', showOverflow: true }
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'name', title: 'Name', minWidth: 100, slots: {
+      default: ({row}) => <div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <div>{row.name}</div>
+        <el-button type="primary" link>查看详情</el-button>
+      </div>
+    } },
+    { field: 'nickname', title: 'Nickname', minWidth: 100 },
+    { field: 'role', title: 'Role', minWidth: 100 },
+    { field: 'address', title: 'Address', showOverflow: true, minWidth: 100 },
+    { field: 'address', title: 'Address', showOverflow: true, minWidth: 100 },
+    { field: 'address', title: 'Address', showOverflow: true, minWidth: 100 },
+    { field: 'address', title: 'Address', fixed: 'right' },
   ],
-  pagerConfig: {
-    pageNum: 1,
-    pageSize: 50,
-    pageSizes: [50, 100, 500, 1000, 5000, 10000]
-  },
   proxyConfig: {
     ajax: {
       // 接收 Promise

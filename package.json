@@ -1,6 +1,6 @@
 {
   "name": "dk-vui",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "dk-vui",
   "private": false,
   "author": "blryli",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "@element-plus/icons-vue": "^2.1.0",
     "@vitejs/plugin-vue": "^4.1.0",
+    "@vitejs/plugin-vue-jsx": "^3.0.2",
     "element-plus": "^2.3.7",
     "sass": "^1.63.6",
     "unplugin-auto-import": "^0.16.4",

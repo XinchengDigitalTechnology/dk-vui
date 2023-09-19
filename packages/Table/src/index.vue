@@ -4,7 +4,8 @@ import { gridConfig } from "./config";
 import { ArrowUpBold } from '@element-plus/icons-vue';
 
 // 插槽处理
-let slots = computed(() => Object.keys(useSlots()))
+let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
+console.log('slots', slots.value)
 
 // 搜索表单处理
 const attrs = XEUtils.clone(XEUtils.merge({}, gridConfig, useAttrs()), true)
@@ -94,36 +95,32 @@ const resetAndQuery = () => {
 
 // 表格滚动隐藏搜索及操作区
 const headerHeight = ref()
-const toolbarHeight = ref()
 const contentRef = ref()
 const contentHeight = ref()
 const offsetHeight = ref(0)
 const { scrollHideForm } = attrs
 const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + offsetHeight.value - 4 : attrs.height)
-const hideHeight = computed(() => headerHeight.value - (toolbarHeight.value + 15))
 
 let timer = null
-const handleScroll = async({ scrollTop, isY }) => {
+const handleScroll = async ({ scrollTop, isY }) => {
   if (!scrollHideForm) return
   if (isY) {
-    offsetHeight.value = Math.min(scrollTop, hideHeight.value)
-    clearTimeout(timer)
-    timer = setTimeout(() => {
-      const endTop = gridRef?.value.getScroll().scrollTop
-      if(endTop === 0) {
-        offsetHeight.value = 0
-      }
-      clearTimeout(timer)
-    }, 100);
+    offsetHeight.value = Math.min(scrollTop, headerHeight.value)
   }
+  if(!scrollTop) {
+    offsetHeight.value = 0
+    return
+  }
+  clearTimeout(timer)
+  timer = setTimeout(() => {
+    const endTop = gridRef?.value.getScroll().scrollTop
+    if (endTop === 0) {
+      offsetHeight.value = 0
+    }
+    clearTimeout(timer)
+  }, 50);
 }
 const throttleScorll = XEUtils.throttle(handleScroll, 10)
-const pageChange = () => {
-  if (!scrollHideForm) return
-  setTimeout(() => {
-    offsetHeight.value = 0
-  }, 200);
-}
 
 const headerResize = async ({ height }) => {
   if (!scrollHideForm) return
@@ -137,11 +134,6 @@ const headerResize = async ({ height }) => {
 const tableLoad = ({ height }) => {
   if (!scrollHideForm) return
   contentHeight.value = height
-}
-
-const toolbarResize = ({ height }) => {
-  if (!scrollHideForm) return
-  toolbarHeight.value = height
 }
 
 const toTop = () => {
@@ -167,19 +159,18 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
             </div>
           </div>
         </div>
-        <div class="vx-table__toolbar" v-dom-resize="toolbarResize">
-          <slot name="toolbar_btns" />
-        </div>
       </div>
     </div>
     <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
-      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="throttleScorll" @page-change="pageChange">
-        <template v-for="name in slots.filter(d => d !== 'form' && d !== 'toolbar_btns')" #[name]>
+      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="throttleScorll">
+        <template v-for="name in slots.filter(d => d !== 'form')" #[name]>
           <slot :name="name"></slot>
         </template>
       </vxe-grid>
-      <div v-if="offsetHeight && offsetHeight === hideHeight" class="vx-table--to-top" @click="toTop">
-        <el-icon><ArrowUpBold /></el-icon>
+      <div v-if="offsetHeight && offsetHeight === headerHeight" class="vx-table--to-top" @click="toTop">
+        <el-icon>
+          <ArrowUpBold />
+        </el-icon>
       </div>
     </div>
   </div>

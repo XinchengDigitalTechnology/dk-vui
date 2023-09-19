@@ -2,12 +2,14 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import autoImport from 'unplugin-auto-import/vite'
 import vuesetupExtend from 'vite-plugin-vue-setup-extend'
+import vueJsx from "@vitejs/plugin-vue-jsx"
 
 console.log('autoImport', autoImport)
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
+    vueJsx(),
     vuesetupExtend(),
     autoImport({
       imports: ['vue'],
