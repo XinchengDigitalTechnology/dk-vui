@@ -1,22 +1,37 @@
 <script setup name="VPage">
 // 分为列表页和表单页，默认是列表页
-defineProps({
+const props = defineProps({
   edit: Boolean, // 是否是表单页
+  footer: Boolean,
   footerAlign: { type: String, default: 'center' }, // 底部区域对齐方式
 })
 const leftSlot = useSlots().left
 
+const pageWidth = ref(0)
+const resize = ({ width }, target) => {
+  if (!props.edit) return
+  const { scrollHeight, offsetHeight } = target
+  if (scrollHeight > offsetHeight) {
+    pageWidth.value = width + 6
+    return
+  }
+  pageWidth.value = width
+}
+
 </script>
 
 <template>
-  <div class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }">
+  <div class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" v-dom-resize="resize">
     <template v-if="edit">
       <slot />
-      <el-affix position="bottom" :offset="0" class="w-full v-page--affix">
-        <div class="v-page__footer" :style="{'justify-content': footerAlign}">
-          <slot name="footer" />
+      <template v-if="footer">
+        <div style="width: 100%;height: 50px;"></div>
+        <div class="v-page__footer-wrapper" :style="{ width: pageWidth + 'px' }">
+          <div class="v-page__footer" :style="{ 'justify-content': footerAlign }">
+            <slot name="footer" />
+          </div>
         </div>
-      </el-affix>
+      </template>
     </template>
     <div v-else class="v-page__body" :class="{ 'is--left': leftSlot }">
       <div class="v-page__body-left" v-if="leftSlot">
@@ -38,12 +53,12 @@ const leftSlot = useSlots().left
     overflow: hidden;
   }
 
-  &.is--edit{
+  &.is--edit {
     padding-bottom: 0;
   }
 
-  &--affix{
-    .el-affix--fixed{
+  &--affix {
+    .el-affix--fixed {
       right: 0;
     }
   }
@@ -74,11 +89,21 @@ const leftSlot = useSlots().left
       content: '';
     }
   }
-  &__footer{
+
+  &__footer {
+    &-wrapper {
+      width: 100%;
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      z-index: 2000;
+    }
+
     display: flex;
     align-items: center;
     background-color: #fff;
-    padding: 8px 15px;
+    height: 50px;
+    padding: 0 15px;
     border: 1px solid #e8eaec;
     border-bottom: 0;
     overflow: hidden;

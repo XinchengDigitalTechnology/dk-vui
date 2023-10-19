@@ -134,10 +134,6 @@ const headerResize = async ({ height }) => {
 const tableLoad = ({ height }) => {
   if (!scrollHideForm) return
   contentHeight.value = height
-  nextTick(() => {
-    const body = contentRef?.value.querySelector('.vxe-table--body-wrapper')
-    console.log('body', body)
-  })
 }
 
 const toTop = () => {

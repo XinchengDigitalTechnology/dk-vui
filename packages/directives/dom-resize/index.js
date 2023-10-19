@@ -3,7 +3,7 @@ const ob = new ResizeObserver((entries) => {
   for (const entry of entries) {
     const handle = map.get(entry.target)
     if (handle) {
-      handle(entry.contentRect)
+      handle(entry.contentRect, entry.target)
     }
   }
 })
