@@ -1,5 +1,5 @@
 <template>
-  <VPage>
+  <VPage edit :footer="{height: 50, offset: 0, align: 'center'}">
     <template #left>
       <div class="p-2 text-sm">信诚网络</div>
       <el-tree :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]"
@@ -44,6 +44,10 @@
         <el-button>批量编辑</el-button>
       </template>
     </VTable>
+    <template #footer>
+      <el-button>返 回</el-button>
+      <el-button type="primary">保 存</el-button>
+    </template>
   </VPage>
 </template>
 

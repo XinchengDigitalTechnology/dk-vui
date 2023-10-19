@@ -2,7 +2,6 @@
 import XEUtils from 'xe-utils'
 import { gridConfig } from "./config";
 import { ArrowUpBold } from '@element-plus/icons-vue';
-import { nextTick } from 'vue';
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])

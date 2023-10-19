@@ -1,21 +1,26 @@
 <script setup name="VPage">
+import XEUtils from 'xe-utils'
+
 // 分为列表页和表单页，默认是列表页
 const props = defineProps({
   edit: Boolean, // 是否是表单页
-  footer: Boolean,
-  footerAlign: { type: String, default: 'center' }, // 底部区域对齐方式
+  footer: { type: Object, default: () => ({}) },
 })
-const leftSlot = useSlots().left
 
-const pageWidth = ref(0)
+// 插槽处理
+let slots = computed(() => [...new Set(Object.keys(useSlots()))])
+
+const footerConfig = computed(() => XEUtils.merge({ height: 50, align: 'center', offset: 0 }, props.footer))
+
+const footerWidth = ref(0)
 const resize = ({ width }, target) => {
   if (!props.edit) return
   const { scrollHeight, offsetHeight } = target
+  let w = width + footerConfig.value.offset
   if (scrollHeight > offsetHeight) {
-    pageWidth.value = width + 6
-    return
+    w += 6
   }
-  pageWidth.value = width
+  footerWidth.value = w
 }
 
 </script>
@@ -24,17 +29,17 @@ const resize = ({ width }, target) => {
   <div class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" v-dom-resize="resize">
     <template v-if="edit">
       <slot />
-      <template v-if="footer">
-        <div style="width: 100%;height: 50px;"></div>
-        <div class="v-page__footer-wrapper" :style="{ width: pageWidth + 'px' }">
-          <div class="v-page__footer" :style="{ 'justify-content': footerAlign }">
+      <template v-if="slots.includes('footer')">
+        <div :style="{width: '100%', height: `${footerConfig.height}px`}"></div>
+        <div class="v-page__footer-wrapper" :style="{ width: footerWidth + 'px', height: `${footerConfig.height}px` }">
+          <div class="v-page__footer" :style="{ 'justify-content': footerConfig.align }">
             <slot name="footer" />
           </div>
         </div>
       </template>
     </template>
-    <div v-else class="v-page__body" :class="{ 'is--left': leftSlot }">
-      <div class="v-page__body-left" v-if="leftSlot">
+    <div v-else class="v-page__body" :class="{ 'is--left': slots.includes('left') }">
+      <div class="v-page__body-left" v-if="slots.includes('left')">
         <slot name="left"></slot>
       </div>
       <slot />
@@ -96,17 +101,17 @@ const resize = ({ width }, target) => {
       position: fixed;
       right: 0;
       bottom: 0;
+      padding: 0 15px;
       z-index: 2000;
+      border: 1px solid #e8eaec;
+      background-color: #fff;
+      border-bottom: 0;
+      overflow: hidden;
     }
 
     display: flex;
     align-items: center;
-    background-color: #fff;
-    height: 50px;
-    padding: 0 15px;
-    border: 1px solid #e8eaec;
-    border-bottom: 0;
-    overflow: hidden;
+    height: 100%;
   }
 
   .v-title {
