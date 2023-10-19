@@ -21,7 +21,7 @@ export const gridConfig = {
   pagerConfig: {
     pageNum: 1,
     pageSize: 20,
-    pageSizes: [5, 20, 50, 100, 200, 500]
+    pageSizes: [20, 50, 100, 200, 500]
   },
   proxyConfig: {
     seq: true, // 启用动态序号代理（分页之后索引自动计算为当前页的起始序号）

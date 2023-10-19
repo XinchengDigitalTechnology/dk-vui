@@ -2,10 +2,10 @@
 import XEUtils from 'xe-utils'
 import { gridConfig } from "./config";
 import { ArrowUpBold } from '@element-plus/icons-vue';
+import { nextTick } from 'vue';
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
-console.log('slots', slots.value)
 
 // 搜索表单处理
 const attrs = XEUtils.clone(XEUtils.merge({}, gridConfig, useAttrs()), true)
@@ -107,7 +107,7 @@ const handleScroll = async ({ scrollTop, isY }) => {
   if (isY) {
     offsetHeight.value = Math.min(scrollTop, headerHeight.value)
   }
-  if(!scrollTop) {
+  if (!scrollTop) {
     offsetHeight.value = 0
     return
   }
@@ -134,6 +134,10 @@ const headerResize = async ({ height }) => {
 const tableLoad = ({ height }) => {
   if (!scrollHideForm) return
   contentHeight.value = height
+  nextTick(() => {
+    const body = contentRef?.value.querySelector('.vxe-table--body-wrapper')
+    console.log('body', body)
+  })
 }
 
 const toTop = () => {
@@ -176,4 +180,6 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
   </div>
 </template>
 
-<style lang="scss">@import './table.scss';</style>
+<style lang="scss">
+@import './table.scss';
+</style>

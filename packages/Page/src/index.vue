@@ -2,17 +2,18 @@
 // 分为列表页和表单页，默认是列表页
 defineProps({
   edit: Boolean, // 是否是表单页
+  footerAlign: { type: String, default: 'center' }, // 底部区域对齐方式
 })
 const leftSlot = useSlots().left
 
 </script>
 
 <template>
-  <div class="v-page" :class="{ 'is--full': !edit }">
+  <div class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }">
     <template v-if="edit">
       <slot />
-      <el-affix position="bottom" :offset="0" class="w-full">
-        <div class="v-page__footer">
+      <el-affix position="bottom" :offset="0" class="w-full v-page--affix">
+        <div class="v-page__footer" :style="{'justify-content': footerAlign}">
           <slot name="footer" />
         </div>
       </el-affix>
@@ -35,6 +36,16 @@ const leftSlot = useSlots().left
 
   &.is--full {
     overflow: hidden;
+  }
+
+  &.is--edit{
+    padding-bottom: 0;
+  }
+
+  &--affix{
+    .el-affix--fixed{
+      right: 0;
+    }
   }
 
   &__body {
@@ -70,7 +81,6 @@ const leftSlot = useSlots().left
     padding: 8px 15px;
     border: 1px solid #e8eaec;
     border-bottom: 0;
-    border-radius: 6px 6px 0 0;
     overflow: hidden;
   }
 
