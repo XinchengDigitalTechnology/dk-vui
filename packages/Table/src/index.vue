@@ -130,6 +130,11 @@ const headerResize = async ({ height }) => {
   contentHeight.value = contentRef?.value.offsetHeight
 }
 
+const tableResize = () => {
+  if (!scrollHideForm) return
+  headerResize({height: headerHeight.value})
+}
+
 const tableLoad = ({ height }) => {
   if (!scrollHideForm) return
   contentHeight.value = height
@@ -139,12 +144,17 @@ const toTop = () => {
   gridRef?.value.scrollTo(null, 0)
 }
 
+onActivated(() => {
+  const { fullData } = gridRef?.value?.getTableData() || {}
+  if (fullData && !fullData.length) query()
+})
+
 // 暴露属性及方法
 defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, resetAndQuery, $table: gridRef })
 </script>
 
 <template>
-  <div class="vx-table">
+  <div class="vx-table" v-dom-resize="tableResize">
     <div class="vx-table__header" :style="{ height: `${offsetHeight ? (headerHeight - offsetHeight) + 'px' : 'auto'}` }">
       <div v-dom-resize="headerResize" :style="{ transform: `translateY(${-offsetHeight + 'px'})` }">
         <div v-if="slots.includes('form')" class="vx-table__form">
@@ -161,7 +171,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
       </div>
     </div>
     <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
-      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="throttleScorll">
+      <vxe-grid ref="gridRef"  v-bind="attrs" :height="tableHeight" @scroll="throttleScorll">
         <template v-for="name in slots.filter(d => d !== 'form')" #[name]>
           <slot :name="name"></slot>
         </template>
