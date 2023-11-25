@@ -3,7 +3,7 @@
     <span v-if="title" class="v-text-title">{{ title }}:</span>
     <div v-if="line === 'full'" class="v-text-content">{{ showValue }}</div>
     <template v-else>
-      <div class="v-text-content-wrapper" :style="{ maxHeight: (+line) * 24 + 'px' }" @mouseenter="mouseenter"
+      <div class="v-text-content-wrapper" :style="{ maxHeight: lineNum * 24 + 'px' }" @mouseenter="mouseenter"
         @mouseleave="mouseleave">
         <slot>
           <div ref="valueRef" class="v-text-content" :class="`is--${type} ${disabled ? 'is--disabled' : ''}`" :style="style" @click="!disabled && type && emit('click')">{{ showValue }}</div>
@@ -43,11 +43,11 @@ const props = defineProps({
 const emit = defineEmits(['click'])
 
 // 溢出
-const line = +props.line
-const style = line > 1 ? {
+const lineNum = +line
+const style = props.line === 'full' ? {} : lineNum > 1 ? {
   'display': '-webkit-box',
   '-webkit-box-orient': 'vertical',
-  '-webkit-line-clamp': line
+  '-webkit-line-clamp': lineNum
 } : {
   'text-overflow': 'ellipsis',
   'white-space': 'nowrap'
@@ -77,12 +77,12 @@ const textRef = ref()
 const isOverflow = ref(false)
 
 const mouseenter = ({ target }) => {
-  const {offsetWidth, offsetHeight} = textRef?.value
-  const {offsetWidth: valueOffsetWidth} = valueRef?.value
+  const {offsetWidth, offsetHeight} = textRef?.value || {}
+  const {offsetWidth: valueOffsetWidth} = valueRef?.value || {}
   if(!offsetWidth || !offsetHeight || !valueOffsetWidth) return
-  isOverflow.value = offsetHeight / 24 > line || valueOffsetWidth < offsetWidth
+  isOverflow.value = offsetHeight / 24 > lineNum || valueOffsetWidth < offsetWidth
   if (!isOverflow.value) return
-  updateTip({
+  updateTip && updateTip({
     visible: true,
     content: showValue.value,
     ref: target
@@ -91,7 +91,7 @@ const mouseenter = ({ target }) => {
 
 const mouseleave = () => {
   if (!isOverflow.value) return
-  updateTip({
+  updateTip && updateTip({
     visible: false,
     content: '',
     ref: null
