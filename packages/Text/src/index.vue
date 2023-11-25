@@ -1,16 +1,16 @@
 <template>
   <div class="v-text">
-    <span v-if="title" class="v-text-title" @click.stop="() => false">{{ title }}:</span>
+    <span v-if="title" class="v-text-title">{{ title }}:</span>
     <div v-if="line === 'full'" class="v-text-content">{{ showValue }}</div>
     <template v-else>
       <div class="v-text-content-wrapper" :style="{ maxHeight: (+line) * 24 + 'px' }" @mouseenter="mouseenter"
         @mouseleave="mouseleave">
         <slot>
-          <div ref="valueRef" class="v-text-content" :class="`is--${type}`" :style="style" @click="emit('click')">{{ showValue }}</div>
+          <div ref="valueRef" class="v-text-content" :class="`is--${type} ${disabled ? 'is--disabled' : ''}`" :style="style" @click="!disabled && type && emit('click')">{{ showValue }}</div>
           <div ref="textRef" class="v-text-content-wrap">{{ showValue }}</div>
         </slot>
         <!-- 未溢出时的复制 -->
-        <div v-if="copy && !isOverflow" class="v-text-btns" title="复制" @click="copyText">
+        <div v-if="copy && !isOverflow" class="v-text-btns" title="复制" @click.stop="copyText">
           <el-icon>
             <DocumentCopy />
           </el-icon>
@@ -18,7 +18,7 @@
       </div>
     </template>
     <!-- 溢出时的复制 -->
-    <div v-if="copy && isOverflow" class="v-text-btns" title="复制" @click="copyText">
+    <div v-if="copy && isOverflow" class="v-text-btns" title="复制" @click.stop="copyText">
       <el-icon>
         <DocumentCopy />
       </el-icon>
@@ -32,11 +32,12 @@ import { ElMessage } from "element-plus"
 import { DocumentCopy } from "@element-plus/icons-vue"
 
 const props = defineProps({
-  value: { type: String, default: '' }, // 文本
-  title: { type: String, default: '' }, // 标题
-  type: { type: String, default: 'text' }, // 类型，text文本/button按钮/link链接
+  value: { type: [Number, String], default: '' }, // 文本
+  title: { type: [Number, String], default: '' }, // 标题
+  type: { type: String, validator: (val) => ['button', 'link'].includes(val) }, // 类型，button按钮/link链接
   line: { type: [Number, String], default: 1 }, // 溢出行数
   copy: { type: Boolean, default: false }, // 复制
+  disabled: { type: Boolean, default: false }, // 禁用
 })
 
 const emit = defineEmits(['click'])
@@ -76,7 +77,10 @@ const textRef = ref()
 const isOverflow = ref(false)
 
 const mouseenter = ({ target }) => {
-  isOverflow.value = textRef?.value.offsetHeight / 24 > line || valueRef?.value.offsetWidth < textRef?.value.offsetWidth
+  const {offsetWidth, offsetHeight} = textRef?.value
+  const {offsetWidth: valueOffsetWidth} = valueRef?.value
+  if(!offsetWidth || !offsetHeight || !valueOffsetWidth) return
+  isOverflow.value = offsetHeight / 24 > line || valueOffsetWidth < offsetWidth
   if (!isOverflow.value) return
   updateTip({
     visible: true,
@@ -139,6 +143,10 @@ const mouseleave = () => {
     &:hover {
       color: var(--el-color-primary-light-3);
     }
+    &.is--disabled{
+      opacity: .6;
+      cursor: no-drop;
+    }
   }
 
   .is--button{
@@ -147,7 +155,7 @@ const mouseleave = () => {
 
   .is--link {
     position: relative;
-    &:hover {
+    &:not(.is--disabled):hover {
       &::after {
         content: "";
         position: absolute;

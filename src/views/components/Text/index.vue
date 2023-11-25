@@ -46,24 +46,31 @@ const log = () => {
 
       <h4>2行溢出</h4>
       <div style="width: 200px;">
-        <VText title="标题" value="2行溢出文本内容2行溢出文本内容2行溢出文本内容2行溢出文本内容" line="2"></VText>
+        <VText title="标题" value="2行溢出文本内容2行溢出文本内容2行溢出文本内容2行溢出文本内容" line="2" @click="log"></VText>
       </div>
       <Md v-model="overflow2" view />
 
       <h4>2行溢出+复制</h4>
       <div style="width: 240px;">
-        <VText title="标题" value="2行溢出文本内容2行溢出文本内容2行溢出文本内容2行溢出文本内容" line="2" copy></VText>
+        <VText title="标题" value="2行溢出文本内容2行溢出文本内容2行溢出文本内容2行溢出文本内容" line="2" copy @click="log"></VText>
       </div>
       <Md v-model="overflowcopy" view />
 
       <h4>按钮</h4>
       <VText title="标题" value="文本内容" type="button" @click="log"></VText>
+      <p>
+        <VText title="禁用" value="文本内容" type="button" disabled @click="log"></VText>
+      </p>
       <Md v-model="button" view />
 
       <h4>链接</h4>
       <VText title="标题" value="文本内容" type="link" @click="log"></VText>
+      <p>
+        <VText title="禁用" value="文本内容" type="link" disabled @click="log"></VText>
+      </p>
       <p style="width: 240px;">
-        <VText title="2行溢出可复制" value="2行溢出文本内容2行溢出文本内容2行溢出文本内容2行溢出文本内容" line="2" type="link" copy @click="log"></VText>
+        <VText title="2行溢出可复制" value="2行溢出文本内容2行溢出文本内容2行溢出文本内容2行溢出文本内容" line="2" type="link" copy @click="log">
+        </VText>
       </p>
       <Md v-model="link" view />
     </div>
