@@ -8,17 +8,6 @@ import directive from './directives'
 import { getRoutes } from './utils'
 import { gridConfig } from './Table/src/config'
 
-// 单独导出
-export {
-  Page,
-  Table,
-  Group,
-  Button,
-  Auth,
-  Text,
-  getRoutes
-}
-
 const components = [
   Page,
   Table,
@@ -29,7 +18,7 @@ const components = [
 ]
 
 const install = (app, options) => {
-   // 指令
+  // 指令
   directive(app)
 
   // 组件
@@ -54,4 +43,5 @@ export default {
   Button,
   Auth,
   Text,
+  getRoutes
 }
