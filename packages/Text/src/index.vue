@@ -43,7 +43,7 @@ const props = defineProps({
 const emit = defineEmits(['click'])
 
 // 溢出
-const lineNum = +line
+const lineNum = +props.line
 const style = props.line === 'full' ? {} : lineNum > 1 ? {
   'display': '-webkit-box',
   '-webkit-box-orient': 'vertical',
