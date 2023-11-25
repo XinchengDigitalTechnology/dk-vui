@@ -3,8 +3,8 @@ import vue from '@vitejs/plugin-vue'
 import autoImport from 'unplugin-auto-import/vite'
 import vuesetupExtend from 'vite-plugin-vue-setup-extend'
 import vueJsx from "@vitejs/plugin-vue-jsx"
+import path from 'path'
 
-console.log('autoImport', autoImport)
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -30,6 +30,17 @@ export default defineConfig({
       entry: './packages/index.js',
       name: 'dk-vui'
     }
+  },
+  resolve: {
+    // https://cn.vitejs.dev/config/#resolve-alias
+    alias: {
+      // 设置路径
+      '~': path.resolve(__dirname, './'),
+      // 设置别名
+      '@': path.resolve(__dirname, './src')
+    },
+    // https://cn.vitejs.dev/config/#resolve-extensions
+    extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
   },
   css: {
     postcss: {

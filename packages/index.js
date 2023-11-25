@@ -3,7 +3,9 @@ import Table from './Table'
 import Group from './Group'
 import Button from './Button'
 import Auth from './Auth'
+import Text from './Text'
 import directive from './directives'
+import {getRoutes} from './utils'
 import { gridConfig } from './Table/src/config'
 
 
@@ -13,6 +15,7 @@ const components = [
   Group,
   Button,
   Auth,
+  Text,
 ]
 
 const install = (app, options) => {
@@ -34,4 +37,6 @@ export default {
   Group,
   Button,
   Auth,
+  Text,
+  getRoutes
 }

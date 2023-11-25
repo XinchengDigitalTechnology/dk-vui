@@ -72,8 +72,10 @@ const resetForm = () => {
 }
 // 代理query请求，把form参数修改为当前组件form
 let qr = attrs.proxyConfig?.ajax?.query
+const loadData = ref(false)
 if (qr) {
   attrs.proxyConfig.ajax.query = (ags) => {
+    loadData.value = true
     const fn = (data) => qr(data)
     ags.form = getQueryForm()
     const { total, pageSize, currentPage: pageNum } = ags.page
@@ -144,6 +146,9 @@ const toTop = () => {
   gridRef?.value.scrollTo(null, 0)
 }
 
+nextTick(() => {
+  if(!loadData.value) query()
+})
 onActivated(() => {
   const { fullData } = gridRef?.value?.getTableData() || {}
   if (fullData && !fullData.length) query()

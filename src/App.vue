@@ -1,9 +1,9 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import layout from './layout/index.vue'
 </script>
 
 <template>
-  <HelloWorld />
+  <layout />
 </template>
 
 <style>
@@ -14,12 +14,12 @@ body,
   overflow: hidden;
   padding: 0;
   margin: 0;
-  background-color: #f5f5f5;
 }
 
 * {
   box-sizing: border-box;
 }
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

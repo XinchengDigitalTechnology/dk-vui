@@ -23,6 +23,17 @@ const resize = ({ width }, target) => {
   footerWidth.value = w
 }
 
+// 页面级气泡
+const tipRef = ref()
+const tip = ref({
+  visible: false,
+  content: '',
+  ref: null
+})
+const updateTip = (val) => {
+  tip.value = val
+}
+provide('updateTip', updateTip)
 </script>
 
 <template>
@@ -45,6 +56,8 @@ const resize = ({ width }, target) => {
       <slot />
     </div>
   </div>
+  <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering
+    placement="top" popper-class="app-tip" :offset="3" enterable />
 </template>
 
 <style lang="scss">
