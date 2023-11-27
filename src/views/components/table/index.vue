@@ -90,14 +90,22 @@ const tableOptins = reactive({
     {
       title: '字体颜色', width: 150, slots: {
         default: ({ row }) => <div>
-          <VText value='正文颜色' />
+          <VText value='标题颜色#666' />
+          <VText value='正文颜色#333' />
           <VText title='标题颜色' value='正文颜色' />
           <VText title='标题颜色' value='正文颜色' />
         </div>
       }
     },
     {
-      title: '一行溢出', width: 140, slots: {
+      title: '默认值', minWidth: 150, slots: {
+        default: ({ row }) => <div>
+          <VText value='' />
+        </div>
+      }
+    },
+    {
+      title: '一行溢出', minWidth: 140, slots: {
         default: ({ row }) => <div>
           <VText value='一行溢出一行溢出一行溢出一行溢出' />
           <VText title='带标题' value='一行溢出一行溢出一行溢出一行溢出' />
@@ -105,7 +113,7 @@ const tableOptins = reactive({
       }
     },
     {
-      title: '两行溢出', width: 140, slots: {
+      title: '两行溢出', minWidth: 140, slots: {
         default: ({ row }) => <div>
           <VText value='两行溢出两行溢出两行溢出两行溢出两行溢出两行溢出两行溢出两行溢出' line={2} />
           <VText title='带标题' value='两行溢出两行溢出两行溢出两行溢出两行溢出两行溢出两行溢出两行溢出' line={2} />
@@ -113,19 +121,42 @@ const tableOptins = reactive({
       }
     },
     {
-      title: '三行溢出', width: 120, slots: {
+      title: '三行溢出', minWidth: 120, slots: {
         default: ({ row }) => <div>
           <VText value='三行溢出三行溢出三行溢出三行溢出三行溢出三行溢出三行溢出三行溢出' line={3} />
         </div>
       }
     },
     {
-      title: '复制', width: 150, slots: {
+      title: '复制', minWidth: 150, slots: {
         default: ({ row }) => <div>
           <VText value='无标题复制' copy />
           <VText title='标题' value='带标题复制' copy />
           <VText value='溢出时的无标题复制' copy />
           <VText title='标题' value='溢出带标题复制' copy />
+        </div>
+      }
+    },
+    {
+      title: '链接', minWidth: 150, slots: {
+        default: ({ row }) => <div>
+          <VText value='我是链接我是链接我是链接我是链接' type='link' />
+          <VText title='两行' value='我是链接我是链接我是链接我是链接' line={2} type='link' copy />
+        </div>
+      }
+    },
+    {
+      title: '禁用', minWidth: 150, slots: {
+        default: ({ row }) => <div>
+          <VText value='我是链接我是链接我是链接我是链接' type='link' disabled />
+        </div>
+      }
+    },
+    {
+      title: '按钮', width: 150, fixed: 'right', slots: {
+        default: ({ row }) => <div>
+          <VText value='编辑' type='button' />
+          <VText value='删除' type='button' />
         </div>
       }
     },

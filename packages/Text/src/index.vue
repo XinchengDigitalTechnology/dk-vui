@@ -99,21 +99,27 @@ const mouseleave = () => {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+:root{
+  --v-text--title-color: #666;
+  --v-text--content-color: #333;
+  --v-text--line-height: 1.4rem;
+}
+
 .v-text {
   display: flex;
   gap: 3px;
 
   &-title {
-    color: #666;
+    color: var(--v-text--title-color);
     white-space: nowrap;
-    line-height: 1.5rem;
+    line-height: var(--v-text--line-height);
   }
 
   &-content {
     display: inline-block;
-    color: #333;
-    line-height: 1.5rem;
+    color: var(--v-text--content-color);
+    line-height: var(--v-text--line-height);
     overflow: hidden;
 
     &-wrapper {
@@ -130,7 +136,6 @@ const mouseleave = () => {
       left: 0;
       top: 0;
       white-space: pre-wrap;
-      line-height: 1.5rem;
       z-index: -1;
     }
   }

@@ -149,10 +149,6 @@ const toTop = () => {
 nextTick(() => {
   if(!loadData.value) query()
 })
-onActivated(() => {
-  const { fullData } = gridRef?.value?.getTableData() || {}
-  if (fullData && !fullData.length) query()
-})
 
 // 暴露属性及方法
 defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, resetAndQuery, $table: gridRef })
