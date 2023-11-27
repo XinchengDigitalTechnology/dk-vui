@@ -53,7 +53,7 @@ const getQueryForm = () => {
         }
       }
     } else { // 值为非对象
-      searchForm[key] = val
+      val && (searchForm[key] = val)
     }
   }
   return searchForm
@@ -77,6 +77,13 @@ if (qr) {
   attrs.proxyConfig.ajax.query = (ags) => {
     loadData.value = true
     const fn = (data) => qr(data)
+    // 页面跳转携带参数处理
+    const { tableForm } = JSON.parse(sessionStorage.getItem('_table_form') || '{}')
+    if (tableForm) {
+      setForm(tableForm)
+      sessionStorage.setItem('_table_form', '{}')
+    }
+    // 表单数据及分页处理
     ags.form = getQueryForm()
     const { total, pageSize, currentPage: pageNum } = ags.page
     ags.page = { total, pageSize, pageNum }
@@ -134,7 +141,7 @@ const headerResize = async ({ height }) => {
 
 const tableResize = () => {
   if (!scrollHideForm) return
-  headerResize({height: headerHeight.value})
+  headerResize({ height: headerHeight.value })
 }
 
 const tableLoad = ({ height }) => {
@@ -146,8 +153,20 @@ const toTop = () => {
   gridRef?.value.scrollTo(null, 0)
 }
 
+
+// 处理带参数的页面跳转
+const _table_form = sessionStorage.getItem('_table_form')
+if (!_table_form) sessionStorage.setItem('_table_form', '{}')
+
+onActivated(() => {
+  const { tableForm } = JSON.parse(sessionStorage.getItem('_table_form') || '{}')
+  if (tableForm) {
+    query()
+  }
+})
+
 nextTick(() => {
-  if(!loadData.value) query()
+  if (!loadData.value) query()
 })
 
 // 暴露属性及方法
@@ -172,7 +191,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
       </div>
     </div>
     <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
-      <vxe-grid ref="gridRef"  v-bind="attrs" :height="tableHeight" @scroll="throttleScorll">
+      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="throttleScorll">
         <template v-for="name in slots.filter(d => d !== 'form')" #[name]>
           <slot :name="name"></slot>
         </template>
