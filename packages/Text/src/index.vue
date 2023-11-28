@@ -45,11 +45,8 @@ const props = defineProps({
 const emit = defineEmits(['click'])
 
 const slots = useSlots()
-const nothing = ref(false)
 const { children } = slots.default && slots.default()[0] || {}
-if(slots.default && !children || !props.value && props.value !== 0) {
-  nothing.value = true
-}
+const nothing = computed(() => slots.default && !children || !props.value && props.value !== 0)
 
 
 // 溢出
