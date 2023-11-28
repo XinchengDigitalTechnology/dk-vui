@@ -45,9 +45,7 @@ const props = defineProps({
 const emit = defineEmits(['click'])
 
 const slots = useSlots()
-const { children } = slots.default && slots.default()[0] || {}
-const nothing = computed(() => slots.default && !children || !props.value && props.value !== 0)
-
+const nothing = computed(() => !slots.default && !props.value && props.value !== 0)
 
 // 溢出
 const lineNum = +props.line
