@@ -6,7 +6,7 @@
       <div class="v-text-content-wrapper" :style="{ maxHeight: lineNum * 24 + 'px' }" @mouseenter="mouseenter"
         @mouseleave="mouseleave">
         <slot>
-          <div ref="valueRef" class="v-text-content" :class="`is--${type} ${disabled ? 'is--disabled' : ''}`"
+          <div ref="valueRef" class="v-text-content" :class="`${type ? 'is--'+type : ''} ${disabled ? 'is--disabled' : ''}`"
             :style="style" @click="!disabled && type && emit('click')">{{ value }}</div>
           <div ref="textRef" class="v-text-content-wrap">{{ value }}</div>
         </slot>
@@ -31,7 +31,7 @@
 import { $copyToClipboard } from "@xqsit94/vue3-copy-to-clipboard"
 import { ElMessage } from "element-plus"
 import { DocumentCopy } from "@element-plus/icons-vue"
-import { useSlots } from "vue";
+import { onUnmounted, useSlots } from "vue";
 
 const props = defineProps({
   value: { type: [Number, String], default: '' }, // 文本
@@ -69,7 +69,7 @@ const copyText = () => {
 }
 
 // 溢出处理
-const updateTip = inject('updateTip')
+const updateTip = inject('updateTip', null)
 const valueRef = ref()
 const textRef = ref()
 const isOverflow = ref(false)
@@ -88,13 +88,14 @@ const mouseenter = ({ target }) => {
 }
 
 const mouseleave = () => {
-  if (!isOverflow.value) return
   updateTip && updateTip({
     visible: false,
     content: '',
     ref: null
   })
 }
+
+onUnmounted(mouseleave)
 </script>
 
 <style lang="scss">
@@ -135,6 +136,7 @@ const mouseleave = () => {
       top: 0;
       white-space: pre-wrap;
       z-index: -1;
+      opacity: 0;
     }
   }
 
