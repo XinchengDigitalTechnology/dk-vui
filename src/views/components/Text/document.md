@@ -2,8 +2,9 @@
 
 1. 标题默认颜色 #666，可通过设置 --v-text--title-color 更改
 2. 文本默认颜色 #333，可通过设置 --v-text--content-color 更改
-3. 文本默认值为 -
-4. 文本支持多行溢出隐藏
+3. 行高默认 1.4rem，可通过设置 --v-text--line-height 更改
+4. 文本默认值为 -
+5. 文本支持多行溢出隐藏
 
 ## Attributes
 

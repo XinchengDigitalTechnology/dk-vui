@@ -1,5 +1,13 @@
 # dk-vui组件库（Vue 3 + Vite）
 
+## 版本升级
+
+- 2023-11-29 v0.0.35
+1. 增加 VText 组件
+2. 增加 getRoutes 路由组装方法
+3. 自定义分页组件(表格组件在分页大小、搜索条件变化后，再次触发搜索将重置页码为1)
+4. 增加带参数的页面跳转处理
+
 ## 组件
 
 - VTable 表格组件（基于vxe-table二次封装）
@@ -16,9 +24,21 @@
 
 ## 指令
 
-- V-dom-load dom加载完毕时触发
+- v-dom-load dom加载完毕时触发
 
-- V-dom-resize dom大小改变时触发
+- v-dom-resize dom大小改变时触发
+
+## 方法
+
+#### getRoutes 组装路由方法
+
+```js
+import DKVui from 'dk-vui'
+
+const routerFiles = import.meta.globEager(['../views/**/index.vue', '!**/components/**']) // 排除组件
+
+export const routes = DKVui.getRoutes(routerFiles, 'Purchase') // 第二个参数为路由名称前缀，如 Purchase
+```
 
 ## 安装
 

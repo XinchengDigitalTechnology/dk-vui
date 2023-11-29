@@ -66,6 +66,7 @@ provide('updateTip', updateTip)
   overflow-x: hidden;
   overflow-y: auto;
   padding: 10px;
+  padding-bottom: 0;
 
   &.is--full {
     overflow: hidden;

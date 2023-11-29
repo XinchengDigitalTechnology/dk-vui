@@ -165,6 +165,7 @@ const tableOptins = reactive({
     ajax: {
       // 接收 Promise
       query: ({ page, form }) => {
+        console.log('分页page', page)
         console.log('提交后端的form: ', form)
         return findPageList(page.pageNum, page.pageSize)
       }

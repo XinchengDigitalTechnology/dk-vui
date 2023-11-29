@@ -1,13 +1,16 @@
 <script lang="jsx" setup name="VTable">
 import XEUtils from 'xe-utils'
 import { gridConfig } from "./config";
-import { ArrowUpBold } from '@element-plus/icons-vue';
+import { ArrowUpBold } from '@element-plus/icons-vue'
+import Pagination from './Pagination'
+import { reactive, watch } from 'vue';
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
 
 // 搜索表单处理
-const attrs = XEUtils.clone(XEUtils.merge({}, gridConfig, useAttrs()), true)
+const merge = XEUtils.merge({}, gridConfig, useAttrs())
+const attrs = XEUtils.clone(Object.assign({}, merge, { pagerConfig: undefined }), true)
 const { data } = attrs.formConfig || {}
 const defaultValue = Object.assign({}, data)
 const getSourceValue = () => XEUtils.clone(defaultValue, true)
@@ -70,13 +73,25 @@ const setFormField = (field, val) => {
 const resetForm = () => {
   form.value = getSourceValue()
 }
+
+// 分页处理
+const { pageSize, pageNum } = merge.pagerConfig || {}
+const pager = reactive({ pageSize: pageSize || 20, pageNum: pageNum || 1, total: 0 })
+const pageChange = val => {
+  const { type, currentPage, pageSize } = val
+  pager.pageNum = type === 'size' ? 1 : currentPage // 分页大小变化重置分页
+  pager.pageSize = pageSize
+  gridRef?.value.commitProxy('query')
+}
+
 // 代理query请求，把form参数修改为当前组件form
 let qr = attrs.proxyConfig?.ajax?.query
 const loadData = ref(false)
+const pageHidden = ref(false)
 if (qr) {
+  const { props } = attrs.proxyConfig
   attrs.proxyConfig.ajax.query = (ags) => {
     loadData.value = true
-    const fn = (data) => qr(data)
     // 页面跳转携带参数处理
     const { tableForm } = JSON.parse(sessionStorage.getItem('_table_form') || '{}')
     if (tableForm) {
@@ -85,16 +100,40 @@ if (qr) {
     }
     // 表单数据及分页处理
     ags.form = getQueryForm()
-    const { total, pageSize, currentPage: pageNum } = ags.page
-    ags.page = { total, pageSize, pageNum }
-    return fn(ags)
+    ags.page = pager
+    return qr(ags).then(res => {
+      if (Array.isArray(res)) {
+        pageHidden.value = true
+        return res
+      }
+      pager.total = XEUtils.get(res, props.total)
+      return XEUtils.get(res, props.result)
+    }).catch(() => [])
   }
 }
 
+// 监听查询条件变化
+const formChange = ref(false)
+watch(
+  () => form.value,
+  () => {
+    formChange.value = true
+  },
+  {
+    deep: true
+  }
+)
+
 const gridRef = ref()
 // 查询方法
-const query = () => {
+const query = async () => {
+  await 1
+  // 如果查询条件变化则重置分页
+  if (formChange.value) {
+    pager.pageNum = 1
+  }
   gridRef?.value.commitProxy('query')
+  formChange.value = false
 }
 const resetAndQuery = () => {
   resetForm()
@@ -166,6 +205,7 @@ onActivated(() => {
 })
 
 nextTick(() => {
+  // 表格加载完毕后，没有加载数据，则主动请求一次
   if (!loadData.value) query()
 })
 
@@ -194,6 +234,10 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
       <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="throttleScorll">
         <template v-for="name in slots.filter(d => d !== 'form')" #[name]>
           <slot :name="name"></slot>
+        </template>
+        <template #pager>
+          <Pagination v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" :hidden="pageHidden"
+            v-model:pageNum="pager.pageNum" :total="pager.total" @change="pageChange" />
         </template>
       </vxe-grid>
       <div v-if="offsetHeight && offsetHeight === headerHeight" class="vx-table--to-top" @click="toTop">
