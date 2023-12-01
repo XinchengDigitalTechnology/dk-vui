@@ -6,8 +6,9 @@
       <div class="v-text-content-wrapper" :style="{ maxHeight: lineNum * 24 + 'px' }" @mouseenter="mouseenter"
         @mouseleave="mouseleave">
         <slot>
-          <div ref="valueRef" class="v-text-content" :class="`${type ? 'is--'+type : ''} ${disabled ? 'is--disabled' : ''}`"
-            :style="style" @click="!disabled && type && emit('click')">{{ value }}</div>
+          <div ref="valueRef" class="v-text-content"
+            :class="`${type ? 'is--' + type : ''} ${disabled ? 'is--disabled' : ''}`" :style="style"
+            @click="!disabled && type && emit('click')">{{ value }}</div>
           <div ref="textRef" class="v-text-content-wrap">{{ value }}</div>
         </slot>
         <!-- 未溢出时的复制 -->
@@ -176,6 +177,9 @@ onUnmounted(mouseleave)
   }
 
   &-btns {
+    display: flex;
+    align-items: center;
+    gap: 3px;
     opacity: 0;
     transition: all 0.2s ease;
     transform: translateX(-8px) scale(0.7);
@@ -192,4 +196,5 @@ onUnmounted(mouseleave)
       transform: translateX(0) scale(1);
     }
   }
-}</style>
+}
+</style>

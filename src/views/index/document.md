@@ -1,5 +1,10 @@
 # dk-vui组件库（Vue 3 + Vite）
 
+1. 组件升级不生效问题
+2. 路由及编辑页面处理
+3. 页面跳转处理
+4. VText组件使用
+
 ## 版本升级
 
 - 2023-11-29 v0.0.35
@@ -37,7 +42,7 @@ import DKVui from 'dk-vui'
 
 const routerFiles = import.meta.globEager(['../views/**/index.vue', '!**/components/**']) // 排除组件
 
-export const routes = DKVui.getRoutes(routerFiles, 'Purchase') // 第二个参数为路由名称前缀，如 Purchase
+export const routes = DKVui.getRoutes(routerFiles, 'Pms') // 第二个参数为路由名称前缀，如 Pms
 ```
 
 ## 安装

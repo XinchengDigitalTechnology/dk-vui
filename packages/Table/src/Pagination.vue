@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'hidden': hidden }" class="pagination-container">
+  <div :class="{ 'hidden': hidden }" class="v-pagination-container">
     <vxe-pager :background="background" v-model:current-page="pageNum" v-model:page-size="pageSize" :layouts="layouts"
       :page-sizes="pageSizes" :pager-count="pagerCount" :total="total" @page-change="pageChange" />
   </div>
@@ -68,12 +68,15 @@ function pageChange(val) {
 </script>
 
 <style scoped>
-.pagination-container {
+.v-pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: right;
   height: 40px;
   background: #fff;
 }
 
-.pagination-container.hidden {
+.v-pagination-container.hidden {
   display: none;
 }
 </style>

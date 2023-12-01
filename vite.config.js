@@ -42,6 +42,9 @@ export default defineConfig({
     // https://cn.vitejs.dev/config/#resolve-extensions
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
   },
+  server: {
+    host: true,
+  },
   css: {
     postcss: {
       plugins: [

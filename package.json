@@ -1,6 +1,6 @@
 {
   "name": "dk-vui",
-  "version": "0.0.35",
+  "version": "0.0.36",
   "description": "dk-vui",
   "private": false,
   "author": "blryli",
@@ -13,12 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/blryli/dk-vui.git"
+    "url": "https://github.com/XinchengDigitalTechnology/dk-vui.git"
   },
   "bugs": {
-    "url": "https://github.com/blryli/dk-vui/issues"
+    "url": "https://github.com/XinchengDigitalTechnology/dk-vui/issues"
   },
-  "homepage": "https://blryli.github.com/dk-vui",
+  "homepage": "https://XinchengDigitalTechnology.github.com/dk-vui",
   "dependencies": {
     "vue": "3.2.45"
   },

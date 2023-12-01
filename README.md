@@ -37,7 +37,7 @@ import DKVui from 'dk-vui'
 
 const routerFiles = import.meta.globEager(['../views/**/index.vue', '!**/components/**']) // 排除组件
 
-export const routes = DKVui.getRoutes(routerFiles, 'Purchase') // 第二个参数为路由名称前缀，如 Purchase
+export const routes = DKVui.getRoutes(routerFiles, 'Pms') // 第二个参数为路由名称前缀，如 Pms
 ```
 
 #### 安装
