@@ -157,6 +157,7 @@ const handleScroll = async ({ scrollTop, isY }) => {
     offsetHeight.value = 0
     return
   }
+  if (activating.value) return
   clearTimeout(timer)
   timer = setTimeout(() => {
     const endTop = gridRef?.value.getScroll().scrollTop
@@ -170,13 +171,13 @@ const throttleScorll = XEUtils.throttle(handleScroll, 10)
 
 const activating = ref(false)
 const headerResize = async ({ width, height }) => {
-  if (!scrollHideForm || activating.value || !width) return
+  if (!scrollHideForm) return
   headerHeight.value = height
+  if(activating.value || !width) return
   offsetHeight.value = 0
   gridRef?.value.clearScroll()
   await 1
   contentHeight.value = contentRef?.value.offsetHeight
-  activating.value = false
 }
 
 const tableResize = () => {
@@ -198,13 +199,18 @@ const toTop = () => {
 const _table_form = sessionStorage.getItem('_table_form')
 if (!_table_form) sessionStorage.setItem('_table_form', '{}')
 
+let atimer = null
 onActivated(() => {
-  activating.value = true
   const { tableForm } = JSON.parse(sessionStorage.getItem('_table_form') || '{}')
   if (tableForm) {
     query()
   }
-
+  activating.value = true
+  clearTimeout(atimer)
+  atimer = setTimeout(() => {
+    activating.value = false
+    clearTimeout(atimer)
+  }, 100)
 })
 
 nextTick(() => {
