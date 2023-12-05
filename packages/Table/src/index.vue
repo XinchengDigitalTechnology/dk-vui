@@ -149,7 +149,7 @@ const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + of
 
 let timer = null
 const handleScroll = async ({ scrollTop, isY }) => {
-  if (!scrollHideForm || activating.value) return
+  if (!scrollHideForm || !headerHeight.value) return
   if (isY) {
     offsetHeight.value = Math.min(scrollTop, headerHeight.value)
   }
@@ -164,18 +164,19 @@ const handleScroll = async ({ scrollTop, isY }) => {
       offsetHeight.value = 0
     }
     clearTimeout(timer)
-  }, 50);
+  }, 50)
 }
 const throttleScorll = XEUtils.throttle(handleScroll, 10)
 
 const activating = ref(false)
-const headerResize = async ({ height }) => {
-  if (!scrollHideForm || activating.value) return
+const headerResize = async ({ width, height }) => {
+  if (!scrollHideForm || activating.value || !width) return
   headerHeight.value = height
   offsetHeight.value = 0
   gridRef?.value.clearScroll()
   await 1
   contentHeight.value = contentRef?.value.offsetHeight
+  activating.value = false
 }
 
 const tableResize = () => {
@@ -203,11 +204,7 @@ onActivated(() => {
   if (tableForm) {
     query()
   }
-  clearTimeout(timer)
-  timer = setTimeout(() => {
-    activating.value = false
-    clearTimeout(timer)
-  }, 50)
+
 })
 
 nextTick(() => {
