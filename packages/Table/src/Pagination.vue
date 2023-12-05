@@ -67,13 +67,16 @@ function pageChange(val) {
 
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .v-pagination-container {
   display: flex;
   align-items: center;
   justify-content: right;
   height: 40px;
   background: #fff;
+  .vxe-pager{
+    height: 40px;
+  }
 }
 
 .v-pagination-container.hidden {

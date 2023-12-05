@@ -3,7 +3,6 @@ import XEUtils from 'xe-utils'
 import { gridConfig } from "./config";
 import { ArrowUpBold } from '@element-plus/icons-vue'
 import Pagination from './Pagination'
-import { reactive, watch } from 'vue';
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
@@ -150,7 +149,7 @@ const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + of
 
 let timer = null
 const handleScroll = async ({ scrollTop, isY }) => {
-  if (!scrollHideForm) return
+  if (!scrollHideForm || activating.value) return
   if (isY) {
     offsetHeight.value = Math.min(scrollTop, headerHeight.value)
   }
@@ -169,8 +168,9 @@ const handleScroll = async ({ scrollTop, isY }) => {
 }
 const throttleScorll = XEUtils.throttle(handleScroll, 10)
 
+const activating = ref(false)
 const headerResize = async ({ height }) => {
-  if (!scrollHideForm) return
+  if (!scrollHideForm || activating.value) return
   headerHeight.value = height
   offsetHeight.value = 0
   gridRef?.value.clearScroll()
@@ -198,10 +198,16 @@ const _table_form = sessionStorage.getItem('_table_form')
 if (!_table_form) sessionStorage.setItem('_table_form', '{}')
 
 onActivated(() => {
+  activating.value = true
   const { tableForm } = JSON.parse(sessionStorage.getItem('_table_form') || '{}')
   if (tableForm) {
     query()
   }
+  clearTimeout(timer)
+  timer = setTimeout(() => {
+    activating.value = false
+    clearTimeout(timer)
+  }, 50)
 })
 
 nextTick(() => {

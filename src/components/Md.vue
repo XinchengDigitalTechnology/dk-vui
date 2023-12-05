@@ -54,6 +54,7 @@ const plugins = [breaks(), frontmatter(), gemoji(), gfm(), copyCode(), highlight
 
 <style lang="scss" scope>
 .bytemd, .md{
+  height: 100%;
   table{
     border: 1px solid #ddd;
     width: 100%;

@@ -23,6 +23,18 @@ const resize = ({ width }, target) => {
   footerWidth.value = w
 }
 
+// 滚动处理
+const scroll = ref({ scrollLeft: 0, scrollTop: 0 })
+const pageRef = ref()
+const handleScroll = ({ target }) => {
+  const { scrollTop, scrollLeft } = target
+  scroll.value = { scrollTop, scrollLeft }
+}
+onActivated(() => {
+  pageRef.value.scrollLeft = scroll.value.scrollLeft
+  pageRef.value.scrollTop = scroll.value.scrollTop
+})
+
 // 页面级气泡
 const tipRef = ref()
 const tip = ref({
@@ -37,11 +49,11 @@ provide('updateTip', updateTip)
 </script>
 
 <template>
-  <div class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" v-dom-resize="resize">
+  <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" v-dom-resize="resize" @scroll="handleScroll">
     <template v-if="edit">
       <slot />
       <template v-if="slots.includes('footer')">
-        <div :style="{width: '100%', height: `${footerConfig.height}px`}"></div>
+        <div :style="{ width: '100%', height: `${footerConfig.height}px` }"></div>
         <div class="v-page__footer-wrapper" :style="{ width: footerWidth + 'px', height: `${footerConfig.height}px` }">
           <div class="v-page__footer" :style="{ 'justify-content': footerConfig.align }">
             <slot name="footer" />

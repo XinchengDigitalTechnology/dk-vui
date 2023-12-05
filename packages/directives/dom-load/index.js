@@ -3,6 +3,6 @@ export default {
   mounted(el, binding) {
     const handle = binding.value
     const rect = el.getBoundingClientRect()
-    handle && handle(rect)
+    handle && handle(rect, el)
   }
 }

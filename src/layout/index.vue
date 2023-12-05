@@ -2,22 +2,34 @@
 import { routes } from '../router'
 import { useRoute } from 'vue-router'
 const route = useRoute()
-// const menus = routes.reduce((acc, cur) => {
-//   let path = cur.path
-//   const paths = path.split('/')
-//   const [parant, child] = paths
-//   if(child) {
-//     acc.find(d => d.name === parant)
-//   }
-//   let name = paths.findLast(d => d)
-//   const menu = {path, name}
-//   if(paths.length > 2) {
-//     if(!menu.children) {
-//       menu.children = []
-//     }
-//     menu.children.push({path, name})
-//   }
-// }, [])
+
+const maps = {
+  components: '组件',
+  directives: '指令'
+}
+const menus = routes.reduce((acc, cur) => {
+  let fullPath = cur.path
+  const paths = fullPath.substring(1).split('/')
+  const [parant, child] = paths
+  const path = `/${parant}`
+  if (path === '/') return acc
+  if (path === '/index') {
+    acc.unshift({ path, name: parant })
+    return acc
+  }
+  if (child) {
+    const index = acc.findIndex(d => d.path === path)
+    if (index > -1) {
+      acc[index].children.push({ path: fullPath, name: child })
+    } else {
+      acc.push({ path, name: maps[parant] || parant, children: [{ path: fullPath, name: child }] })
+    }
+  } else {
+    acc.push({ path, name: parant })
+  }
+  return acc
+}, [])
+console.log('menus', menus)
 </script>
 
 <template>
@@ -25,18 +37,30 @@ const route = useRoute()
     <div class="logo">dk-vui</div>
   </div>
   <div class="app-container">
-    <div class="menu">
-      <el-scrollbar>
-        <el-menu :default-active="route.path" router>
-          <el-menu-item v-for="(d, i) in routes.filter(d => d.path !== '/index')" :key="i" :index="d.path">
-            <template #title>{{ d.path === '/' ? '首页' : d.path.split('/').findLast(d => d) }}</template>
-          </el-menu-item>
-        </el-menu>
-      </el-scrollbar>
-    </div>
+    <el-scrollbar class="menu">
+      <div class="menu-list">
+        <template v-for="(da, idx) in menus">
+          <div class="menu-group" v-if="da.children">
+            <h3 class="menu-title">{{ da.name }}</h3>
+            <div v-for="(d, i) in da.children" :key="i" class="menu-item" :class="d.path === route.path && 'is--active'">
+              <router-link :to="d.path">
+                <el-link :underline="false" :type="d.path === route.path ? 'primary' : 'default'">{{ d.name }}</el-link>
+              </router-link>
+            </div>
+          </div>
+          <div v-else class="menu-item">
+            <router-link :to="da.path">
+              <el-link :underline="false">{{ da.name }}</el-link>
+            </router-link>
+          </div>
+        </template>
+      </div>
+    </el-scrollbar>
     <div class="body">
       <router-view v-slot="{ Component }">
-        <component :is="Component" />
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
       </router-view>
     </div>
   </div>
@@ -68,24 +92,41 @@ const route = useRoute()
   overflow-x: hidden;
   overflow-y: auto;
 
-  .el-scrollbar__view,
-  .el-menu {
-    height: 100%;
+  .menu {
+    padding: 3rem 2rem;
+    position: fixed;
+    left: 0;
+    top: 50px;
+    bottom: 0;
+    width: var(--menu-width);
+    background-color: #fff;
+
+    &-group {
+      .menu-item {
+        padding-left: 15px;
+      }
+    }
+
+    &-title {
+      margin: 0;
+    }
+
+    .el-link,
+    &-title {
+      display: block;
+      padding: 10px;
+    }
+    .is--active{
+      .el-link__inner{
+        font-weight: bold;
+      }
+    }
   }
 }
 
 :root {
   --border-color: #ddd;
-  --menu-width: 100px;
-}
-
-.menu {
-  position: fixed;
-  left: 0;
-  top: 50px;
-  bottom: 0;
-  width: var(--menu-width);
-  background-color: #fff;
+  --menu-width: 200px;
 }
 
 .body {
@@ -97,6 +138,7 @@ const route = useRoute()
 }
 
 .page {
+  min-height: calc(100% - 30px);
   max-width: 1000px;
   margin: 0 auto;
   padding-bottom: 30px;
