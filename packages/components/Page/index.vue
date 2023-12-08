@@ -152,7 +152,6 @@ provide('updateTip', updateTip)
 :root {
   --v-text--title-color: #666;
   --v-text--content-color: #333;
-  --v-text--line-height: 1.4rem;
 }
 
 .v-text {
@@ -162,13 +161,11 @@ provide('updateTip', updateTip)
   &-title {
     color: var(--v-text--title-color);
     white-space: nowrap;
-    line-height: var(--v-text--line-height);
   }
 
   &-content {
     display: inline-block;
     color: var(--v-text--content-color);
-    line-height: var(--v-text--line-height);
     overflow: hidden;
 
     &-wrapper {

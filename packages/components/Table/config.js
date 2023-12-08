@@ -1,4 +1,5 @@
 export const gridConfig = {
+  size: 'small',
   height: 'auto',
   scrollHideForm: false, // 滚动时是否收起搜索区域
   showOverflow: 'tooltip', // 单元格溢出显示 tooltip
@@ -8,7 +9,7 @@ export const gridConfig = {
   scrollY: { enabled: true, gt: 0, oSize: 4 }, // 默认启用虚拟滚动
   sortConfig: { remote: true, trigger: 'cell', orders: ['desc', 'asc', 'null'] }, // 默认远程排序
   rowConfig: {
-    height: 40,
+    height: 60,
     isHover: true
   },
   tooltipConfig: {

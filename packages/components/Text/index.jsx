@@ -7,7 +7,6 @@ import { inject } from "vue"
 
 const VText = (props, { slots, emit, attrs }) => {
   const { value, title, type, line, copy, disabled } = props
-  const nothing = !slots.default && !props.value && props.value !== 0
   const lineNum = +line
 
   // 样式
@@ -68,7 +67,7 @@ const VText = (props, { slots, emit, attrs }) => {
   return <div class='v-text'>
     {title ? <span class="v-text-title">{title}:</span> : ''}
     {
-      (nothing || slots.default && !hasSlot) ? '-' : <div class="v-text-content-wrapper" style={{ maxHeight: lineNum * 24 + 'px' }} onMouseenter={mouseenter}
+      (!(value+'') || slots.default && !hasSlot) ? '-' : <div class="v-text-content-wrapper" style={{ maxHeight: lineNum * 24 + 'px' }} onMouseenter={mouseenter}
         onMouseleave={mouseleave}>
         {
           hasSlot ? slots.default() : [<div class={`v-text-content ${type ? 'is--' + type : ''} ${disabled ? 'is--disabled' : ''}`} style={style}

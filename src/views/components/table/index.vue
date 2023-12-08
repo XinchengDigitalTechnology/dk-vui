@@ -83,7 +83,7 @@ const tableOptins = reactive({
     }
   },
   scrollY: { enabled: true, gt: 0 },
-  rowConfig: { height: 140 },
+  rowConfig: { height: 120 },
   columns: [
     { type: 'checkbox', width: 50, fixed: 'left' },
     { type: 'seq', width: 60 },
