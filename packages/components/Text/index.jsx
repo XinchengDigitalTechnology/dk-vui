@@ -63,13 +63,15 @@ const VText = (props, { slots, emit, attrs }) => {
     !disabled && type && emit('click')
   }
 
+  const hasSlot = slots.default && slots.default().filter(d => d.children).length
+
   return <div class='v-text'>
     {title ? <span class="v-text-title">{title}:</span> : ''}
     {
-      nothing ? '-' : <div class="v-text-content-wrapper" style={{ maxHeight: lineNum * 24 + 'px' }} onMouseenter={mouseenter}
+      (nothing || slots.default && !hasSlot) ? '-' : <div class="v-text-content-wrapper" style={{ maxHeight: lineNum * 24 + 'px' }} onMouseenter={mouseenter}
         onMouseleave={mouseleave}>
         {
-          slots.default ? slots.default() : [<div class={`v-text-content ${type ? 'is--' + type : ''} ${disabled ? 'is--disabled' : ''}`} style={style}
+          hasSlot ? slots.default() : [<div class={`v-text-content ${type ? 'is--' + type : ''} ${disabled ? 'is--disabled' : ''}`} style={style}
             onClick={handleClick}>{value}</div>,
           <div class="v-text-content-wrap">{value}</div>]
         }
@@ -93,7 +95,7 @@ const VText = (props, { slots, emit, attrs }) => {
 VText.props = {
   value: { type: [Number, String], default: '' }, // 文本
   title: { type: [Number, String], default: '' }, // 标题
-  type: { type: String, validator: (val) => ['button', 'link'].includes(val) }, // 类型，button按钮/link链接
+  type: { type: String, validator: (val) => ['button', 'link', ''].includes(val) }, // 类型，button按钮/link链接
   line: { type: [Number, String], default: 1 }, // 溢出行数
   copy: { type: Boolean, default: false }, // 复制
   disabled: { type: Boolean, default: false }, // 禁用
