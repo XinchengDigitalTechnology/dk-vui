@@ -58,7 +58,8 @@ const VText = (props, { slots, emit, attrs }) => {
   }
 
   // 点击事件
-  const handleClick = () => {
+  const handleClick = (e) => {
+    e.stopPropagation()
     !disabled && type && emit('click')
   }
 
@@ -67,11 +68,11 @@ const VText = (props, { slots, emit, attrs }) => {
     {
       nothing ? '-' : <div class="v-text-content-wrapper" style={{ maxHeight: lineNum * 24 + 'px' }} onMouseenter={mouseenter}
         onMouseleave={mouseleave}>
-        <slot>
-          <div class={`v-text-content ${type ? 'is--' + type : ''} ${disabled ? 'is--disabled' : ''}`} style={style}
-            onClick={handleClick}>{value}</div>
-          <div class="v-text-content-wrap">{value}</div>
-        </slot>
+        {
+          slots.default ? slots.default() : [<div class={`v-text-content ${type ? 'is--' + type : ''} ${disabled ? 'is--disabled' : ''}`} style={style}
+            onClick={handleClick}>{value}</div>,
+          <div class="v-text-content-wrap">{value}</div>]
+        }
         {/* 未溢出时的复制 */}
         {copy && !isOverflow ? <div class="v-text-btns" title="复制" onClick={copyText}>
           <el-icon>
