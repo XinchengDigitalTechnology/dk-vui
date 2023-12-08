@@ -85,7 +85,7 @@ const tableOptins = reactive({
   scrollY: { enabled: true, gt: 0 },
   rowConfig: { height: 140 },
   columns: [
-    { type: 'checkbox', width: 50 },
+    { type: 'checkbox', width: 50, fixed: 'left' },
     { type: 'seq', width: 60 },
     {
       title: '字体颜色', width: 150, slots: {

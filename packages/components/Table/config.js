@@ -4,6 +4,7 @@ export const gridConfig = {
   showOverflow: 'tooltip', // 单元格溢出显示 tooltip
   showHeaderOverflow: 'tooltip', // 表头溢出显示 tooltip
   columnConfig: { resizable: true }, // 列宽可拖动
+  checkboxConfig: { checkField: '_CHECKED_' }, // 列宽可拖动
   scrollY: { enabled: true, gt: 0, oSize: 4 }, // 默认启用虚拟滚动
   sortConfig: { remote: true, trigger: 'cell', orders: ['desc', 'asc', 'null'] }, // 默认远程排序
   rowConfig: {

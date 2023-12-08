@@ -1,7 +1,7 @@
 # Button 按钮组件
 
 - 针对按钮的权限组件
-- 继承el-button组件的属性和事件
+- 继承el-button组件的属性、事件、插槽
 
 ## Attributes
 
@@ -9,8 +9,11 @@
 | --- | --- | --- | --- | 
 | auth | 绑定值，必须与权限路径一致 |string |—|
 
-## 按钮
+## Slots
+继承el-button
+
+## 使用
 
 ```js
-<VButton auth='/pms/order/add'>按钮</VButton>
+<VButton auth='/pms/order/add'>权限按钮</VButton>
 ```

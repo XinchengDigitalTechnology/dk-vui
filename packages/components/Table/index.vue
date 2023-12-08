@@ -1,4 +1,4 @@
-<script lang="jsx" setup name="VTable">
+<script lang="jsx" setup>
 import XEUtils from 'xe-utils'
 import { gridConfig } from "./config";
 import { ArrowUpBold } from '@element-plus/icons-vue'
@@ -106,7 +106,11 @@ if (qr) {
         return res
       }
       pager.total = XEUtils.get(res, props.total)
-      return XEUtils.get(res, props.result)
+      const data = XEUtils.get(res, props.result).map(d => {
+        d._CHECKED_ = false
+        return d
+      })
+      return data
     }).catch(() => [])
   }
 }
@@ -173,7 +177,7 @@ const activating = ref(false)
 const headerResize = async ({ width, height }) => {
   if (!scrollHideForm) return
   headerHeight.value = height
-  if(activating.value || !width) return
+  if (activating.value || !width) return
   offsetHeight.value = 0
   gridRef?.value.clearScroll()
   await 1

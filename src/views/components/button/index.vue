@@ -8,6 +8,7 @@ const content = ref(doc)
   <VPage edit>
     <div class="page">
       <Md v-model="content" view />
+      <VButton>权限按钮</VButton>
     </div>
   </VPage>
 </template>

@@ -5,7 +5,8 @@ const route = useRoute()
 
 const maps = {
   components: '组件',
-  directives: '指令'
+  directives: '指令',
+  api: 'API',
 }
 const menus = routes.reduce((acc, cur) => {
   let fullPath = cur.path

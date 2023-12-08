@@ -148,4 +148,102 @@ provide('updateTip', updateTip)
     line-height: 16px;
   }
 }
+
+:root {
+  --v-text--title-color: #666;
+  --v-text--content-color: #333;
+  --v-text--line-height: 1.4rem;
+}
+
+.v-text {
+  display: flex;
+  gap: 3px;
+
+  &-title {
+    color: var(--v-text--title-color);
+    white-space: nowrap;
+    line-height: var(--v-text--line-height);
+  }
+
+  &-content {
+    display: inline-block;
+    color: var(--v-text--content-color);
+    line-height: var(--v-text--line-height);
+    overflow: hidden;
+
+    &-wrapper {
+      display: flex;
+      gap: 3px;
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      white-space: pre-wrap;
+    }
+
+    &-wrap {
+      position: absolute;
+      left: 0;
+      top: 0;
+      white-space: pre-wrap;
+      z-index: -1;
+      opacity: 0;
+    }
+  }
+
+  .is--button,
+  .is--link {
+    cursor: pointer;
+    color: var(--el-color-primary);
+
+    &:hover {
+      color: var(--el-color-primary-light-3);
+    }
+
+    &.is--disabled {
+      opacity: .6;
+      cursor: no-drop;
+    }
+  }
+
+  .is--button {
+    user-select: none;
+  }
+
+  .is--link {
+    position: relative;
+
+    &:not(.is--disabled):hover {
+      &::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 0;
+        bottom: 0;
+        border-bottom: 1px solid var(--el-color-primary);
+      }
+    }
+  }
+
+  &-btns {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    opacity: 0;
+    transition: all 0.2s ease;
+    transform: translateX(-8px) scale(0.7);
+
+    i {
+      vertical-align: middle;
+    }
+  }
+
+  &:hover {
+    .v-text-btns {
+      cursor: pointer;
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+}
 </style>
