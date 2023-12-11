@@ -1,6 +1,6 @@
-## 内置功能
+# 内置功能
 
-#### 带条件搜索
+## 带条件搜索
 
 - 表格在请求数据时，如果游览器缓存存在 _table_form，则会把当前 _table_form 中的数据作为搜索条件消费，消费后清空该数据
 - 因此，只需要设置 _table_form，然后跳转对应页面既可
@@ -20,7 +20,37 @@ sessionStorage.setItem('_table_form', JSON.stringify({ tableForm }))
 router.push('/demand/plan')
 ```
 
+## 滚动隐藏搜索区域
+
+#### 全局配置 main.js
+
+```js
+app.use(DKVui, { scrollHideForm: true })
+```
+
+#### 单独配置
+
+```js
+tableOptions: {
+  scrollHideForm: true
+}
+```
+
+## getRoutes 组装路由方法
+
+#### router/index.js
+
+```js
+import DKVui from 'dk-vui'
+
+const routerFiles = import.meta.globEager(['../views/**/index.vue', '!**/components/**']) // 第二个参数为排除文件
+
+export const routes = DKVui.getRoutes(routerFiles, 'Pms') // 第二个参数为路由名称前缀，如 Pms
+```
+
 # Table API
+
+
 
 - ...
 <!-- - 基础页面为列表页，页面高度100%，溢出隐藏

@@ -73,11 +73,17 @@ const resetForm = () => {
   form.value = getSourceValue()
 }
 
+// 分页变化及搜索条件变化
+const isChange = ref(false)
+
 // 分页处理
 const { pageSize, pageNum } = merge.pagerConfig || {}
 const pager = reactive({ pageSize: pageSize || 20, pageNum: pageNum || 1, total: 0 })
 const pageChange = val => {
   const { type, currentPage, pageSize } = val
+  if (type === 'current') {
+    isChange.value = true
+  }
   pager.pageNum = type === 'size' ? 1 : currentPage // 分页大小变化重置分页
   pager.pageSize = pageSize
   gridRef?.value.commitProxy('query')
@@ -96,6 +102,13 @@ if (qr) {
     if (tableForm) {
       setForm(tableForm)
       sessionStorage.setItem('_table_form', '{}')
+    }
+    formChange.value = false
+    // 分页变化及搜索条件变化返回顶部
+    if (isChange.value) {
+      offsetHeight.value = 0
+      gridRef?.value.clearScroll()
+      isChange.value = false
     }
     // 表单数据及分页处理
     ags.form = getQueryForm()
@@ -121,6 +134,7 @@ watch(
   () => form.value,
   () => {
     formChange.value = true
+    isChange.value = true
   },
   {
     deep: true
@@ -136,7 +150,6 @@ const query = async () => {
     pager.pageNum = 1
   }
   gridRef?.value.commitProxy('query')
-  formChange.value = false
 }
 const resetAndQuery = () => {
   resetForm()
@@ -184,9 +197,9 @@ const headerResize = async ({ width, height }) => {
   contentHeight.value = contentRef?.value.offsetHeight
 }
 
-const tableResize = () => {
+const tableResize = ({ width }) => {
   if (!scrollHideForm) return
-  headerResize({ height: headerHeight.value })
+  headerResize({ width, height: headerHeight.value })
 }
 
 const tableLoad = ({ height }) => {
