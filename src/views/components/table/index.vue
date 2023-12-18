@@ -16,8 +16,8 @@
           end-placeholder="日期结束" style="max-width: 300px" />
         <VGroup>
           <el-select v-model="form.group.type" style="max-width: 100px">
-            <el-option label="组合1" value="group1"></el-option>
-            <el-option label="组合2" value="group2"></el-option>
+            <el-option label="组合1" :value="0"></el-option>
+            <el-option label="组合2" :value="1"></el-option>
           </el-select>
           <el-input v-model="form.group.value"></el-input>
         </VGroup>
@@ -77,7 +77,7 @@ const tableOptins = reactive({
     data: {
       base: '', // 基础类型
       date: { value: [], range: true, rangeKeys: ['start_time', 'end_time'] }, // 日期
-      group: { type: 'group1', value: '' }, // 组合
+      group: { type: 0, value: '' }, // 组合
       dateRange: { type: 'dateRange1', value: [], range: true }, // 组合+日期范围
       sizeRange: { type: 'sizeRange1' }, // 组合+范围
     }
@@ -165,8 +165,7 @@ const tableOptins = reactive({
     ajax: {
       // 接收 Promise
       query: ({ page, form }) => {
-        console.log('分页page', page)
-        console.log('提交后端的form: ', form)
+        console.log('提交后端的form: ', JSON.stringify(form, null, 2))
         return findPageList(page.pageNum, page.pageSize)
       }
     }

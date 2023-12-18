@@ -18,6 +18,7 @@ const form = ref(getSourceValue())
 const getForm = () => form.value
 const getQueryForm = () => {
   const searchForm = {}
+  const noNull = (val) => val || val === 0 // 非空值
   for (const key in form.value) {
     if (!key) continue
     const val = form.value[key];
@@ -26,36 +27,42 @@ const getQueryForm = () => {
       const { range, value } = val
       if (keys.includes('type')) { // 有type的特殊对象
         const { type, start, end } = val
-        if (!type) continue
+        if (!noNull(type)) continue
         // 处理结构为 { type: '', value: '' } 的对象
         if (keys.includes('value')) {
           // range代表值需要拆分成 { start, end }
           if (range && Array.isArray(value)) {
             const [s, e] = value || [undefined, undefined]
-            if (s || e) {
+            if (noNull(s) || noNull(e)) {
               searchForm[type] = { start: s, end: e }
             }
           } else {
-            value && (searchForm[type] = value)
+            if (noNull(value)) {
+              searchForm[type] = value
+            }
           }
         }
         // 处理结构为 { type: '', start: '', end: '' } 的对象
         if (keys.includes('start') && keys.includes('end')) {
-          (start || end) && (searchForm[type] = { start, end })
+          (noNull(start) || noNull(end)) && (searchForm[type] = { start, end })
         }
       } else { // 没有type的普通对象
         if (range && Array.isArray(value)) {
           // range代表值需要拆分成 { start_key, end_key }
           const [startKey, endKey] = val.rangeKeys // 自定义key
           const [s, e] = value || [undefined, undefined]
-          s && (searchForm[startKey || 'start_' + key] = s)
-          e && (searchForm[endKey || 'end_' + key] = e)
+          noNull(s) && (searchForm[startKey || 'start_' + key] = s)
+          noNull(e) && (searchForm[endKey || 'end_' + key] = e)
         } else {
-          val && (searchForm[key] = val)
+          if (noNull(val)) {
+            searchForm[key] = val
+          }
         }
       }
     } else { // 值为非对象
-      val && (searchForm[key] = val)
+      if (noNull(val)) {
+        searchForm[key] = val
+      }
     }
   }
   return searchForm
