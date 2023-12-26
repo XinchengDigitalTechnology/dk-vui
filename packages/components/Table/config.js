@@ -26,6 +26,7 @@ export const gridConfig = {
     pageSizes: [20, 50, 100, 200, 500]
   },
   proxyConfig: {
+    autoLoad: false,
     seq: true, // 启用动态序号代理（分页之后索引自动计算为当前页的起始序号）
     props: {
       result: 'data',
