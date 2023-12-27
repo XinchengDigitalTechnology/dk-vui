@@ -265,8 +265,8 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
     </div>
     <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
       <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="throttleScorll">
-        <template v-for="name in slots.filter(d => d !== 'form')" #[name]>
-          <slot :name="name"></slot>
+        <template v-for="name in slots.filter(d => d !== 'form')" #[name]="row">
+          <slot :name="name" v-bind="row"></slot>
         </template>
         <template #pager>
           <Pagination v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" :hidden="pageHidden"
