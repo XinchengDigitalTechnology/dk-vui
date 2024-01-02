@@ -12,7 +12,9 @@ import 'element-plus/dist/index.css'
 const app = createApp(App)
 app.use(VXETable)
 app.use(ElementPlus)
-app.use(DKVui, { scrollHideForm: true })
+app.use(DKVui, {
+  scrollHideForm: true, tableConfig: { size: 'small' }
+})
 app.use(router)
 
 app.mount('#app')

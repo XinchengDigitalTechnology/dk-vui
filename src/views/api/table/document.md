@@ -1,4 +1,93 @@
+# Table API
+
+## formConfig Attributes
+
+| 属性名 | 说明                                                 | 类型   | 默认值 |
+| ------ | ---------------------------------------------------- | ------ | ------ |
+| data   | 表单默认值                                           | object | -      |
+| save   | 有值则开启搜索条件保存功能，细节请看下方搜索条件保存功能 | string | ''     |
+| proxy  | 搜索功能接口及主键配置，远程保存搜索条件时需要配置                               | object | {}     |
+
+## formConfig proxy Attributes
+
+| 属性名  | 说明     | 类型                                                  | 默认值 |
+| ------- | -------- | ----------------------------------------------------- | ------ |
+| mainKey | 主键     | string                                                | -      |
+| query   | 查询方法 | function({ model_type })                              | -      |
+| save    | 保存方法 | function({ model_type, name, [mainKey], conditions }) | -      |
+| remove  | 删除方法 | function({ [mainKey] })                               | -      |
+
+## Table Exposes
+
+| Method        | 说明                         | 类型                   |
+| ------------- | ---------------------------- | ---------------------- |
+| getForm       | 获取原始查询条件             | function               |
+| getQueryForm  | 获取处理后(给后端)的查询条件 | function               |
+| setForm       | 设置原始查询条件             | function(object)       |
+| setFormField  | 单个设置原始查询条件         | function(field, value) |
+| resetForm     | 重置查询条件                 | function               |
+| query         | 表格查询方法                 | function               |
+| resetAndQuery | 重置查询条件并查询           | function               |
+| $table        | vxt-grid实例                 | object                 |
+
+[其他属性、方法、事件请参考vxetable](https://vxetable.cn/#/grid/api)
+
 # 内置功能
+
+
+## 搜索条件保存功能
+
+#### 本地存储，配置 formConfig.save 即可
+  
+```js
+{
+  tableOptions: {
+    formConfig: {
+      save: '/purchase/manage/process' // 必填，唯一
+    }
+  }
+}
+```
+
+#### 远程存储，需要配置 main.js
+
+```js
+import api from '@/api/tableForm'
+app.use(DKVui, {
+  tableConfig: {
+    formConfig: {
+      proxy: {
+        mainKey: 'sc_id', // 主键
+        query: ({ model_type }) => api.query({ model_type }),
+        // model_type 类型/ name 保存名称 / sc_id 主键 / conditions保存条件
+        save: ({ model_type, name, sc_id, conditions }) => api.save({ model_type, name, sc_id, conditions }),
+        remove: ({ sc_id }) => api.remove({ sc_id })
+      },
+      ...
+    }
+  }
+})
+```
+
+## 高级搜索功能
+
+#### 使用插槽 high_form，自动开启高级搜索功能
+
+```html
+<VTable ref="tableRef" v-bind="tableOptins">
+  <template #high_form="{form}">
+    <el-form>
+      <el-form-item label="高级搜索1">
+        <el-input v-model="form.highform1" placeholder="请输入" class="w-full" />
+      </el-form-item>
+      <el-form-item label="高级搜索2">
+        <el-input v-model="form.highform2" placeholder="请输入" class="w-full" />
+      </el-form-item>
+    </el-form>
+  </template>
+</VTable>
+```
+
 
 ## 带条件搜索
 
@@ -6,6 +95,7 @@
 - 因此，只需要设置 _table_form，然后跳转对应页面既可
 
 ```js
+// 目标页面
 tableOptions: {
   formConfig: {
     data: {
@@ -14,7 +104,7 @@ tableOptions: {
   }
 }
 
-// data格式与formConfig中的data一致
+// 需跳转页面，tableForm格式与目标页面formConfig中的data一致
 const tableForm = { input: { type: 'demand_no', value: '168168' } }
 sessionStorage.setItem('_table_form', JSON.stringify({ tableForm }))
 router.push('/demand/plan')
@@ -48,15 +138,23 @@ const routerFiles = import.meta.globEager(['../views/**/index.vue', '!**/compone
 export const routes = DKVui.getRoutes(routerFiles, 'Pms') // 第二个参数为路由名称前缀，如 Pms
 ```
 
-# Table API
-
-
-
-- ...
 <!-- - 基础页面为列表页，页面高度100%，溢出隐藏
 - edit为true时为编辑页，横向溢出隐藏，纵向溢出为自动
 - 编辑页保留滚动位置
 
+## Table Exposes
+
+| Method | 说明                                  | 类型    |
+| ------ | ------------------------------------- | ------- |
+| edit   | 是否为编辑页                          | boolean |
+| footer | 为编辑页时底部固定区域配置 { offset } | object  |
+
+## Table Events
+
+| 事件名 | 说明                                  | 类型    |
+| ------ | ------------------------------------- | ------- |
+| edit   | 是否为编辑页                          | boolean |
+| footer | 为编辑页时底部固定区域配置 { offset } | object  |
 ## Attributes
 
 | 属性名 | 说明                                  | 类型    | 默认值 |

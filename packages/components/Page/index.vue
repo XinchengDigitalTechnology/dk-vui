@@ -169,10 +169,9 @@ provide('updateTip', updateTip)
     overflow: hidden;
 
     &-wrapper {
-      display: flex;
+      display: inline-flex;
       gap: 3px;
       position: relative;
-      flex: 1;
       overflow: hidden;
       white-space: pre-wrap;
     }

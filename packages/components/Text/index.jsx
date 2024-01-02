@@ -4,7 +4,6 @@ import { ElMessage } from "element-plus"
 import { DocumentCopy } from "@element-plus/icons-vue"
 import { inject } from "vue"
 
-
 const VText = (props, { slots, emit, attrs }) => {
   const { value, title, type, line, copy, disabled } = props
   const lineNum = +line
@@ -56,22 +55,15 @@ const VText = (props, { slots, emit, attrs }) => {
     }
   }
 
-  // 点击事件
-  const handleClick = (e) => {
-    e.stopPropagation()
-    !disabled && type && emit('click')
-  }
-
   const hasSlot = slots.default && slots.default().filter(d => d.children).length
 
   return <div class='v-text'>
     {title ? <span class="v-text-title">{title}:</span> : ''}
     {
-      (!slots.default && !(value+'') || slots.default && !hasSlot) ? '-' : <div class="v-text-content-wrapper" style={{ maxHeight: lineNum * 24 + 'px' }} onMouseenter={mouseenter}
-        onMouseleave={mouseleave}>
+      (!slots.default && !(value + '') || slots.default && !hasSlot) ? '-' : <div class="v-text-content-wrapper" style={{ maxHeight: lineNum * 24 + 'px' }} onMouseenter={mouseenter}
+        onMouseleave={mouseleave} {...attrs}>
         {
-          hasSlot ? slots.default() : [<div class={`v-text-content ${type ? 'is--' + type : ''} ${disabled ? 'is--disabled' : ''}`} style={style}
-            onClick={handleClick}>{value}</div>,
+          hasSlot ? slots.default() : [<div class={`v-text-content ${type ? 'is--' + type : ''} ${disabled ? 'is--disabled' : ''}`} style={style}>{value}</div>,
           <div class="v-text-content-wrap">{value}</div>]
         }
         {/* 未溢出时的复制 */}
@@ -99,6 +91,8 @@ VText.props = {
   copy: { type: Boolean, default: false }, // 复制
   disabled: { type: Boolean, default: false }, // 禁用
 }
+
+VText.inheritAttrs = false
 
 VText.emit = ['click']
 

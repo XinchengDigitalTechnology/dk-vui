@@ -3,15 +3,16 @@ import XEUtils from 'xe-utils'
 import { gridConfig } from "./config";
 import { ArrowUpBold } from '@element-plus/icons-vue'
 import Pagination from './Pagination'
+import SaveForm from './SaveForm'
+import HighForm from './HighForm'
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
-
 // 搜索表单处理
 const merge = XEUtils.merge({}, gridConfig, useAttrs())
 const attrs = XEUtils.clone(Object.assign({}, merge, { pagerConfig: undefined }), true)
-const { data } = attrs.formConfig || {}
-const defaultValue = Object.assign({}, data)
+const { formConfig } = attrs
+const defaultValue = Object.assign({}, formConfig.data)
 const getSourceValue = () => XEUtils.clone(defaultValue, true)
 const form = ref(getSourceValue())
 // 设置表单方法
@@ -242,6 +243,8 @@ nextTick(() => {
   if (!loadData.value) query()
 })
 
+provide('table', { getForm, setForm, formConfig })
+
 // 暴露属性及方法
 defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, resetAndQuery, $table: gridRef })
 </script>
@@ -255,8 +258,14 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
             <slot name="form" v-bind="{ form }" />
             <div class="vx-table__form-handle">
               <slot name="form_handle">
+                <SaveForm v-if="formConfig.save" @query="query" />
                 <el-button type="primary" @click="query">查询</el-button>
                 <el-button @click="resetAndQuery">重置</el-button>
+                <template v-if="slots.includes('high_form')">
+                  <HighForm @query="query" @reset="resetAndQuery">
+                    <slot name="high_form" v-bind="{ form }" />
+                  </HighForm>
+                </template>
               </slot>
             </div>
           </div>
@@ -265,7 +274,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
     </div>
     <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
       <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="throttleScorll">
-        <template v-for="name in slots.filter(d => d !== 'form')" #[name]="row">
+        <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
           <slot :name="name" v-bind="row"></slot>
         </template>
         <template #pager>

@@ -8,6 +8,45 @@ export const gridConfig = {
   checkboxConfig: { checkField: '_CHECKED_' }, // 列宽可拖动
   scrollY: { enabled: true, gt: 0, oSize: 4 }, // 默认启用虚拟滚动
   sortConfig: { remote: true, trigger: 'cell', orders: ['desc', 'asc', 'null'] }, // 默认远程排序
+  formConfig: {
+    save: '/purchase/manage/plan', // 值存在则开启保存功能(值作为为保存的类型model_type)，必须唯一
+    proxy: {
+      mainKey: 'sc_id', // 主键
+      query: async (obj) => { // 查询方法
+        const { save } = obj.formConfig
+        if (!obj.formConfig.save) {
+          console.error('请配置 formConfig.save 字段')
+          return
+        }
+        const _table_form_save = JSON.parse(localStorage.getItem('DK_VUI_TABLE_FROM_SAVE'))
+        return {
+          data: _table_form_save && _table_form_save[save] || []
+        }
+      },
+      remove: async (obj) => { // 删除方法
+        if (!obj.formConfig.save) {
+          console.error('请配置 formConfig.save 字段')
+          return
+        }
+        const { sc_id, formConfig } = obj
+        const { save } = formConfig
+        const _table_form_save = JSON.parse(localStorage.getItem('DK_VUI_TABLE_FROM_SAVE'))
+        _table_form_save[save] = _table_form_save[save].filter(d => d.sc_id !== sc_id)
+        localStorage.setItem('DK_VUI_TABLE_FROM_SAVE', JSON.stringify(_table_form_save))
+      },
+      save: async (obj) => { // 保存方法
+        if (!obj.formConfig.save) {
+          console.error('请配置 formConfig.save 字段')
+          return
+        }
+        const { name, conditions, formConfig } = obj
+        const { save } = formConfig
+        const _table_form_save = JSON.parse(localStorage.getItem('DK_VUI_TABLE_FROM_SAVE')) || { [save]: [] }
+        _table_form_save[save].unshift({ name, sc_id: Date.now(), conditions })
+        localStorage.setItem('DK_VUI_TABLE_FROM_SAVE', JSON.stringify(_table_form_save))
+      }
+    }
+  },
   rowConfig: {
     height: 60,
     isHover: true

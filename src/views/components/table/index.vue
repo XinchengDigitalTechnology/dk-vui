@@ -39,6 +39,16 @@
           <el-input-number v-model="form.sizeRange.end" :controls="false" placeholder="最大值" />
         </VGroup>
       </template>
+      <template #high_form="{ form }">
+        <el-form>
+          <el-form-item label="高级搜索1">
+            <el-input v-model="form.highform1" placeholder="请输入" class="w-full" />
+          </el-form-item>
+          <el-form-item label="高级搜索2">
+            <el-input v-model="form.highform2" placeholder="请输入" class="w-full" />
+          </el-form-item>
+        </el-form>
+      </template>
       <template #toolbar_btns>
         <el-button type="primary" class="ml-auto" @click="create(tableRef)">新增</el-button>
         <el-button>批量编辑</el-button>
@@ -74,6 +84,7 @@ const findPageList = (pageNum, pageSize) => {
 const tableOptins = reactive({
   id: 'id',
   formConfig: {
+    save: '/purchase/manage/plan',
     data: {
       base: '', // 基础类型
       date: { value: [], range: true, rangeKeys: ['start_time', 'end_time'] }, // 日期
@@ -140,8 +151,8 @@ const tableOptins = reactive({
     {
       title: '链接', minWidth: 150, slots: {
         default: ({ row }) => <div>
-          <VText value='我是链接我是链接我是链接我是链接' type='link' />
-          <VText title='两行' value='我是链接我是链接我是链接我是链接' line={2} type='link' copy />
+          <VText value='我是链接我是链接我是链接我是链接' type='link' onClick={log} />
+          <VText title='两行' value='我是链接我是链接我是链接我是链接' line={2} type='link' copy onClick={log} />
         </div>
       }
     },
@@ -171,6 +182,11 @@ const tableOptins = reactive({
     }
   }
 })
+
+const log = () => {
+  console.log('点击')
+}
+
 const defaultProps = {
   children: 'children',
   label: 'label',
