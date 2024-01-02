@@ -9,7 +9,6 @@ export const gridConfig = {
   scrollY: { enabled: true, gt: 0, oSize: 4 }, // 默认启用虚拟滚动
   sortConfig: { remote: true, trigger: 'cell', orders: ['desc', 'asc', 'null'] }, // 默认远程排序
   formConfig: {
-    save: '/purchase/manage/plan', // 值存在则开启保存功能(值作为为保存的类型model_type)，必须唯一
     proxy: {
       mainKey: 'sc_id', // 主键
       query: async (obj) => { // 查询方法
