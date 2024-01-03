@@ -9,7 +9,7 @@ import HighForm from './HighForm'
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
 // 搜索表单处理
-const merge = XEUtils.merge({}, gridConfig, useAttrs())
+const merge = XEUtils.merge({}, XEUtils.clone(gridConfig, true), useAttrs())
 const attrs = XEUtils.clone(Object.assign({}, merge, { pagerConfig: undefined }), true)
 const { formConfig } = attrs
 const defaultValue = Object.assign({}, formConfig.data)
