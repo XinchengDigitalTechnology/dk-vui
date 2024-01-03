@@ -16,8 +16,9 @@ const install = (app, options) => {
     if (options.scrollHideForm === true) {
       gridConfig.scrollHideForm = true
     }
-    if(options.tableConfig) {
-      XEUtils.merge(gridConfig, options.tableConfig)
+    const { proxy } = options.tableConfig?.formConfig || {}
+    if (proxy) {
+      gridConfig.formConfig.proxy = proxy
     }
   }
 }

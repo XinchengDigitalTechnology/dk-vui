@@ -7,7 +7,7 @@ const props = defineProps({
 
 const table = inject('table')
 const { proxy } = table.formConfig
-const mainKey = proxy.mainKey
+const mainKey = proxy
 if(!mainKey) {
   console.error('formConfig.proxy.mainKey 不能为空')
 }
@@ -19,6 +19,10 @@ let loadings = reactive({})
 const list = ref([])
 
 const query = () => {
+  if(!proxy.query) {
+    console.error('formConfig.proxy.query 不能为空')
+    return
+  }
   return proxy.query({ model_type, formConfig: table.formConfig }).then(res => {
     list.value = res.data.map(d => ((d.type = ''), d))
   })
@@ -33,6 +37,10 @@ const visibleChange = async (val) => {
 }
 
 const open = () => {
+  if(!proxy.save) {
+    console.error('formConfig.proxy.save 不能为空')
+    return
+  }
   ElMessageBox.prompt('搜索条件名称', '保存搜索条件', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -54,6 +62,10 @@ const open = () => {
 
 const remove = (id, i) => {
   loadings['remove' + i] = true
+  if(!proxy.remove) {
+    console.error('formConfig.proxy.remove 不能为空')
+    return
+  }
   proxy.remove({ [mainKey]: id, formConfig: table.formConfig }).then(res => {
     list.value = list.value.filter(d => d[mainKey] !== id)
   }).finally(() => {

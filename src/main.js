@@ -13,7 +13,7 @@ const app = createApp(App)
 app.use(VXETable)
 app.use(ElementPlus)
 app.use(DKVui, {
-  scrollHideForm: true, tableConfig: { size: 'small' }
+  scrollHideForm: true, tableConfig: {}
 })
 app.use(router)
 
