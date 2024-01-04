@@ -10,6 +10,15 @@ import HighForm from './HighForm'
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
 // 搜索表单处理
 const merge = XEUtils.merge({}, XEUtils.clone(gridConfig, true), useAttrs())
+// column不传slots时，默认用 VText组件渲染，支持设置 line 参数
+merge.columns = merge.columns.map(d => {
+  const { type, field, slots, line } = d
+  if (!type && !slots) {
+    d.slots = {}
+    d.slots.default = ({ row }) => <VText value={row[field]} line={line} />
+  }
+  return d
+})
 const attrs = XEUtils.clone(Object.assign({}, merge, { pagerConfig: undefined }), true)
 const { formConfig } = attrs
 const defaultValue = Object.assign({}, formConfig.data)

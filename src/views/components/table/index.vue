@@ -109,11 +109,7 @@ const tableOptins = reactive({
       }
     },
     {
-      title: '默认值', minWidth: 150, slots: {
-        default: ({ row }) => <div>
-          <VText value='' />
-        </div>
-      }
+      title: '默认值', minWidth: 150
     },
     {
       title: '一行溢出', minWidth: 140, slots: {

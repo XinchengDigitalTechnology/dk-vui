@@ -3,7 +3,7 @@ export const gridConfig = {
   height: 'auto',
   scrollHideForm: false, // 滚动时是否收起搜索区域
   showOverflow: 'tooltip', // 单元格溢出显示 tooltip
-  showHeaderOverflow: 'tooltip', // 表头溢出显示 tooltip
+  showHeaderOverflow: false, // 表头溢出
   columnConfig: { resizable: true }, // 列宽可拖动
   checkboxConfig: { checkField: '_CHECKED_' }, // 列宽可拖动
   scrollY: { enabled: true, gt: 0, oSize: 4 }, // 默认启用虚拟滚动
@@ -47,7 +47,7 @@ export const gridConfig = {
     }
   },
   rowConfig: {
-    height: 60,
+    height: 52,
     isHover: true
   },
   tooltipConfig: {
