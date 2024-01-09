@@ -40,13 +40,18 @@
         </VGroup>
       </template>
       <template #high_form="{ form }">
-        <el-form>
-          <el-form-item label="高级搜索1">
-            <el-input v-model="form.highform1" placeholder="请输入" class="w-full" />
-          </el-form-item>
-          <el-form-item label="高级搜索2">
-            <el-input v-model="form.highform2" placeholder="请输入" class="w-full" />
-          </el-form-item>
+        <el-form label-position="top">
+          <div style="display: grid;grid-template-columns: repeat(3, minmax(0, 1fr));column-gap: 0.75rem;">
+            <el-form-item label="高级搜索1">
+              <el-input v-model="form.highform1" placeholder="请输入" class="w-full" />
+            </el-form-item>
+            <el-form-item label="高级搜索2">
+              <el-input v-model="form.highform2" placeholder="请输入" class="w-full" />
+            </el-form-item>
+            <el-form-item label="高级搜索3">
+              <el-input v-model="form.highform3" placeholder="请输入" class="w-full" />
+            </el-form-item>
+          </div>
         </el-form>
       </template>
       <template #toolbar_btns>

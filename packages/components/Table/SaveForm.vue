@@ -7,8 +7,8 @@ const props = defineProps({
 
 const table = inject('table')
 const { proxy } = table.formConfig
-const mainKey = proxy
-if(!mainKey) {
+const { mainKey } = proxy
+if (!mainKey) {
   console.error('formConfig.proxy.mainKey 不能为空')
 }
 
@@ -19,7 +19,7 @@ let loadings = reactive({})
 const list = ref([])
 
 const query = () => {
-  if(!proxy.query) {
+  if (!proxy.query) {
     console.error('formConfig.proxy.query 不能为空')
     return
   }
@@ -37,7 +37,7 @@ const visibleChange = async (val) => {
 }
 
 const open = () => {
-  if(!proxy.save) {
+  if (!proxy.save) {
     console.error('formConfig.proxy.save 不能为空')
     return
   }
@@ -62,7 +62,7 @@ const open = () => {
 
 const remove = (id, i) => {
   loadings['remove' + i] = true
-  if(!proxy.remove) {
+  if (!proxy.remove) {
     console.error('formConfig.proxy.remove 不能为空')
     return
   }
@@ -97,8 +97,7 @@ defineExpose({ open })
         <el-input v-if="list.length" v-model="filterValue" placeholder="搜索" clearable :prefix-icon="Search" />
         <div v-if="!filterList.length" class="v-save-search-not">无数据</div>
         <el-scrollbar max-height="520px">
-          <div v-for="(d, i) in filterList" :key="i"
-            class="v-save-search-item">
+          <div v-for="(d, i) in filterList" :key="i" class="v-save-search-item">
             <div class="v-save-search-text" @mouseenter="d.type = 'button'" @mouseleave="d.type = ''">
               <VText :value="d.name" :type="d.type || ''" @click="check(d.conditions)" />
             </div>
@@ -114,7 +113,8 @@ defineExpose({ open })
 <style lang="scss">
 .v-save-search {
   width: 160px;
-  &-not{
+
+  &-not {
     line-height: 32px;
     text-align: center;
     color: #888;
