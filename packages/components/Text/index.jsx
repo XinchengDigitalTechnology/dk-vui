@@ -7,7 +7,6 @@ import GlobalConfig from "~/packages/config"
 
 const VText = (props, { slots, emit, attrs }) => {
   const { value, title, titlePosition, type, line, copy, disabled, empty } = props
-  console.log('copy', copy)
   const lineNum = +line
 
   // 样式

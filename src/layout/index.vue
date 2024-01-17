@@ -31,8 +31,8 @@ const list = routes.reduce((acc, cur) => {
   }
   return acc
 }, [])
-console.log('list', list)
 const menus = ['/index','/public','/components','/directives', '/api'].map(d => list.find(l => l.path === d))
+console.log('menus', menus)
 </script>
 
 <template>
