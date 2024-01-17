@@ -1,3 +1,4 @@
+import GlobalConfig from './config'
 import XEUtils from 'xe-utils'
 
 /**
@@ -51,4 +52,18 @@ export const getRoutes = (routerFiles, baseName = '') => {
     }
   }
   return routeList
+}
+
+export const setup = (options) => {
+  // 参数配置
+  if (options) {
+    if (options.scrollHideForm === true) {
+      GlobalConfig.table.scrollHideForm = true
+    }
+    const { proxy } = options.tableConfig?.formConfig || {}
+    if (proxy) {
+      GlobalConfig.table.formConfig.proxy = proxy
+    }
+  }
+  XEUtils.merge(GlobalConfig, options)
 }

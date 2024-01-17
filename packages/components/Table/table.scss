@@ -7,7 +7,7 @@
   flex-direction: column;
   position: relative;
 
-  &__header{
+  &__header {
     overflow: hidden;
   }
 
@@ -71,7 +71,7 @@
     margin-bottom: 10px;
   }
 
-  &--to-top{
+  &--to-top {
     position: absolute;
     width: 30px;
     height: 30px;
@@ -85,10 +85,12 @@
     cursor: pointer;
     transition: all .2s;
     opacity: .4;
-    &:hover{
+
+    &:hover {
       opacity: .8;
     }
-    .el-icon{
+
+    .el-icon {
       color: #fff;
     }
   }
@@ -110,7 +112,7 @@
     }
   }
 
-  .vxe-cell{
+  .vxe-cell {
     line-height: 1.3rem;
   }
 }

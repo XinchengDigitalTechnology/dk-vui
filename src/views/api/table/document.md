@@ -59,10 +59,23 @@ column.item不传slots时，默认用 VText 组件渲染，支持设置 line 参
 
 #### 远程存储，需要配置 main.js
 
+vue文件
+```js
+{
+  tableOptions: {
+    formConfig: {
+      save: '/purchase/manage/process' // 必填，唯一，如果后端有定义则使用后端提供的值
+    }
+  }
+}
+```
+
+main.js
 ```js
 import api from '@/api/tableForm'
-app.use(DKVui, {
-  tableConfig: {
+app.use(DKVui)
+DKVui.setup({
+  table: {
     formConfig: {
       proxy: {
         mainKey: 'sc_id', // 主键
@@ -70,8 +83,7 @@ app.use(DKVui, {
         // model_type 类型/ name 保存名称 / sc_id 主键 / conditions保存条件
         save: ({ model_type, name, sc_id, conditions }) => api.save({ model_type, name, sc_id, conditions }),
         remove: ({ sc_id }) => api.remove({ sc_id })
-      },
-      ...
+      }
     }
   }
 })
@@ -128,7 +140,12 @@ router.push('/demand/plan')
 #### 全局配置 main.js
 
 ```js
-app.use(DKVui, { scrollHideForm: true })
+app.use(DKVui)
+DKVui.setup({
+  table: {
+    scrollHideForm: true
+  }
+})
 ```
 
 #### 单独配置

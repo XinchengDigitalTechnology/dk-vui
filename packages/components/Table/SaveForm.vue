@@ -3,6 +3,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Search, Loading, Delete } from '@element-plus/icons-vue'
 
 const props = defineProps({
+  placement: { type: String, default: 'bottom' },
 })
 
 const table = inject('table')
@@ -86,7 +87,7 @@ defineExpose({ open })
 </script>
 
 <template>
-  <el-dropdown ref="downRef" split-button placement="bottom" trigger="click" type="primary" :hide-on-click="false"
+  <el-dropdown ref="downRef" split-button :placement="placement" trigger="click" type="primary" :hide-on-click="false"
     popper-class="v-save-search" @click="open" @visible-change="visibleChange">
     <el-icon v-show="loadings.save">
       <Loading />
@@ -94,7 +95,8 @@ defineExpose({ open })
     保存
     <template #dropdown>
       <div>
-        <el-input v-if="list.length" v-model="filterValue" placeholder="搜索" clearable :prefix-icon="Search" />
+        <el-input v-if="placement === 'bottom' && list.length" v-model="filterValue" placeholder="搜索" clearable
+          :prefix-icon="Search" />
         <div v-if="!filterList.length" class="v-save-search-not">无数据</div>
         <el-scrollbar max-height="520px">
           <div v-for="(d, i) in filterList" :key="i" class="v-save-search-item">
@@ -105,6 +107,8 @@ defineExpose({ open })
               @click.stop="remove(d[mainKey], i)"></el-button>
           </div>
         </el-scrollbar>
+        <el-input v-if="placement === 'top' && list.length" v-model="filterValue" placeholder="搜索" clearable
+          :prefix-icon="Search" />
       </div>
     </template>
   </el-dropdown>

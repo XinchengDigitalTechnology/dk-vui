@@ -1,6 +1,6 @@
 <script lang="jsx" setup>
 import XEUtils from 'xe-utils'
-import { gridConfig } from "./config";
+import GlobalConfig from "~/packages/config"
 import { ArrowUpBold } from '@element-plus/icons-vue'
 import Pagination from './Pagination'
 import SaveForm from './SaveForm'
@@ -9,13 +9,13 @@ import HighForm from './HighForm'
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
 // 搜索表单处理
-const merge = XEUtils.merge({}, XEUtils.clone(gridConfig, true), useAttrs())
+const merge = XEUtils.merge({}, XEUtils.clone(GlobalConfig.table, true), useAttrs())
 // column不传slots时，默认用 VText组件渲染，支持设置 line 参数
 merge.columns = merge.columns.map(d => {
-  const { type, field, slots, line } = d
+  const { type, field, slots, line = 1, copy = true } = d
   if (!type && !slots) {
     d.slots = {}
-    d.slots.default = ({ row }) => <VText value={row[field]} line={line} />
+    d.slots.default = ({ row }) => <VText value={row[field]} line={line} copy={copy} />
   }
   return d
 })

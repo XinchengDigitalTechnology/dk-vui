@@ -7,8 +7,9 @@ const maps = {
   components: '组件',
   directives: '指令',
   api: 'API',
+  public: '全局参数',
 }
-const menus = routes.reduce((acc, cur) => {
+const list = routes.reduce((acc, cur) => {
   let fullPath = cur.path
   const paths = fullPath.substring(1).split('/')
   const [parant, child] = paths
@@ -30,7 +31,8 @@ const menus = routes.reduce((acc, cur) => {
   }
   return acc
 }, [])
-console.log('menus', menus)
+console.log('list', list)
+const menus = ['/index','/public','/components','/directives', '/api'].map(d => list.find(l => l.path === d))
 </script>
 
 <template>

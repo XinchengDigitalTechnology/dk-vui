@@ -49,7 +49,8 @@ provide('updateTip', updateTip)
 </script>
 
 <template>
-  <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" v-dom-resize="resize" @scroll="handleScroll">
+  <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" v-dom-resize="resize"
+    @scroll="handleScroll">
     <template v-if="edit">
       <slot />
       <template v-if="slots.includes('footer')">
@@ -157,6 +158,15 @@ provide('updateTip', updateTip)
 .v-text {
   display: flex;
   gap: 3px;
+
+  &-wrapper {
+    display: flex;
+    gap: 3px;
+    width: 100%;
+    &.is--wrap{
+      flex-direction: column;
+    }
+  }
 
   &-title {
     color: var(--v-text--title-color);

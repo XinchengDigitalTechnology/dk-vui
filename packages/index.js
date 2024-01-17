@@ -1,29 +1,23 @@
 import component from './components'
 import directive from './directives'
-import { getRoutes } from './utils'
-import { gridConfig } from './components/Table/config'
-import XEUtils from 'xe-utils'
+import { getRoutes, setup } from './utils'
+import { updateSelectOptions } from './components/Select/store'
+
 
 const install = (app, options) => {
+  // 全局参数
+  setup(options)
+
   // 指令
   directive(app)
 
   // 组件
   component(app)
-
-  // 参数配置
-  if (options) {
-    if (options.scrollHideForm === true) {
-      gridConfig.scrollHideForm = true
-    }
-    const { proxy } = options.tableConfig?.formConfig || {}
-    if (proxy) {
-      gridConfig.formConfig.proxy = proxy
-    }
-  }
 }
 
 export default {
   install,
-  getRoutes
+  getRoutes,
+  setup,
+  updateSelectOptions
 }

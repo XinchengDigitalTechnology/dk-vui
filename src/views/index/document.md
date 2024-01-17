@@ -4,9 +4,16 @@
 
 ## 版本升级
 
+- 2024-1-15 v0.0.53
+1. VText 组件增加参数 title-position (left/top)
+2. 增加下拉框组件 VSelect
+3. 增加全局方法 setup(设置全局参数)
+4. 增加全局方法 updateSelectOptions(动态更新options)
+5. columns.item支持设置VText组件的copy参数
+
 - 2024-1-4 v0.0.52
 1. 行高默认值改为52px
-2. column.item不传slots时，默认用 VText 组件渲染，自动溢出隐藏，支持设置 line 参数
+2. columns.item不传slots时，默认用 VText 组件渲染，自动溢出隐藏，支持设置 line 参数
 
 - 2024-1-2 v0.0.48
 1. 增加搜索条件保存功能
