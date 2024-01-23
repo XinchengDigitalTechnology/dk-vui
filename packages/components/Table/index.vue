@@ -236,8 +236,13 @@ if (!_table_form) sessionStorage.setItem('_table_form', '{}')
 let atimer = null
 onActivated(() => {
   const { tableForm } = JSON.parse(sessionStorage.getItem('_table_form') || '{}')
+  const handleQuery = sessionStorage.getItem('DK_VUI_TABLE_QUERY')
   if (tableForm) {
     query()
+  }
+  if (handleQuery) {
+    query()
+    sessionStorage.removeItem('DK_VUI_TABLE_QUERY')
   }
   activating.value = true
   clearTimeout(atimer)
