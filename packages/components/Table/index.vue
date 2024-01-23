@@ -12,7 +12,7 @@ let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_
 const merge = XEUtils.merge({}, XEUtils.clone(GlobalConfig.table, true), useAttrs())
 // column不传slots时，默认用 VText组件渲染，支持设置 line 参数
 merge.columns = merge.columns.map(d => {
-  const { type, field, slots, line = 1, copy = true } = d
+  const { type, field, slots, line = 1, copy = false } = d
   if (!type && !slots) {
     d.slots = {}
     d.slots.default = ({ row }) => <VText value={row[field]} line={line} copy={copy} />
