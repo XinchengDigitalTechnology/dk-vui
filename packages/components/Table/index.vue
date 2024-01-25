@@ -94,6 +94,7 @@ const resetForm = () => {
 const isChange = ref(false)
 
 // 分页处理
+const gridRef = ref()
 const { pageSize, pageNum } = merge.pagerConfig || {}
 const pager = reactive({ pageSize: pageSize || 20, pageNum: pageNum || 1, total: 0 })
 const pageChange = val => {
@@ -103,7 +104,12 @@ const pageChange = val => {
   }
   pager.pageNum = type === 'size' ? 1 : currentPage // 分页大小变化重置分页
   pager.pageSize = pageSize
-  gridRef?.value.commitProxy('query')
+  gridRef?.value?.commitProxy('query')
+}
+
+// 设置分页方法
+const setPager = ({ pageNum, pageSize } = {}) => {
+  pageChange({ type: pageNum ? 'current' : 'size', currentPage: pageNum || pager.pageNum, pageSize: pageSize || pager.pageSize })
 }
 
 // 代理query请求，把form参数修改为当前组件form
@@ -158,7 +164,6 @@ watch(
   }
 )
 
-const gridRef = ref()
 // 查询方法
 const query = async () => {
   await 1
@@ -260,7 +265,7 @@ nextTick(() => {
 provide('table', { getForm, setForm, formConfig })
 
 // 暴露属性及方法
-defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, resetAndQuery, $table: gridRef })
+defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, resetAndQuery, setPager, $table: gridRef })
 </script>
 
 <template>

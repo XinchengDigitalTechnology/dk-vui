@@ -158,6 +158,7 @@ provide('updateTip', updateTip)
 .v-text {
   display: flex;
   gap: 3px;
+  width: 100%;
 
   &-wrapper {
     display: flex;

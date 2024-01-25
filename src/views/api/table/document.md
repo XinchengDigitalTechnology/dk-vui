@@ -27,16 +27,17 @@ column.item不传slots时，默认用 VText 组件渲染，支持设置 line 参
 
 ## Table Exposes
 
-| Method        | 说明                         | 类型                   |
-| ------------- | ---------------------------- | ---------------------- |
-| getForm       | 获取原始查询条件             | function               |
-| getQueryForm  | 获取处理后(给后端)的查询条件 | function               |
-| setForm       | 设置原始查询条件             | function(object)       |
-| setFormField  | 单个设置原始查询条件         | function(field, value) |
-| resetForm     | 重置查询条件                 | function               |
-| query         | 表格查询方法                 | function               |
-| resetAndQuery | 重置查询条件并查询           | function               |
-| $table        | vxt-grid实例                 | object                 |
+| Method        | 说明                         | 类型                          |
+| ------------- | ---------------------------- | ----------------------------- |
+| getForm       | 获取原始查询条件             | function                      |
+| getQueryForm  | 获取处理后(给后端)的查询条件 | function                      |
+| setForm       | 设置原始查询条件             | function(object)              |
+| setFormField  | 单个设置原始查询条件         | function(field, value)        |
+| resetForm     | 重置查询条件                 | function                      |
+| query         | 表格查询方法                 | function                      |
+| resetAndQuery | 重置查询条件并查询           | function                      |
+| setPager      | 设置分页参数并查询                 | function({pageNum, pageSize}) |
+| $table        | vxt-grid实例                 | object                        |
 
 [其他属性、方法、事件请参考vxetable](https://vxetable.cn/#/grid/api)
 

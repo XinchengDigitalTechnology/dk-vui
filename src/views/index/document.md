@@ -4,6 +4,9 @@
 
 ## 版本升级
 
+- 2024-1-25 v0.1.2
+1. table 组件增加 setPager 方法
+
 - 2024-1-15 v0.0.53
 1. VText 组件增加参数 title-position (left/top)
 2. 增加下拉框组件 VSelect

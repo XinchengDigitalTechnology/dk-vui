@@ -65,7 +65,7 @@ const VText = (props, { slots, emit, attrs }) => {
         (!slots.default && !(value + '') || slots.default && !hasSlot) ? empty : <div class="v-text-content-wrapper" style={{ maxHeight: lineNum * 24 + 'px' }} onMouseenter={mouseenter}
           onMouseleave={mouseleave} {...attrs}>
           {
-            hasSlot ? slots.default() : [<div class={`v-text-content ${type ? 'is--' + type : ''} ${disabled ? 'is--disabled' : ''}`} style={style}>{value}</div>,
+            hasSlot ? slots.default() : [<div class={`v-text-content${type ? ' is--' + type : ''}${disabled ? ' is--disabled' : ''}`} style={style}>{value}</div>,
             <div class="v-text-content-wrap">{value}</div>]
           }
           {/* 未溢出时的复制 */}
