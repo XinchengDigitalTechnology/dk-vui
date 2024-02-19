@@ -5,6 +5,7 @@ import { ArrowUpBold } from '@element-plus/icons-vue'
 import Pagination from './Pagination'
 import SaveForm from './SaveForm'
 import HighForm from './HighForm'
+import HScroll from './HScroll.vue'
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
@@ -97,19 +98,18 @@ const isChange = ref(false)
 const gridRef = ref()
 const { pageSize, pageNum } = merge.pagerConfig || {}
 const pager = reactive({ pageSize: pageSize || 20, pageNum: pageNum || 1, total: 0 })
-const pageChange = val => {
-  const { type, currentPage, pageSize } = val
+const pageChange = ({ type, pageNum, pageSize }) => {
   if (type === 'current') {
     isChange.value = true
   }
-  pager.pageNum = type === 'size' ? 1 : currentPage // 分页大小变化重置分页
+  pager.pageNum = type === 'size' ? 1 : pageNum // 分页大小变化重置分页
   pager.pageSize = pageSize
   gridRef?.value?.commitProxy('query')
 }
 
 // 设置分页方法
 const setPager = ({ pageNum, pageSize } = {}) => {
-  pageChange({ type: pageNum ? 'current' : 'size', currentPage: pageNum || pager.pageNum, pageSize: pageSize || pager.pageSize })
+  pageChange({ type: pageNum ? 'current' : 'size', pageNum: pageNum || pager.pageNum, pageSize: pageSize || pager.pageSize })
 }
 
 // 代理query请求，把form参数修改为当前组件form
@@ -184,10 +184,11 @@ const contentRef = ref()
 const contentHeight = ref()
 const offsetHeight = ref(0)
 const { scrollHideForm } = attrs
-const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + offsetHeight.value - 4 : attrs.height)
+const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + offsetHeight.value : attrs.height)
 
 let timer = null
-const handleScroll = async ({ scrollTop, isY }) => {
+const handleScroll = async ({ scrollLeft, scrollTop, isY }) => {
+  bodyRect.scrollLeft = scrollLeft
   if (!scrollHideForm || !headerHeight.value) return
   if (isY) {
     offsetHeight.value = Math.min(scrollTop, headerHeight.value)
@@ -206,7 +207,12 @@ const handleScroll = async ({ scrollTop, isY }) => {
     clearTimeout(timer)
   }, 50)
 }
-const throttleScorll = XEUtils.throttle(handleScroll, 10)
+// const throttleScorll = XEUtils.throttle(handleScroll, 10)
+
+// 横线滚动
+const handleScrollX = (scrollLeft) => {
+  gridRef.value.scrollTo(scrollLeft)
+}
 
 const activating = ref(false)
 const headerResize = async ({ width, height }) => {
@@ -219,9 +225,17 @@ const headerResize = async ({ width, height }) => {
   contentHeight.value = contentRef?.value.offsetHeight
 }
 
+const tableRef = ref()
+const bodyRect = reactive({ ffsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
 const tableResize = ({ width }) => {
   if (!scrollHideForm) return
   headerResize({ width, height: headerHeight.value })
+  const tableBody = tableRef.value.querySelector('.vxe-table--body-wrapper')
+  const { scrollWidth, clientWidth, scrollHeight, clientHeight } = tableBody
+  console.log('scrollHeight, clientHeight', scrollHeight, clientHeight)
+  bodyRect.scrollWidth = scrollWidth
+  bodyRect.clientWidth = clientWidth
+  console.log('bodyRect', bodyRect)
 }
 
 const tableLoad = ({ height }) => {
@@ -269,7 +283,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
 </script>
 
 <template>
-  <div class="vx-table" v-dom-resize="tableResize">
+  <div ref="tableRef" class="vx-table" v-dom-resize="tableResize">
     <div class="vx-table__header" :style="{ height: `${offsetHeight ? (headerHeight - offsetHeight) + 'px' : 'auto'}` }">
       <div v-dom-resize="headerResize" :style="{ transform: `translateY(${-offsetHeight + 'px'})` }">
         <div v-if="slots.includes('form')" class="vx-table__form">
@@ -277,9 +291,9 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
             <slot name="form" v-bind="{ form }" />
             <div class="vx-table__form-handle">
               <slot name="form_handle">
-                <SaveForm v-if="formConfig.save" @query="query" />
                 <el-button type="primary" @click="query">查询</el-button>
                 <el-button @click="resetAndQuery">重置</el-button>
+                <SaveForm v-if="formConfig.save" @query="query" />
                 <template v-if="slots.includes('high_form')">
                   <HighForm @query="query" @reset="resetAndQuery">
                     <slot name="high_form" v-bind="{ form }" />
@@ -292,13 +306,16 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
       </div>
     </div>
     <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
-      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="throttleScorll">
+      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="handleScroll">
         <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
           <slot :name="name" v-bind="row"></slot>
         </template>
         <template #pager>
-          <Pagination v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" :hidden="pageHidden"
-            v-model:pageNum="pager.pageNum" :total="pager.total" @change="pageChange" />
+          <div class="v-pagination-container">
+            <Pagination v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" :hidden="pageHidden"
+              v-model:pageNum="pager.pageNum" :total="pager.total" @change="pageChange" />
+            <HScroll v-if="merge.crossSlip" :bodyRect="bodyRect" @scroll="handleScrollX" />
+          </div>
         </template>
       </vxe-grid>
       <div v-if="offsetHeight && offsetHeight === headerHeight" class="vx-table--to-top" @click="toTop">

@@ -1,10 +1,3 @@
-<template>
-  <div :class="{ 'hidden': hidden }" class="v-pagination-container">
-    <vxe-pager :background="background" v-model:current-page="pageNum" v-model:page-size="pageSize" :layouts="layouts"
-      :page-sizes="pageSizes" :pager-count="pagerCount" :total="total" @page-change="pageChange" />
-  </div>
-</template>
-
 <script setup>
 const props = defineProps({
   total: {
@@ -38,10 +31,6 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
-  hidden: {
-    type: Boolean,
-    default: false
-  }
 })
 
 const emit = defineEmits(['update:pageNum', 'update:pageSize', 'change']);
@@ -61,25 +50,21 @@ const pageSize = computed({
     emit('update:pageSize', val)
   }
 })
-function pageChange(val) {
-  emit('change', val)
+function pageChange({ type, currentPage: pageNum, pageSize, $event }) {
+  emit('change', { type, pageNum, pageSize, $event })
 }
 
 </script>
 
-<style lang="scss" scoped>
-.v-pagination-container {
-  display: flex;
-  align-items: center;
-  justify-content: right;
-  height: 40px;
-  background: #fff;
-  .vxe-pager{
-    height: 40px;
-  }
-}
+<template>
+  <vxe-pager :background="background" v-model:current-page="pageNum" v-model:page-size="pageSize" :layouts="layouts"
+    :page-sizes="pageSizes" :pager-count="pagerCount" :total="total" @page-change="pageChange" />
+</template>
 
-.v-pagination-container.hidden {
-  display: none;
+<style lang="scss" scoped>
+.vxe-pager {
+  position: relative;
+  height: 40px;
+  z-index: 0;
 }
 </style>

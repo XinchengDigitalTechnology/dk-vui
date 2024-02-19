@@ -95,7 +95,7 @@ defineExpose({ open })
     保存
     <template #dropdown>
       <div>
-        <el-input v-if="placement === 'bottom' && list.length" v-model="filterValue" placeholder="搜索" clearable
+        <el-input v-if="placement === 'bottom' && list.length > 10" v-model="filterValue" placeholder="搜索" clearable
           :prefix-icon="Search" />
         <div v-if="!filterList.length" class="v-save-search-not">无数据</div>
         <el-scrollbar max-height="520px">
@@ -107,7 +107,7 @@ defineExpose({ open })
               @click.stop="remove(d[mainKey], i)"></el-button>
           </div>
         </el-scrollbar>
-        <el-input v-if="placement === 'top' && list.length" v-model="filterValue" placeholder="搜索" clearable
+        <el-input v-if="placement === 'top' && list.length > 10" v-model="filterValue" placeholder="搜索" clearable
           :prefix-icon="Search" />
       </div>
     </template>
