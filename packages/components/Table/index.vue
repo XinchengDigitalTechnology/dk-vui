@@ -188,7 +188,7 @@ const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + of
 
 let timer = null
 const handleScroll = async ({ scrollLeft, scrollTop, isY }) => {
-  bodyRect.scrollLeft = scrollLeft
+  bodyRect.value.scrollLeft = scrollLeft
   if (!scrollHideForm || !headerHeight.value) return
   if (isY) {
     offsetHeight.value = Math.min(scrollTop, headerHeight.value)
@@ -226,16 +226,13 @@ const headerResize = async ({ width, height }) => {
 }
 
 const tableRef = ref()
-const bodyRect = reactive({ ffsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
+const bodyRect = ref({ ffsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
 const tableResize = ({ width }) => {
   if (!scrollHideForm) return
   headerResize({ width, height: headerHeight.value })
   const tableBody = tableRef.value.querySelector('.vxe-table--body-wrapper')
-  const { scrollWidth, clientWidth, scrollHeight, clientHeight } = tableBody
-  console.log('scrollHeight, clientHeight', scrollHeight, clientHeight)
-  bodyRect.scrollWidth = scrollWidth
-  bodyRect.clientWidth = clientWidth
-  console.log('bodyRect', bodyRect)
+  const { scrollWidth, clientWidth } = tableBody
+  bodyRect.value = { scrollWidth, clientWidth, mouseOffset: clientWidth > 900 ? 0 : Math.min(240, 900 - clientWidth) }
 }
 
 const tableLoad = ({ height }) => {

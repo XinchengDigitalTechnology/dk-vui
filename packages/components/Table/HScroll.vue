@@ -18,7 +18,9 @@ watch(
   () => props.bodyRect.scrollLeft,
   async (val) => {
     scrolling.value = true
-    scrollRef.value.scrollTop = val
+    if (scrollRef.value) {
+      scrollRef.value.scrollTop = val
+    }
     await 1
     scrolling.value = false
   }
@@ -27,7 +29,7 @@ watch(
 </script>
 <template>
   <div v-if="bodyRect.scrollWidth !== bodyRect.clientWidth" class="v-HScroll"
-    :style="{ '--scrollWidth': (bodyRect.scrollWidth + 14) + 'px', '--clientWidth': (bodyRect.clientWidth + 7) + 'px', '--ratio': ((bodyRect.clientWidth + scrollTop) / bodyRect.scrollWidth).toFixed(2) * 100 + '%', '--scrollTop': scrollTop + 'px' }">
+    :style="{ '--scrollWidth': (bodyRect.scrollWidth + 12) + 'px', '--clientWidth': (bodyRect.clientWidth + 6) + 'px', '--ratio': ((bodyRect.clientWidth + scrollTop) / (bodyRect.scrollWidth+12)).toFixed(2) * 100 + '%', '--scrollTop': scrollTop + 'px', '--mouseOffset': ((bodyRect.clientWidth > 600 ? 0 : (510 - bodyRect.clientWidth) / 2) - bodyRect.mouseOffset) + 'px' }">
     <div class="v-HScroll-wrapper">
       <div class="v-HScroll-mouse">
         <svg t="1708234887719" class="v-HScroll-mouse-icon" viewBox="0 0 1024 1024" version="1.1"
@@ -53,25 +55,21 @@ watch(
   z-index: 0;
   width: 40px;
   height: 100%;
-  left: 50%;
+  left: calc(50%);
   transform: translateX(-50%);
 
   &:hover {
     width: 100%;
 
     .v-HScroll-slither {
-      position: relative;
-      top: -20px;
+      top: 0;
       cursor: default;
       opacity: 1;
     }
-    .v-HScroll-mouse{
-      top: 110%;
-      opacity: 0;
-    }
 
     .v-HScroll-mouse {
-      display: none;
+      top: 110%;
+      opacity: 0;
     }
   }
 
@@ -88,25 +86,29 @@ watch(
     position: absolute;
     width: 100%;
     height: 100%;
+    left: 0;
     top: 110%;
     opacity: 0;
     background: transparent;
     transition: opacity .1s;
+    overflow: hidden;
 
     &-over {
       position: absolute;
       left: 0;
+      top: 0;
+      direction: rtl;
       transform: rotate(-90deg);
       overflow-x: hidden;
       overflow-y: auto;
-      width: 100%;
+      width: var(--clientWidth);
       height: var(--clientWidth);
-      background-color: rgba(#888, .6);
+      background-color: rgba(#000, .15);
       color: #fff;
       opacity: 1;
-      background-image: url('./7.png'), linear-gradient(to bottom, rgba(#333, .4) var(--ratio), transparent 0%);
+      background-image: url('./7.png'), linear-gradient(to bottom, rgba(#000, .3) var(--ratio), transparent 0%);
       background-size: auto, 100%;
-      background-position: calc(100% - 34px) center, left;
+      background-position: calc(100% - 14px) center, left;
       background-repeat: no-repeat, repeat;
     }
 
@@ -121,17 +123,18 @@ watch(
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative;
+    position: absolute;
     transition: opacity .1s;
-    top: 0;
+    bottom: 0;
     opacity: 1;
     height: 32px;
     width: 32px;
     border-radius: 8px 8px 0 0;
-    background-color: rgba(#888, .6);
-    background-image: linear-gradient(to right, rgba(#333, .4) var(--ratio), transparent 0%);
+    background-color: rgba(#000, .15);
+    background-image: linear-gradient(to right, rgba(#000, .3) var(--ratio), transparent 0%);
     background-size: 100% 100%;
     background-position: left;
+    transform: translateX(var(--mouseOffset));
 
     &-icon {
       animation: scale 1.5s infinite;
