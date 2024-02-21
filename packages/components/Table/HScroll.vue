@@ -29,15 +29,24 @@ watch(
 </script>
 <template>
   <div v-if="bodyRect.scrollWidth !== bodyRect.clientWidth" class="v-HScroll"
-    :style="{ '--scrollWidth': (bodyRect.scrollWidth + 12) + 'px', '--clientWidth': (bodyRect.clientWidth + 6) + 'px', '--ratio': ((bodyRect.clientWidth + scrollTop) / (bodyRect.scrollWidth+12)).toFixed(2) * 100 + '%', '--scrollTop': scrollTop + 'px', '--mouseOffset': ((bodyRect.clientWidth > 600 ? 0 : (510 - bodyRect.clientWidth) / 2) - bodyRect.mouseOffset) + 'px' }">
+    :style="{ '--scrollWidth': (bodyRect.scrollWidth + 12) + 'px', '--clientWidth': (bodyRect.clientWidth + 6) + 'px', '--ratio': ((bodyRect.clientWidth + scrollTop) / (bodyRect.scrollWidth + 12)).toFixed(2) * 100 + '%', '--scrollTop': scrollTop + 'px', '--mouseOffset': ((bodyRect.clientWidth > 600 ? 0 : (510 - bodyRect.clientWidth) / 2) - bodyRect.mouseOffset) + 'px' }">
     <div class="v-HScroll-wrapper">
       <div class="v-HScroll-mouse">
-        <svg t="1708234887719" class="v-HScroll-mouse-icon" viewBox="0 0 1024 1024" version="1.1"
-          xmlns="http://www.w3.org/2000/svg" p-id="4317" xmlns:xlink="http://www.w3.org/1999/xlink" width="18"
-          height="18">
-          <path
-            d="M228.8 193.92C283.392 105.984 374.464 53.376 512 53.376s228.608 52.608 283.2 140.672C848 279.04 864 393.152 864 512c0 118.784-16 232.896-68.8 318.08-54.592 88-145.664 140.608-283.2 140.608s-228.608-52.608-283.2-140.672C176 744.96 160 630.784 160 512c0-118.784 16-232.832 68.8-317.952z m54.4 33.792C240 297.344 224 396.544 224 512c0 115.392 16 214.656 59.2 284.288 41.408 66.752 110.336 110.4 228.8 110.4 118.464 0 187.392-43.648 228.8-110.4 43.2-69.632 59.2-168.896 59.2-284.288 0-115.456-16-214.656-59.2-284.288C703.36 167.232 643.2 125.696 544 118.4v106.624c5.76 0.768 11.776 2.048 17.92 4.608 18.304 7.552 32.832 22.08 40.384 40.384 3.52 8.512 4.672 16.832 5.248 24.384 0.448 7.04 0.448 15.488 0.448 24.576v87.232c0 9.152 0 17.536-0.512 24.576a75.968 75.968 0 0 1-5.12 24.384 74.688 74.688 0 0 1-40.448 40.448 76.032 76.032 0 0 1-24.384 5.12c-7.04 0.512-15.488 0.512-24.576 0.512h-1.92c-9.088 0-17.536 0-24.576-0.448a76.032 76.032 0 0 1-24.32-5.184 74.688 74.688 0 0 1-40.448-40.448 75.968 75.968 0 0 1-5.248-24.32C416 423.744 416 415.36 416 406.208V319.104c0-9.152 0-17.6 0.512-24.64 0.512-7.552 1.664-15.872 5.12-24.32 7.68-18.368 22.144-32.896 40.448-40.448 6.144-2.56 12.16-3.84 17.92-4.608V118.464c-99.2 7.232-159.296 48.768-196.8 109.248z m203.264 61.184a10.688 10.688 0 0 0-5.568 5.568 27.264 27.264 0 0 0-0.576 4.352A353.92 353.92 0 0 0 480 320v85.312c0 10.368 0 16.64 0.32 21.184a27.264 27.264 0 0 0 0.576 4.352c1.024 2.56 3.072 4.48 5.568 5.632a27.392 27.392 0 0 0 4.352 0.512c4.608 0.32 10.816 0.32 21.184 0.32s16.576 0 21.12-0.32a27.392 27.392 0 0 0 4.48-0.512 10.688 10.688 0 0 0 5.504-5.632 27.392 27.392 0 0 0 0.576-4.352 353.92 353.92 0 0 0 0.32-21.12V320c0-10.368 0-16.576-0.32-21.12a27.392 27.392 0 0 0-0.576-4.48 10.688 10.688 0 0 0-5.568-5.504 27.264 27.264 0 0 0-4.352-0.576A353.92 353.92 0 0 0 512 288c-10.368 0-16.576 0-21.12 0.32a27.264 27.264 0 0 0-4.48 0.576z"
-            fill="#fff" p-id="4318"></path>
+        <svg class="v-HScroll-mouse-icon" width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
+          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+          <title>shubiao</title>
+          <g id="权限" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+            <g id="鼠标滑动滚轮内容横向移动-收起效果" transform="translate(-1036.000000, -1048.000000)" fill="#666666"
+              fill-rule="nonzero">
+              <g id="编组-7" transform="translate(1035.000000, 1046.000000)">
+                <g id="编组-3" transform="translate(0.998143, 1.998143)">
+                  <path
+                    d="M11.5236609,0.68920725 L11.6024149,0.745610033 L11.9790726,1.06994903 C12.2948404,1.34185582 12.4913444,1.72408189 12.5311136,2.13491208 L12.5386069,2.29015462 L12.5386069,3.43157621 L12.5363798,3.44960451 C16.5947598,3.72427762 19.8016275,7.10331017 19.8016275,11.2313468 L19.8016275,18.2036819 C19.8016275,20.5751927 17.8791381,22.4976821 15.5076272,22.4976821 L8.49608657,22.4976821 C6.1245757,22.4976821 4.2020863,20.5751927 4.2020863,18.2036819 L4.2020863,11.2313468 C4.2020863,7.10325289 7.40904298,3.72418384 11.4675029,3.44959307 L11.4651069,3.43157621 L11.4651069,2.29015462 C11.4651069,2.16514329 11.4215238,2.04509719 11.3434632,1.9498731 L11.2785954,1.88341943 L10.9019377,1.55908043 C10.677304,1.36564899 10.6520096,1.02674027 10.8454411,0.802106628 C11.0173801,0.602432275 11.3042642,0.560260548 11.5236609,0.68920725 Z M12.0018569,4.50507628 C8.36959174,4.50507628 5.4097761,7.38417491 5.28002245,10.9847597 L5.27558636,11.2313468 L5.27558636,18.2036819 C5.27558636,19.9187924 6.61630203,21.320762 8.30685772,21.418715 L8.49608657,21.4241821 L15.5076272,21.4241821 C17.2227378,21.4241821 18.6247074,20.0834664 18.7226604,18.3929107 L18.7281274,18.2036819 L18.7281274,11.2313468 C18.7281274,7.51653017 15.7166735,4.50507628 12.0018569,4.50507628 Z M12.0018569,7.5815898 C12.5947346,7.5815898 13.075357,8.06221215 13.075357,8.65508987 L13.075357,10.80209 C13.075357,11.3949677 12.5947346,11.8755901 12.0018569,11.8755901 C11.4089792,11.8755901 10.9283568,11.3949677 10.9283568,10.80209 L10.9283568,8.65508987 C10.9283568,8.06221215 11.4089792,7.5815898 12.0018569,7.5815898 Z"
+                    id="形状结合"></path>
+                </g>
+              </g>
+            </g>
+          </g>
         </svg>
       </div>
       <div class="v-HScroll-slither">
@@ -103,10 +112,10 @@ watch(
       overflow-y: auto;
       width: var(--clientWidth);
       height: var(--clientWidth);
-      background-color: rgba(#000, .15);
+      background-color: rgba(#000, .06);
       color: #fff;
       opacity: 1;
-      background-image: url('./7.png'), linear-gradient(to bottom, rgba(#000, .3) var(--ratio), transparent 0%);
+      background-image: url('./1.png'), linear-gradient(to bottom, rgba(#000, .1) var(--ratio), transparent 0%);
       background-size: auto, 100%;
       background-position: calc(100% - 14px) center, left;
       background-repeat: no-repeat, repeat;
@@ -125,20 +134,20 @@ watch(
     justify-content: center;
     position: absolute;
     transition: opacity .1s;
-    bottom: 0;
+    bottom: 6px;
     opacity: 1;
-    height: 32px;
-    width: 32px;
-    border-radius: 8px 8px 0 0;
-    background-color: rgba(#000, .15);
-    background-image: linear-gradient(to right, rgba(#000, .3) var(--ratio), transparent 0%);
+    width: 26px;
+    height: 28px;
+    border-radius: 12px 12px 9px 9px;
+    background-color: rgba(#000, .06);
+    background-image: linear-gradient(to right, rgba(#000, .1) var(--ratio), transparent 0%);
     background-size: 100% 100%;
     background-position: left;
     transform: translateX(var(--mouseOffset));
 
-    &-icon {
-      animation: scale 1.5s infinite;
-    }
+    // &-icon {
+    //   animation: scale 1.5s infinite;
+    // }
   }
 }
 
@@ -148,11 +157,10 @@ watch(
   }
 
   50% {
-    transform: scale(1.2);
+    transform: scale(.9);
   }
 
   100% {
     transform: scale(1);
   }
-}
-</style>
+}</style>
