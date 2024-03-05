@@ -1,8 +1,11 @@
-
+import { VComponent } from './component'
 /**
- * 按钮
+ * 组件 - 文本
+ * @example import { VButton } from 'dk-vui'
  */
-export declare class VText {
+export const VxeButton: VComponent<VTextProps>
+
+export type VTextProps = {
   /**
    * 绑定值
    */

@@ -1,6 +1,6 @@
 {
   "name": "dk-vui",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "dk-vui",
   "private": false,
   "author": "blryli",
@@ -36,6 +36,7 @@
     "@element-plus/icons-vue": "^2.1.0",
     "@vitejs/plugin-vue": "^4.1.0",
     "@vitejs/plugin-vue-jsx": "^3.0.2",
+    "@vue/runtime-core": "^3.4.21",
     "@xqsit94/vue3-copy-to-clipboard": "^1.1.0",
     "bytemd": "^1.21.0",
     "element-plus": "^2.3.7",

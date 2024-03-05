@@ -1,10 +1,13 @@
-
+import { VComponent } from './component'
 /**
- * 按钮
+ * 组件 - 按钮
+ * @example import { VButton } from 'dk-vui'
  */
-export declare class VButton {
+export const VxeButton: VComponent<VButtonProps>
+
+export type VButtonProps = {
   /**
-   * 权限
+   * 按钮权限
    */
-  auth?: string;
+  auth?: string
 }
