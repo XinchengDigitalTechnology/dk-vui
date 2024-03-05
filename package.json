@@ -1,11 +1,12 @@
 {
   "name": "dk-vui",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "dk-vui",
   "private": false,
   "author": "blryli",
   "license": "MIT",
   "main": "dist/dk-vui.mjs",
+  "types": "types/index.d.ts",
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode prod",
@@ -40,6 +41,7 @@
     "element-plus": "^2.3.7",
     "highlight.js": "^11.9.0",
     "sass": "^1.63.6",
+    "typescript": "^5.3.3",
     "unplugin-auto-import": "^0.16.4",
     "vite": "^4.3.9",
     "vite-plugin-vue-setup-extend": "^0.4.0",

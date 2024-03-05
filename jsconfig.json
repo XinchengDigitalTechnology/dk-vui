@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "lib": ["ESNext", "DOM"],
+    "skipLibCheck": true,
+    "noEmit": true
+  },
+  "include": [
+    "package/**/*.js",
+    "package/**/*.jsx",
+    "package/**/*.ts",
+    "package/**/*.tsx",
+    "package/**/*.d.ts",
+    "package/**/*.vue",
+    "vite-env.d.ts"
+  ],
+  // 指定不需要被编译的目录
+  "exclude": [
+    "node_modules"
+  ],
+}
