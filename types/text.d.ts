@@ -1,41 +1,44 @@
 import { VComponent } from './component'
 /**
- * 组件 - 文本
- * @example import { VButton } from 'dk-vui'
+ * dk-vui 组件 - 文本
  */
-export const VxeButton: VComponent<VTextProps>
+export const VText: VComponent<VTextProps>
+/**
+ * dk-vui 组件 - 文本
+ */
+export const Text: typeof VText
 
 export type VTextProps = {
   /**
    * 绑定值
    */
-  value?:scring | number;
+  value?: string | number;
   /**
    * 标题
    */
-  title?:scring;
+  title?: string;
   /**
    * 标题位置
    */
-  titlePosition?:scring;
+  titlePosition?: string;
   /**
    * 文本类型
    */
-  type?:'button' | 'link';
+  type?: 'button' | 'link';
   /**
    * 溢出行数
    */
-  line?:number;
+  line?: number;
   /**
    * 是否启用复制
    */
-  copy?:boolean;
+  copy?: boolean;
   /**
    * 是否禁用
    */
-  disabled?:boolean;
+  disabled?: boolean;
   /**
    * 占位符
    */
-  empty?:boolean;
+  empty?: boolean;
 }

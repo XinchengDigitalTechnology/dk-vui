@@ -1,9 +1,12 @@
 import { VComponent } from './component'
 /**
- * 组件 - 按钮
- * @example import { VButton } from 'dk-vui'
+ * dk-vui 组件 - 按钮
  */
-export const VxeButton: VComponent<VButtonProps>
+export const VButton: VComponent<VButtonProps>
+/**
+ * dk-vui 组件 - 按钮
+ */
+export const Button: typeof VButton
 
 export type VButtonProps = {
   /**

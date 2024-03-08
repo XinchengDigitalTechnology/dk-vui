@@ -8,7 +8,7 @@ export type VComponent<
   E = { [key: string]: any },
   S = { [key: string]: (...args: any[]) => any }
 > = ({
-  new (): {
+  new(): {
     $props: P & E,
     $slots: S
   }
