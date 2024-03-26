@@ -5,7 +5,6 @@ import { defineComponent } from 'vue'
  */
 
 export default /*#__PURE__*/ defineComponent(
-  (props) => () => 1,
   {
     props: {
       value: [String, Number],
