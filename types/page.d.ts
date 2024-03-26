@@ -1,17 +1,15 @@
 import { defineComponent } from 'vue'
 
 /**
- * dk-vui 组件 - 按钮
+ * dk-vui 组件 - 页面
  */
 
 export default /*#__PURE__*/ defineComponent(
   (props) => () => 1,
   {
     props: {
-      /**
-       * 按钮权限
-       */
-      auth?: String
+      edit: Boolean, // 是否是表单页
+      footer: { type: Object, default: () => ({}) },
     }
   }
 )

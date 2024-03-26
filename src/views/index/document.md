@@ -4,6 +4,12 @@
 
 ## 版本升级
 
+- 2024-2-19 v0.1.9
+1. 表格组件增加属性 autoLoadQuery， 加载完毕后是否主动请求数据
+2. 表格组件增加方法 updateScroll， 更新横向滚动条（用于表格动态列）
+3. 表格改变列宽度时，更新横向滚动条
+4. 增加types属性提示
+
 - 2024-2-19 v0.1.3
 1. table.scrollHideForm 默认值改为true
 2. 保存查询条件位置更改
@@ -112,4 +118,16 @@ import DKVui from 'dk-vui'
 import 'dk-vui/dist/style.css'
 
 app.use(DKVui)
+```
+
+## types
+tsconfig.json
+```js
+{
+  "compilerOptions": {
+    "types": [
+      "dk-vui/types",
+    ],
+  }
+}
 ```

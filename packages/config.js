@@ -3,6 +3,7 @@ export default {
     size: 'small',
     height: 'auto',
     scrollHideForm: true, // 滚动时是否收起搜索区域
+    autoLoadQuery: true, // 加载完毕后是否主动请求数据
     crossSlip: true, // 是否开启鼠标滚轮横向滚动
     columnConfig: { resizable: true }, // 每一列是否启用列宽调整
     checkboxConfig: { checkField: '_CHECKED_', highlight: true }, // 绑定选中属性（行数据中必须存在该字段，否则无效）

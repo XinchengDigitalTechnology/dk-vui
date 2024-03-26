@@ -227,12 +227,18 @@ const headerResize = async ({ width, height }) => {
 
 const tableRef = ref()
 const bodyRect = ref({ ffsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
+
+const updateScroll = () => {
+  const tableBody = tableRef.value.querySelector('.vxe-table--body-wrapper')
+  if(!tableBody) return
+  const { scrollWidth, clientWidth } = tableBody
+  bodyRect.value = { ...bodyRect.value, scrollWidth, clientWidth, mouseOffset: clientWidth > 900 ? 0 : Math.min(240, 900 - clientWidth) }
+}
+
 const tableResize = ({ width }) => {
   if (!scrollHideForm) return
   headerResize({ width, height: headerHeight.value })
-  const tableBody = tableRef.value.querySelector('.vxe-table--body-wrapper')
-  const { scrollWidth, clientWidth } = tableBody
-  bodyRect.value = { scrollWidth, clientWidth, mouseOffset: clientWidth > 900 ? 0 : Math.min(240, 900 - clientWidth) }
+  updateScroll()
 }
 
 const tableLoad = ({ height }) => {
@@ -270,13 +276,13 @@ onActivated(() => {
 
 nextTick(() => {
   // 表格加载完毕后，没有加载数据，则主动请求一次
-  if (!loadData.value) query()
+  if (!loadData.value && merge.autoLoadQuery) query()
 })
 
 provide('table', { getForm, setForm, formConfig })
 
 // 暴露属性及方法
-defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, resetAndQuery, setPager, $table: gridRef })
+defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, resetAndQuery, setPager, updateScroll, $table: gridRef })
 </script>
 
 <template>
@@ -303,7 +309,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
       </div>
     </div>
     <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
-      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="handleScroll">
+      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="handleScroll" @resizable-change="updateScroll">
         <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
           <slot :name="name" v-bind="row"></slot>
         </template>
