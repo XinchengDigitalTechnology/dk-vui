@@ -1,22 +1,26 @@
 <script setup name="VPage">
 import XEUtils from 'xe-utils'
+import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
+import GlobalConfig from "~/packages/config"
 
 // 分为列表页和表单页，默认是列表页
 const props = defineProps({
   edit: Boolean, // 是否是表单页
-  footer: { type: Object, default: () => ({}) },
+  leftConfig: { type: Object, default: () => ({}) },
+  footerConfig: { type: Object, default: () => ({}) },
 })
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()))])
 
-const footerConfig = computed(() => XEUtils.merge({ height: 50, align: 'center', offset: 0 }, props.footer))
+const leftConfig = XEUtils.merge(GlobalConfig.page.leftConfig, props.leftConfig)
+const footerConfig = XEUtils.merge(GlobalConfig.page.footerConfig, props.footerConfig)
 
 const footerWidth = ref(0)
 const resize = ({ width }, target) => {
   if (!props.edit) return
   const { scrollHeight, offsetHeight } = target
-  let w = width + footerConfig.value.offset
+  let w = width + footerConfig.offset
   if (scrollHeight > offsetHeight) {
     w += 6
   }
@@ -35,6 +39,9 @@ onActivated(() => {
   pageRef.value.scrollTop = scroll.value.scrollTop
 })
 
+// 折叠处理
+const collapse = ref(false)
+
 // 页面级气泡
 const tipRef = ref()
 const tip = ref({
@@ -49,7 +56,7 @@ provide('updateTip', updateTip)
 </script>
 
 <template>
-  <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" v-dom-resize="resize"
+  <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" :style="{'--left-width': collapse ? 0 : leftConfig.width+'px'}" v-dom-resize="resize" v-bind="$attrs"
     @scroll="handleScroll">
     <template v-if="edit">
       <slot />
@@ -68,13 +75,19 @@ provide('updateTip', updateTip)
       </div>
       <slot />
     </div>
+    <div v-if="leftConfig.collapse" class="v-page__body-collapse" @click="collapse=!collapse">
+      <el-icon color="white">
+        <ArrowRightBold  v-if="collapse" />
+        <ArrowLeftBold v-else />
+      </el-icon>
+    </div>
   </div>
-  <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering
-    placement="top" popper-class="app-tip" :offset="3" enterable />
+  <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering placement="top" popper-class="app-tip" :offset="3" enterable />
 </template>
 
 <style lang="scss">
 .v-page {
+  position: relative;
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
@@ -102,11 +115,28 @@ provide('updateTip', updateTip)
     background-color: #fff;
 
     &.is--left {
-      padding-left: 200px;
+      padding-left: var(--left-width);
+      transition: padding .2s;
+    }
+    &-collapse {
+      position: absolute;
+      left: var(--left-width);
+      top: 50%;
+      transform: translate(2px, -15px);
+      height: 30px;
+      line-height: 30px;
+      border-radius: 4px;
+      overflow: hidden;
+      z-index: 1;
+      background: #CCCCCC;
+      cursor: pointer;
+      &:hover{
+        background-color: #aaa;
+      }
     }
 
     &-left {
-      width: 200px;
+      width: var(--left-width);
       position: absolute;
       left: 0;
       top: 0;
@@ -114,7 +144,8 @@ provide('updateTip', updateTip)
       overflow-x: hidden;
       overflow-y: auto;
       z-index: 1;
-      box-shadow: 1px 0 0 0 rgba($color: #EFF3FE, $alpha: 1.0);
+      box-shadow: 1px 0 0 0 rgba($color: #eff3fe, $alpha: 1);
+      transition: all .2s;
     }
 
     &::after {
@@ -164,7 +195,7 @@ provide('updateTip', updateTip)
     display: flex;
     gap: 3px;
     width: 100%;
-    &.is--wrap{
+    &.is--wrap {
       flex-direction: column;
     }
   }
@@ -207,7 +238,7 @@ provide('updateTip', updateTip)
     }
 
     &.is--disabled {
-      opacity: .6;
+      opacity: 0.6;
       cursor: no-drop;
     }
   }
@@ -221,7 +252,7 @@ provide('updateTip', updateTip)
 
     &:not(.is--disabled):hover {
       &::after {
-        content: "";
+        content: '';
         position: absolute;
         left: 0;
         right: 0;

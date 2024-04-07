@@ -187,12 +187,18 @@ const { scrollHideForm } = attrs
 const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + offsetHeight.value : attrs.height)
 
 let timer = null
-const handleScroll = async ({ scrollLeft, scrollTop, isY }) => {
+const handleScroll = async ({ scrollLeft, scrollTop, isY, $event }) => {
+  const { scrollHeight, clientHeight } = $event.target
   bodyRect.value.scrollLeft = scrollLeft
   if (!scrollHideForm || !headerHeight.value) return
+  // 底部
+  const scrollTopEnd = scrollHeight - clientHeight
+  if(scrollTopEnd === scrollTop) return
+  
   if (isY) {
     offsetHeight.value = Math.min(scrollTop, headerHeight.value)
   }
+  // 顶部
   if (!scrollTop) {
     offsetHeight.value = 0
     return
@@ -315,8 +321,8 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
         </template>
         <template #pager>
           <div class="v-pagination-container">
-            <Pagination v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" :hidden="pageHidden"
-              v-model:pageNum="pager.pageNum" :total="pager.total" @change="pageChange" />
+            <Pagination v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" :hidden="pageHidden" v-model:pageNum="pager.pageNum" :total="pager.total"
+              @change="pageChange" />
             <HScroll v-if="merge.crossSlip" :bodyRect="bodyRect" @scroll="handleScrollX" />
           </div>
         </template>

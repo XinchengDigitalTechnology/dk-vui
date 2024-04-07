@@ -1,7 +1,6 @@
 <template>
-  <VPage>
+  <VPage style="background: #f5f5f5;" :left-config="{collapse: true}">
     <template #left>
-      <div class="p-2 text-sm">信诚网络</div>
       <el-tree :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]"
         :props="defaultProps" />
     </template>
@@ -78,7 +77,7 @@ const findPageList = (pageNum, pageSize) => {
   return new Promise(resolve => {
     setTimeout(() => {
       const item = { name: 'Test1', nickname: 'T1', role: 'Develop', sex: 'Man', age: 28, address: 'Shenzhen' }
-      const list = [...new Array(10000).keys()].reduce((acc, cur) => acc.concat({ id: cur, ...item }), [])
+      const list = [...new Array(8).keys()].reduce((acc, cur) => acc.concat({ id: cur, ...item }), [])
       resolve({
         total: list.length,
         data: list.slice((pageNum - 1) * pageSize, pageNum * pageSize)

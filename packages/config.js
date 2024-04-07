@@ -83,5 +83,17 @@ export default {
     filterable: true, // 是否可筛选
     clearable: true, // 是否可清空
     types: {} // 配置选项
+  },
+  page: {
+    edit: Boolean, // 是否是表单页
+    leftConfig: {
+      width: 200, // 左侧宽度
+      collapse: false // 是否可折叠
+    },
+    footerConfig: {
+      height: 50, // 底部高度
+      align: 'center', // 对齐方式
+      offset: 0 // 偏移
+    },
   }
 }

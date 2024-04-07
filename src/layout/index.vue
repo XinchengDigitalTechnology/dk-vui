@@ -31,7 +31,7 @@ const list = routes.reduce((acc, cur) => {
   }
   return acc
 }, [])
-const menus = ['/index','/public','/components','/directives', '/api'].map(d => list.find(l => l.path === d))
+const menus = ['/index', '/public', '/components', '/directives', '/api'].map(d => list.find(l => l.path === d))
 console.log('menus', menus)
 </script>
 
@@ -42,8 +42,8 @@ console.log('menus', menus)
   <div class="app-container">
     <el-scrollbar class="menu">
       <div class="menu-list">
-        <template v-for="(da, idx) in menus">
-          <div class="menu-group" v-if="da.children">
+        <template v-for="da in menus">
+          <div class="menu-group" v-if="da.children" :key="da.path">
             <h3 class="menu-title">{{ da.name }}</h3>
             <div v-for="(d, i) in da.children" :key="i" class="menu-item" :class="d.path === route.path && 'is--active'">
               <router-link :to="d.path">
@@ -51,7 +51,7 @@ console.log('menus', menus)
               </router-link>
             </div>
           </div>
-          <div v-else class="menu-item">
+          <div v-else class="menu-item" :key="da.path">
             <router-link :to="da.path">
               <el-link :underline="false">{{ da.name }}</el-link>
             </router-link>
@@ -74,14 +74,14 @@ console.log('menus', menus)
   position: fixed;
   left: 0;
   top: 0;
-  right: 7px;
+  right: 0;
   display: flex;
   justify-content: center;
   height: 50px;
   line-height: 50px;
   padding: 0 20px;
   border-bottom: 1px solid var(--el-menu-border-color);
-  background: rgba($color: #fff, $alpha: .9);
+  background: rgba($color: #fff, $alpha: 0.9);
   z-index: 100;
 
   .logo {
@@ -119,8 +119,8 @@ console.log('menus', menus)
       display: block;
       padding: 10px;
     }
-    .is--active{
-      .el-link__inner{
+    .is--active {
+      .el-link__inner {
         font-weight: bold;
       }
     }
