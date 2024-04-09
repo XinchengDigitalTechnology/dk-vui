@@ -146,6 +146,9 @@ if (qr) {
         d._CHECKED_ = false
         return d
       })
+      if(!data.length) {
+        offsetHeight.value = 0
+      }
       return data
     }).catch(() => [])
   }
@@ -253,7 +256,9 @@ const tableLoad = ({ height }) => {
 }
 
 const toTop = () => {
-  gridRef?.value.scrollTo(null, 0)
+  gridRef?.value.scrollTo(null, 0).then(res => {
+    offsetHeight.value = 0
+  })
 }
 
 
