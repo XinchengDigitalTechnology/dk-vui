@@ -28,16 +28,15 @@ watch(
 
 </script>
 <template>
-  <div v-if="bodyRect.scrollWidth !== bodyRect.clientWidth" class="v-HScroll"
+  <div v-if="bodyRect.scrollWidth > bodyRect.clientWidth" class="v-HScroll"
     :style="{ '--scrollWidth': (bodyRect.scrollWidth + 12) + 'px', '--clientWidth': (bodyRect.clientWidth + 6) + 'px', '--ratio': ((bodyRect.clientWidth + scrollTop) / (bodyRect.scrollWidth + 12)).toFixed(2) * 100 + '%', '--scrollTop': scrollTop + 'px', '--mouseOffset': ((bodyRect.clientWidth > 600 ? 0 : (510 - bodyRect.clientWidth) / 2) - bodyRect.mouseOffset) + 'px' }">
     <div class="v-HScroll-wrapper">
       <div class="v-HScroll-mouse">
-        <svg class="v-HScroll-mouse-icon" width="24px" height="24px" viewBox="0 0 24 24" version="1.1"
-          xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <svg class="v-HScroll-mouse-icon" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink">
           <title>shubiao</title>
           <g id="权限" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-            <g id="鼠标滑动滚轮内容横向移动-收起效果" transform="translate(-1036.000000, -1048.000000)" fill="#666666"
-              fill-rule="nonzero">
+            <g id="鼠标滑动滚轮内容横向移动-收起效果" transform="translate(-1036.000000, -1048.000000)" fill="#666666" fill-rule="nonzero">
               <g id="编组-7" transform="translate(1035.000000, 1046.000000)">
                 <g id="编组-3" transform="translate(0.998143, 1.998143)">
                   <path
@@ -99,26 +98,35 @@ watch(
     top: 110%;
     opacity: 0;
     background: transparent;
-    transition: opacity .1s;
+    transition: opacity 0.1s;
     overflow: hidden;
 
     &-over {
       position: absolute;
       left: 0;
       top: 0;
-      direction: rtl;
       transform: rotate(-90deg);
       overflow-x: hidden;
       overflow-y: auto;
       width: var(--clientWidth);
       height: var(--clientWidth);
-      background-color: rgba(#000, .06);
+      background-color: rgba(#000, 0.06);
       color: #fff;
       opacity: 1;
-      background-image: url('./1.png'), linear-gradient(to bottom, rgba(#000, .1) var(--ratio), transparent 0%);
+      background-image: url('./1.png');
       background-size: auto, 100%;
       background-position: calc(100% - 14px) center, left;
       background-repeat: no-repeat, repeat;
+      &::-webkit-scrollbar {
+        width: 40px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: rgba(#000, 0.14);
+        cursor: pointer;
+      }
+      &::-webkit-scrollbar-track {
+        background: rgba(#000, 0.01);
+      }
     }
 
     &-item {
@@ -127,27 +135,34 @@ watch(
     }
   }
 
-
   &-mouse {
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
-    transition: opacity .1s;
+    transition: opacity 0.1s;
     bottom: 6px;
     opacity: 1;
     width: 26px;
     height: 28px;
     border-radius: 12px 12px 9px 9px;
-    background-color: rgba(#000, .06);
-    background-image: linear-gradient(to right, rgba(#000, .1) var(--ratio), transparent 0%);
+    background-color: rgba(#000, 0.06);
+    background-image: linear-gradient(
+      to right,
+      rgba(#000, 0.1) var(--ratio),
+      transparent 0%
+    );
     background-size: 100% 100%;
     background-position: left;
     transform: translateX(var(--mouseOffset));
+  }
+}
 
-    // &-icon {
-    //   animation: scale 1.5s infinite;
-    // }
+@supports (-moz-appearance: none) {
+  .v-HScroll .v-HScroll-slither-over {
+    direction: rtl;
+    background-image: url('./1.png'),
+        linear-gradient(to bottom, rgba(#000, 0.1) var(--ratio), transparent 0%);
   }
 }
 
@@ -157,10 +172,11 @@ watch(
   }
 
   50% {
-    transform: scale(.9);
+    transform: scale(0.9);
   }
 
   100% {
     transform: scale(1);
   }
-}</style>
+}
+</style>

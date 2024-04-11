@@ -237,9 +237,11 @@ const headerResize = async ({ width, height }) => {
 const tableRef = ref()
 const bodyRect = ref({ ffsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
 
-const updateScroll = () => {
+const updateScroll = async() => {
   const tableBody = tableRef.value.querySelector('.vxe-table--body-wrapper')
   if(!tableBody) return
+  await nextTick()
+  await new Promise(resolve => setTimeout(resolve, 100))
   const { scrollWidth, clientWidth } = tableBody
   bodyRect.value = { ...bodyRect.value, scrollWidth, clientWidth, mouseOffset: clientWidth > 900 ? 0 : Math.min(240, 900 - clientWidth) }
 }
