@@ -33,7 +33,7 @@ const getQueryForm = () => {
   for (const key in form.value) {
     if (!key) continue
     const val = form.value[key];
-    if (XEUtils.isObject(val)) { // 值为对象
+    if (XEUtils.isObject(val) && val !== null) { // 值为对象
       const keys = Object.keys(val)
       const { range, value } = val
       if (keys.includes('type')) { // 有type的特殊对象
