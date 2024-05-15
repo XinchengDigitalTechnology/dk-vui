@@ -77,7 +77,7 @@ const findPageList = (pageNum, pageSize) => {
   return new Promise(resolve => {
     setTimeout(() => {
       const item = { name: 'Test1', nickname: 'T1', role: 'Develop', sex: 'Man', age: 28, address: 'Shenzhen' }
-      const list = [...new Array(8).keys()].reduce((acc, cur) => acc.concat({ id: cur, ...item }), [])
+      const list = [...new Array(80).keys()].reduce((acc, cur) => acc.concat({ id: cur, ...item }), [])
       resolve({
         total: list.length,
         data: list.slice((pageNum - 1) * pageSize, pageNum * pageSize)
@@ -101,7 +101,7 @@ const tableOptins = reactive({
   rowConfig: { height: 100 },
   columns: [
     { type: 'checkbox', width: 50, fixed: 'left' },
-    { type: 'seq', width: 60 },
+    { type: 'seq', width: 60, fixed: 'left' },
     {
       title: '字体颜色', width: 150, slots: {
         default: ({ row }) => <div>

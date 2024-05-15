@@ -2,14 +2,53 @@
   --vxe-table-row-height-default: 40px;
   --vxe-table-row-checkbox-checked-background-color: #EAF3FF;
   --vxe-table-row-hover-checkbox-checked-background-color: #EAF3FF;
- --vxe-table-row-hover-background-color: #EAF3FF;
-
+  --vxe-table-row-hover-background-color: #EAF3FF;
+  
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   position: relative;
-
+  
+  .cell--fixed {
+    background-color: #fff;
+  }
+  .left-shadow{
+    &::after{
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 1px;
+      box-shadow: 3px 0 5px rgba(0,0,0,0.3);
+    }
+  }
+  .right-shadow{
+    &::after{
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 1px;
+      box-shadow: -3px 0 5px rgba(0,0,0,0.3);
+    }
+  }
+  .right-gutter + .vxe-header--gutter{
+    position: sticky;
+    right: 0;
+    background-color: #F6FAFF;
+    z-index: 1;
+  }
+  .header-cell--fixed, .vxe-header--column {
+    background-color: #F6FAFF;
+  }
+  .row--checked, .row--hover{
+    .cell--fixed {
+      background-color: #EAF3FF;
+    }
+  }
   &__header {
     overflow: hidden;
   }

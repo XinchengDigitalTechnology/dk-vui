@@ -14,6 +14,8 @@ const merge = XEUtils.merge({}, XEUtils.clone(GlobalConfig.table, true), useAttr
 // column不传slots时，默认用 VText组件渲染，支持设置 line 参数
 merge.columns = merge.columns.map(d => {
   const { type, field, slots, line = 1, copy = false } = d
+  d.params = d.fixed
+  d.fixed = ''
   if (!type && !slots) {
     d.slots = {}
     d.slots.default = ({ row }) => <VText value={row[field]} line={line} copy={copy} />
@@ -150,7 +152,9 @@ if (qr) {
         offsetHeight.value = 0
       }
       return data
-    }).catch(() => [])
+    }).catch(() => []).finally(() => {
+      updateScroll()
+    })
   }
 }
 
@@ -174,7 +178,7 @@ const query = async () => {
   if (formChange.value) {
     pager.pageNum = 1
   }
-  gridRef?.value.commitProxy('query')
+  return gridRef?.value.commitProxy('query')
 }
 const resetAndQuery = () => {
   resetForm()
@@ -238,12 +242,13 @@ const tableRef = ref()
 const bodyRect = ref({ ffsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
 
 const updateScroll = async() => {
+  columnList.value = gridRef?.value?.getColumns()
   const tableBody = tableRef.value.querySelector('.vxe-table--body-wrapper')
   if(!tableBody) return
   await nextTick()
   await new Promise(resolve => setTimeout(resolve, 100))
-  const { scrollWidth, clientWidth } = tableBody
-  bodyRect.value = { ...bodyRect.value, scrollWidth, clientWidth, mouseOffset: clientWidth > 900 ? 0 : Math.min(240, 900 - clientWidth) }
+  const { scrollWidth, clientWidth, scrollHeight,clientHeight } = tableBody
+  bodyRect.value = { ...bodyRect.value, scrollWidth, clientWidth, scrollHeight, clientHeight, mouseOffset: clientWidth > 900 ? 0 : Math.min(240, 900 - clientWidth) }
 }
 
 const tableResize = ({ width }) => {
@@ -287,10 +292,65 @@ onActivated(() => {
   }, 100)
 })
 
-nextTick(() => {
+nextTick(async() => {
   // 表格加载完毕后，没有加载数据，则主动请求一次
-  if (!loadData.value && merge.autoLoadQuery) query()
+  if (!loadData.value && merge.autoLoadQuery) await query()
+  columnList.value = gridRef?.value?.getColumns()
 })
+
+// 处理固定列
+const columnList = ref(merge.columns)
+const fixs = computed(() => columnList.value.reduce((acc, cur) => {
+  if(cur.params) {
+    acc[cur.params+'s'].push(cur)
+  }
+  return acc
+}, {lefts: [], rights: []}))
+const {columns} = merge
+const cellStyle = ({row, column, columnIndex}) => {
+  const {params} = column
+  if(params) {
+    const style = {
+      position: 'sticky',
+      zIndex: 2,
+    }
+    if(params === 'left') {
+      const index = fixs.value?.lefts.findIndex(d => d.id === column.id)
+      style.left = (fixs.value?.lefts.filter((d, i) => i < index).reduce((acc, cur) => acc+(cur.resizeWidth || cur.width),0) || 0) + 'px'
+    }
+    if(params === 'right') {
+      const index = fixs.value?.rights.findIndex(d => d.id === column.id)
+      const {scrollHeight, clientHeight} = bodyRect.value
+      const scrollW = !row && scrollHeight > clientHeight ? 6 : 0
+      style.right = scrollW + (fixs.value?.rights.filter((d, i) => i > index).reduce((acc, cur) => acc+ (cur.resizeWidth || cur.width),0) || 0) + 'px'
+    }
+    return style
+  }
+}
+
+const cellClassName = ({row, column, columnIndex}) => {
+  const {params} = column
+  if(params) {
+    let classes = row ? 'cell--fixed' : 'header-cell--fixed'
+    if(params === 'left') {
+      const index = fixs.value?.lefts.findIndex(d => d.id === column.id)
+      if(fixs.value?.lefts.length - 1 === index && bodyRect.value.scrollLeft) {
+        classes += ' left-shadow'
+      }
+    }
+    if(params === 'right') {
+      const index = fixs.value?.rights.findIndex(d => d.id === column.id)
+      const {clientWidth, scrollLeft, scrollWidth} = bodyRect.value
+      if(!index && clientWidth + scrollLeft < scrollWidth) {
+        classes += ' right-shadow'
+      }
+      if(fixs.value?.rights.length - 1 === index) {
+        classes += ' right-gutter'
+      }
+    }
+    return classes
+  }
+}
 
 provide('table', { getForm, setForm, formConfig })
 
@@ -322,7 +382,8 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, r
       </div>
     </div>
     <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
-      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" @scroll="handleScroll" @resizable-change="updateScroll">
+      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
+        :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="updateScroll">
         <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
           <slot :name="name" v-bind="row"></slot>
         </template>
