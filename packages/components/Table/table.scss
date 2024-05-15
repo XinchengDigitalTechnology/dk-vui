@@ -21,7 +21,7 @@
       right: 0;
       bottom: 0;
       width: 1px;
-      box-shadow: 3px 0 5px rgba(0,0,0,0.3);
+      box-shadow: 3px 0 5px rgba(0,0,0,0.35);
     }
   }
   .right-shadow{
@@ -32,7 +32,7 @@
       left: 0;
       bottom: 0;
       width: 1px;
-      box-shadow: -3px 0 5px rgba(0,0,0,0.3);
+      box-shadow: -3px 0 5px rgba(0,0,0,0.35);
     }
   }
   .right-gutter + .vxe-header--gutter{
@@ -49,6 +49,16 @@
       background-color: #EAF3FF;
     }
   }
+  .header-cell--fixed {
+    .vxe-resizable{
+      right: -6px;
+    }
+    &.left-shadow{
+      .vxe-resizable{
+        right: -2px;
+      }
+    }
+  } 
   &__header {
     overflow: hidden;
   }

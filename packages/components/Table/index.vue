@@ -316,13 +316,13 @@ const cellStyle = ({row, column, columnIndex}) => {
     }
     if(params === 'left') {
       const index = fixs.value?.lefts.findIndex(d => d.id === column.id)
-      style.left = (fixs.value?.lefts.filter((d, i) => i < index).reduce((acc, cur) => acc+(cur.resizeWidth || cur.width),0) || 0) + 'px'
+      style.left = (fixs.value?.lefts.filter((d, i) => i < index).reduce((acc, cur) => acc+(cur.renderWidth || cur.width),0) || 0) + 'px'
     }
     if(params === 'right') {
       const index = fixs.value?.rights.findIndex(d => d.id === column.id)
       const {scrollHeight, clientHeight} = bodyRect.value
       const scrollW = !row && scrollHeight > clientHeight ? 6 : 0
-      style.right = scrollW + (fixs.value?.rights.filter((d, i) => i > index).reduce((acc, cur) => acc+ (cur.resizeWidth || cur.width),0) || 0) + 'px'
+      style.right = scrollW + (fixs.value?.rights.filter((d, i) => i > index).reduce((acc, cur) => acc+ (cur.renderWidth || cur.width),0) || 0) + 'px'
     }
     return style
   }
