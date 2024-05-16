@@ -12,17 +12,25 @@ let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_
 // 搜索表单处理
 const merge = XEUtils.merge({}, XEUtils.clone(GlobalConfig.table, true), useAttrs())
 // column不传slots时，默认用 VText组件渲染，支持设置 line 参数
-merge.columns = merge.columns.map(d => {
-  const { type, field, slots, line = 1, copy = false } = d
-  d.params = d.fixed
-  d.fixed = ''
-  if (!type && !slots) {
-    d.slots = {}
-    d.slots.default = ({ row }) => <VText value={row[field]} line={line} copy={copy} />
-  }
-  return d
-})
+const initColumn = (columns) => {
+  const cols = columns.map(d => {
+    const { type, field, slots, line = 1, copy = false } = d
+    d.params = d.fixed
+    d.fixed = ''
+    if (!type && !slots) {
+      d.slots = {}
+      d.slots.default = ({ row }) => <VText value={row[field]} line={line} copy={copy} />
+    }
+    return d
+  })
+  nextTick(() => {
+    updateScroll()
+  })
+  return cols
+}
+merge.columns = initColumn(merge.columns)
 const attrs = XEUtils.clone(Object.assign({}, merge, { pagerConfig: undefined }), true)
+
 const { formConfig } = attrs
 const defaultValue = Object.assign({}, formConfig.data)
 const getSourceValue = () => XEUtils.clone(defaultValue, true)
@@ -64,10 +72,11 @@ const getQueryForm = () => {
           // range代表值需要拆分成 { start_key, end_key }
           const [startKey, endKey] = val.rangeKeys // 自定义key
           const [s, e] = value || [undefined, undefined]
+
           noNull(s) && (searchForm[startKey || 'start_' + key] = s)
           noNull(e) && (searchForm[endKey || 'end_' + key] = e)
         } else {
-          if (noNull(val)) {
+          if (noNull(val.start) || noNull(val.end)) {
             searchForm[key] = val
           }
         }
@@ -307,39 +316,37 @@ const fixs = computed(() => columnList.value.reduce((acc, cur) => {
   return acc
 }, {lefts: [], rights: []}))
 const {columns} = merge
-const cellStyle = ({row, column, columnIndex}) => {
-  const {params} = column
+const cellStyle = (ags) => {
+  const {params, id} = ags.column
+  const style = typeof attrs.cellStyle === 'function' ? attrs.cellStyle(ags) : {}
   if(params) {
-    const style = {
-      position: 'sticky',
-      zIndex: 2,
-    }
     if(params === 'left') {
-      const index = fixs.value?.lefts.findIndex(d => d.id === column.id)
+      const index = fixs.value?.lefts.findIndex(d => d.id === id)
       style.left = (fixs.value?.lefts.filter((d, i) => i < index).reduce((acc, cur) => acc+(cur.renderWidth || cur.width),0) || 0) + 'px'
     }
     if(params === 'right') {
-      const index = fixs.value?.rights.findIndex(d => d.id === column.id)
+      const index = fixs.value?.rights.findIndex(d => d.id === id)
       const {scrollHeight, clientHeight} = bodyRect.value
-      const scrollW = !row && scrollHeight > clientHeight ? 6 : 0
+      const scrollW = !ags.row && scrollHeight > clientHeight ? 6 : 0
       style.right = scrollW + (fixs.value?.rights.filter((d, i) => i > index).reduce((acc, cur) => acc+ (cur.renderWidth || cur.width),0) || 0) + 'px'
     }
-    return style
   }
+  return style
 }
 
-const cellClassName = ({row, column, columnIndex}) => {
-  const {params} = column
+const cellClassName = (ags) => {
+  const {params, id} = ags.column
+  let classes = typeof attrs.cellClassName === 'function' ? attrs.cellClassName(ags) : typeof attrs.cellClassName === 'string' ? attrs.cellClassName : ''
   if(params) {
-    let classes = row ? 'cell--fixed' : 'header-cell--fixed'
+    classes += ags.row ? ' cell--fixed' : ' header-cell--fixed'
     if(params === 'left') {
-      const index = fixs.value?.lefts.findIndex(d => d.id === column.id)
+      const index = fixs.value?.lefts.findIndex(d => d.id === id)
       if(fixs.value?.lefts.length - 1 === index && bodyRect.value.scrollLeft) {
         classes += ' left-shadow'
       }
     }
     if(params === 'right') {
-      const index = fixs.value?.rights.findIndex(d => d.id === column.id)
+      const index = fixs.value?.rights.findIndex(d => d.id === id)
       const {clientWidth, scrollLeft, scrollWidth} = bodyRect.value
       if(!index && clientWidth + scrollLeft < scrollWidth) {
         classes += ' right-shadow'
@@ -348,14 +355,14 @@ const cellClassName = ({row, column, columnIndex}) => {
         classes += ' right-gutter'
       }
     }
-    return classes
   }
+  return classes
 }
 
 provide('table', { getForm, setForm, formConfig })
 
 // 暴露属性及方法
-defineExpose({ getForm, setForm, setFormField, resetForm, query, getQueryForm, resetAndQuery, setPager, updateScroll, $table: gridRef })
+defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, getQueryForm, resetAndQuery, setPager, updateScroll, $table: gridRef })
 </script>
 
 <template>

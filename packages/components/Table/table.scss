@@ -13,6 +13,13 @@
   .cell--fixed {
     background-color: #fff;
   }
+  .header-cell--fixed, .vxe-header--column {
+    background-color: #F6FAFF;
+  }
+  .cell--fixed, .header-cell--fixed {
+    position: sticky !important;
+    z-index: 2;
+  }
   .left-shadow{
     &::after{
       content: '';
@@ -40,9 +47,6 @@
     right: 0;
     background-color: #F6FAFF;
     z-index: 1;
-  }
-  .header-cell--fixed, .vxe-header--column {
-    background-color: #F6FAFF;
   }
   .row--checked, .row--hover{
     .cell--fixed {

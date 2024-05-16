@@ -1,8 +1,7 @@
 <template>
   <VPage style="background: #f5f5f5;" :left-config="{collapse: true}">
     <template #left>
-      <el-tree :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]"
-        :props="defaultProps" />
+      <el-tree :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]" :props="defaultProps" />
     </template>
     <VTable ref="tableRef" v-bind="tableOptins">
       <template #form="{ form }">
@@ -11,8 +10,7 @@
           <div class="v-group-item">带标题</div>
           <el-input v-model="form.base" class="w-40" placeholder="带标题"></el-input>
         </VGroup>
-        <el-date-picker v-model="form.date.value" type="daterange" range-separator="至" start-placeholder="日期开始"
-          end-placeholder="日期结束" style="max-width: 300px" />
+        <el-date-picker v-model="form.date.value" type="daterange" range-separator="至" start-placeholder="日期开始" end-placeholder="日期结束" style="max-width: 300px" />
         <VGroup>
           <el-select v-model="form.group.type" style="max-width: 100px">
             <el-option label="组合1" :value="0"></el-option>
@@ -25,8 +23,13 @@
             <el-option label="类型+日期范围1" value="dateRange1"></el-option>
             <el-option label="类型+日期范围2" value="dateRange2"></el-option>
           </el-select>
-          <el-date-picker v-model="form.dateRange.value" type="daterange" range-separator="至"
-            start-placeholder="Start date" end-placeholder="End date" style="max-width: 300px" />
+          <el-date-picker v-model="form.dateRange.value" type="daterange" range-separator="至" start-placeholder="Start date" end-placeholder="End date" style="max-width: 300px" />
+        </VGroup>
+        <VGroup>
+          <div class="v-group-item">普通范围</div>
+          <el-input-number v-model="form.baseRange.start" :controls="false" placeholder="最小值" />
+          <div class="v-group-item">至</div>
+          <el-input-number v-model="form.baseRange.end" :controls="false" placeholder="最大值" />
         </VGroup>
         <VGroup>
           <el-select v-model="form.sizeRange.type" style="max-width: 150px">
@@ -82,7 +85,7 @@ const findPageList = (pageNum, pageSize) => {
         total: list.length,
         data: list.slice((pageNum - 1) * pageSize, pageNum * pageSize)
       })
-    }, 100)
+    }, 1000);
   })
 }
 const tableOptins = reactive({
@@ -91,6 +94,7 @@ const tableOptins = reactive({
     save: '/purchase/manage/plan',
     data: {
       base: '', // 基础类型
+      baseRange: {},
       date: { value: [], range: true, rangeKeys: ['start_time', 'end_time'] }, // 日期
       group: { type: 0, value: '' }, // 组合
       dateRange: { type: 'dateRange1', value: [], range: true }, // 组合+日期范围

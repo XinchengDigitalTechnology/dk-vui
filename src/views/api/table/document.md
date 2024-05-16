@@ -37,6 +37,7 @@ column.item不传slots时，默认用 VText 组件渲染，支持设置 line 参
 | query         | 表格查询方法                 | function                      |
 | resetAndQuery | 重置查询条件并查询           | function                      |
 | setPager      | 设置分页参数并查询                 | function({pageNum, pageSize}) |
+| initColumn    | 在调用vxe-table的 loadColumn及reloadColumn 方法时需要用这个方法初始化参数 columns                 | function                      |
 | $table        | vxt-grid实例                 | object                        |
 
 [其他属性、方法、事件请参考vxetable](https://vxetable.cn/#/grid/api)

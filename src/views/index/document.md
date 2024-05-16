@@ -4,6 +4,9 @@
 
 ## 版本升级
 
+- 2024-5-16 v0.1.17
+1. 表格组件增加 initColumn 方法，在调用vxe-table的 loadColumn及reloadColumn 方法时需要用这个方法初始化参数 columns
+
 - 2024-5-15 v0.1.16
 1. 解决表格组件滚动时固定列错位的问题
 
