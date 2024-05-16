@@ -15,8 +15,12 @@ const merge = XEUtils.merge({}, XEUtils.clone(GlobalConfig.table, true), useAttr
 const initColumn = (columns) => {
   const cols = columns.map(d => {
     const { type, field, slots, line = 1, copy = false } = d
-    d.params = d.fixed
-    d.fixed = ''
+    if(d.fixed) {
+      if(!d.params) {
+        d.params = d.fixed
+      }
+      d.fixed = ''
+    }
     if (!type && !slots) {
       d.slots = {}
       d.slots.default = ({ row }) => <VText value={row[field]} line={line} copy={copy} />
@@ -317,8 +321,18 @@ const fixs = computed(() => columnList.value.reduce((acc, cur) => {
 }, {lefts: [], rights: []}))
 const {columns} = merge
 const cellStyle = (ags) => {
-  const {params, id} = ags.column
-  const style = typeof attrs.cellStyle === 'function' ? attrs.cellStyle(ags) : {}
+  const {row, column} = ags
+  const {params, id} = column
+  let style = {}
+  if(row) {
+    if(typeof attrs.cellStyle === 'function') {
+      style = attrs.cellStyle(ags)
+    }
+  } else {
+    if(typeof attrs.headerCellStyle === 'function') {
+      style = attrs.headerCellStyle(ags)
+    }
+  }
   if(params) {
     if(params === 'left') {
       const index = fixs.value?.lefts.findIndex(d => d.id === id)
@@ -327,7 +341,7 @@ const cellStyle = (ags) => {
     if(params === 'right') {
       const index = fixs.value?.rights.findIndex(d => d.id === id)
       const {scrollHeight, clientHeight} = bodyRect.value
-      const scrollW = !ags.row && scrollHeight > clientHeight ? 6 : 0
+      const scrollW = !row && scrollHeight > clientHeight ? 6 : 0
       style.right = scrollW + (fixs.value?.rights.filter((d, i) => i > index).reduce((acc, cur) => acc+ (cur.renderWidth || cur.width),0) || 0) + 'px'
     }
   }
@@ -335,10 +349,24 @@ const cellStyle = (ags) => {
 }
 
 const cellClassName = (ags) => {
-  const {params, id} = ags.column
-  let classes = typeof attrs.cellClassName === 'function' ? attrs.cellClassName(ags) : typeof attrs.cellClassName === 'string' ? attrs.cellClassName : ''
+  const {row, column} = ags
+  const {params, id} = column
+  let classes = ''
+  if(row) {
+    if(typeof attrs.cellClassName === 'function') {
+      style = attrs.cellClassName(ags)
+    } else if(typeof attrs.cellClassName === 'string') {
+      attrs.cellClassName
+    }
+  } else {
+    if(typeof attrs.headerCellClassName === 'function') {
+      style = attrs.headerCellClassName(ags)
+    } else if(typeof attrs.headerCellClassName === 'string') {
+      attrs.headerCellClassName
+    }
+  }
   if(params) {
-    classes += ags.row ? ' cell--fixed' : ' header-cell--fixed'
+    classes += row ? ' cell--fixed' : ' header-cell--fixed'
     if(params === 'left') {
       const index = fixs.value?.lefts.findIndex(d => d.id === id)
       if(fixs.value?.lefts.length - 1 === index && bodyRect.value.scrollLeft) {
