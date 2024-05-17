@@ -80,7 +80,9 @@ const getQueryForm = () => {
           noNull(s) && (searchForm[startKey || 'start_' + key] = s)
           noNull(e) && (searchForm[endKey || 'end_' + key] = e)
         } else {
-          if (noNull(val.start) || noNull(val.end)) {
+          if(Array.isArray(val)) {
+            if(val.length) searchForm[key] = val
+          } else if (noNull(val.start) || noNull(val.end)) {
             searchForm[key] = val
           }
         }

@@ -6,6 +6,10 @@
     <VTable ref="tableRef" v-bind="tableOptins">
       <template #form="{ form }">
         <el-input v-model="form.base" style="max-width: 150px" placeholder="普通类型"></el-input>
+        <el-select v-model="form.select" multiple style="max-width: 100px">
+            <el-option label="选项1" :value="0"></el-option>
+            <el-option label="选项2" :value="1"></el-option>
+          </el-select>
         <VGroup>
           <div class="v-group-item">带标题</div>
           <el-input v-model="form.base" class="w-40" placeholder="带标题"></el-input>
