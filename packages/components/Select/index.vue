@@ -14,6 +14,7 @@ const props = defineProps({
   multiple: Boolean,
   select: { type: Boolean, default: false }, // 是否使用el-select组件渲染
   paste: { type: [Boolean, String], default: false }, // 粘贴功能，存在则开启粘贴功能，粘贴弹窗的标题默认使用传入的placeholder，如果类型为字符串则会作为弹窗的标题
+  confusedPaste: Boolean,
 })
 const attrs = useAttrs()
 // 插槽处理
@@ -81,13 +82,15 @@ const visibleChange = val => {
 }
 
 const pasteChange = (pastes) => {
-  const pastesValue = opts.value.reduce((acc, cur) => pastes.includes(cur.label) ? acc.concat(cur.value) : acc, [])
+  const pastesValue = opts.value.reduce((acc, cur) => {
+    return (props.confusedPaste && pastes.some(d => cur.label.indexOf(d) > -1) || pastes.includes(cur.label)) ? acc.concat(cur.value) : acc
+  }, [])
   selectValue.value = [...new Set((selectValue.value || []).concat(pastesValue))]
 }
 </script>
 
 <template>
-  <VGroup v-if="paste && multiple">
+  <VGroup v-if="(paste || confusedPaste) && multiple">
     <el-select v-if="select" v-model="selectValue" v-bind="$attrs" :filterable="filterable" :clearable="clearable"
       :multiple="multiple" collapse-tags-tooltip @change="handleChange" @visible-change="visibleChange">
       <el-option v-for="(d, i) in opts" :key="i" :label="d.label" :value="d.value"></el-option>

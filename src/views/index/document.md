@@ -4,6 +4,10 @@
 
 ## 版本升级
 
+- 2024-5-20 v0.1.21
+1. 下拉框组件增加 confusedPaste 参数，支持模糊粘贴选项
+2. 修复表格组件搜索参数的问题
+
 - 2024-5-16 v0.1.18
 1. 表格组件增加 initColumn 方法，在调用vxe-table的 loadColumn及reloadColumn 方法时需要用这个方法初始化参数 columns
 

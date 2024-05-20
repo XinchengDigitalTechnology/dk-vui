@@ -40,6 +40,11 @@ const options = [
       <VSelect v-model="form.field2" placeholder="店铺" multiple collapse-tags paste :options="options" class="w-400" />
       <Md v-model="paste" view />
 
+      <h2>confusedPaste 模糊粘贴</h2>
+      <p>multiple 多选模式下，可以使用 confusedPaste 模糊粘贴功能快速追加选项</p>
+      <VSelect v-model="form.field2" placeholder="店铺" multiple collapse-tags confusedPaste :options="options" class="w-400" />
+      <Md v-model="paste" view />
+
       <h2>配置选项</h2>
       <p>
         使用 types 定义配置，结合 type 参数来使用
