@@ -82,7 +82,11 @@ const getQueryForm = () => {
         } else {
           if(Array.isArray(val)) {
             if(val.length) searchForm[key] = val
-          } else if (noNull(val.start) || noNull(val.end)) {
+          } else if (val.hasOwnProperty('start') && val.hasOwnProperty('end')) {
+            if(noNull(val.start) || noNull(val.end)) {
+              searchForm[key] = val
+            }
+          } else {
             searchForm[key] = val
           }
         }
@@ -389,6 +393,14 @@ const cellClassName = (ags) => {
   return classes
 }
 
+const sortChange = (val) => {
+  if(attrs.sortConfig?.remote) {
+    const {field, order: rule} = val
+    setFormField('sort', rule ? {field, rule} : {})
+    query()
+  }
+}
+
 provide('table', { getForm, setForm, formConfig })
 
 // 暴露属性及方法
@@ -420,7 +432,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
     </div>
     <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
       <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
-        :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="updateScroll">
+        :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="updateScroll" @sortChange="sortChange">
         <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
           <slot :name="name" v-bind="row"></slot>
         </template>
