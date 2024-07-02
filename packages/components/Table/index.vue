@@ -438,7 +438,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
         </template>
         <template #pager>
           <div class="v-pagination-container">
-            <Pagination v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" :hidden="pageHidden" v-model:pageNum="pager.pageNum" :total="pager.total"
+            <Pagination v-if="!pageHidden" v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" v-model:pageNum="pager.pageNum" :total="pager.total"
               @change="pageChange" />
             <HScroll v-if="merge.crossSlip" :bodyRect="bodyRect" @scroll="handleScrollX" />
           </div>
