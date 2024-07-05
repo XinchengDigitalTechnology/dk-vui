@@ -10,6 +10,8 @@
 | --- | --- | --- | --- | 
 | edit | 是否为编辑页 |boolean |—|
 | footer | 为编辑页时底部固定区域配置 { offset } |object |{}|
+| leftConfig | {width: 宽度, collapse: 是否开启折叠功能, collapseValue: 是否默认折叠} |object |—|
+| footerConfig | {height: 高度, align: 对齐方式, offset: 偏移量} |object |—|
 
 ## Slots
 

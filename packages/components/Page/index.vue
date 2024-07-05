@@ -13,8 +13,8 @@ const props = defineProps({
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()))])
 
-const leftConfig = XEUtils.merge(GlobalConfig.page.leftConfig, props.leftConfig)
-const footerConfig = XEUtils.merge(GlobalConfig.page.footerConfig, props.footerConfig)
+const leftConfig = XEUtils.merge({}, GlobalConfig.page.leftConfig, props.leftConfig)
+const footerConfig = XEUtils.merge({}, GlobalConfig.page.footerConfig, props.footerConfig)
 
 const footerWidth = ref(0)
 const resize = ({ width }, target) => {
@@ -40,7 +40,7 @@ onActivated(() => {
 })
 
 // 折叠处理
-const collapse = ref(false)
+const collapse = ref(leftConfig.collapseValue || false)
 
 // 页面级气泡
 const tipRef = ref()
