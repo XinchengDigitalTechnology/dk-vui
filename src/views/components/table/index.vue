@@ -105,6 +105,9 @@ const tableOptins = reactive({
       sizeRange: { type: 'sizeRange1' }, // 组合+范围
     }
   },
+  pagerConfig: {
+    layouts: ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total']
+  },
   scrollY: { enabled: true, gt: 0 },
   rowConfig: { height: 100 },
   columns: [
