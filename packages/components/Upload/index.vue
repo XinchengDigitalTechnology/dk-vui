@@ -4,6 +4,7 @@ import { Delete, CircleClose } from '@element-plus/icons-vue'
 import { download } from '~/packages/utils'
 import Paste from './Paste'
 import Drag from './Drag'
+import GlobalConfig from "~/packages/config"
 
 const emit = defineEmits(['update:modelValue'])
 const props = defineProps({
@@ -20,7 +21,7 @@ const props = defineProps({
   required: Boolean, // 是否必填，仅展示样式，校验用el-form-item包一层来处理，也可以使用插槽 title 来自定义标题
   inline: { type: [Boolean, Number], default: true }, // 列表是否在一行展示，默认一行展示三个，传入数字可控制一行展示数量
   params: { type: Object, default: () => ({}) }, // 上传时的额外参数
-  upload: { type: Function, default: async() => ({}) }, //上传方法
+  upload: { type: Function, default: () => GlobalConfig.upload.upload }, //上传方法
 })
 
 const pasteRef = ref()
