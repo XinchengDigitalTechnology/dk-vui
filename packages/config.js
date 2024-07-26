@@ -98,19 +98,15 @@ export default {
     },
   },
   upload: {
-    modelValue: { type: [String, Array] },
-    title: { type: String, default: '' }, // 标题，无标题时不展示
-    types: { type: Array, default: () => (['png', 'jpg', 'jpeg']) },
-    limit: { type: [String, Number], default: () => '' },
-    drag: Boolean, // 是否开启拖动、粘贴上传
-    card: Boolean, // 是否使用卡片模式展示
-    size: { type: Number, default: 144 }, // 卡片模式展示大小
-    edit: Boolean, // 是否开启名称编辑功能
-    disabled: Boolean, // 是否禁用
-    multiple: Boolean, // 是否开启多个上传
-    required: Boolean, // 是否必填，仅展示样式，校验用el-form-item包一层来处理，也可以使用插槽 title 来自定义标题
-    inline: { type: [Boolean, Number], default: true }, // 列表是否在一行展示，默认一行展示三个，传入数字可控制一行展示数量
-    params: { type: Object, default: () => ({}) }, // 上传时的额外参数
-    upload: { type: Function, default: async() => ({}) }, //上传方法
+    types: ['png', 'jpg', 'jpeg'],
+    drag: false, // 是否开启拖动、粘贴上传
+    card: false, // 是否使用卡片模式展示
+    size: 144, // 卡片模式展示大小
+    edit: false, // 是否开启名称编辑功能
+    disabled: false, // 是否禁用
+    multiple: false, // 是否开启多个上传
+    required: false, // 是否必填，仅展示样式，校验用el-form-item包一层来处理，也可以使用插槽 title 来自定义标题
+    inline: true, // 列表是否在一行展示，默认一行展示三个，传入数字可控制一行展示数量
+    upload: async() => ({}), //上传方法
   },
 }

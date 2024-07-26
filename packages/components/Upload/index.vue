@@ -1,6 +1,6 @@
 <script setup>
 import { VXETable } from "vxe-table"
-import { Delete, CircleClose } from '@element-plus/icons-vue'
+import { Delete, CircleClose, CirclePlus } from '@element-plus/icons-vue'
 import { download } from '~/packages/utils'
 import Paste from './Paste'
 import Drag from './Drag'
@@ -14,7 +14,7 @@ const props = defineProps({
   limit: { type: [String, Number], default: () => '' },
   drag: Boolean, // 是否开启拖动、粘贴上传
   card: Boolean, // 是否使用卡片模式展示
-  size: { type: Number, default: 144 }, // 卡片模式展示大小
+  size: { type: Number, default: () => GlobalConfig.upload.size }, // 卡片模式展示大小
   edit: Boolean, // 是否开启名称编辑功能
   disabled: Boolean, // 是否禁用
   multiple: Boolean, // 是否开启多个上传
@@ -104,7 +104,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
     <template v-if="card">
       <div v-for="(d, i) in list" :key="i" class="v-upload-card">
         <div class="v-upload-card-item">
-          <VImage :src="d" :list="list" :size="size" />
+          <VImage :src="d" :list="list" :size="size+'px'" />
           <div class="v-upload-card-remove">
             <el-icon @click="remove(i)"><CircleClose /></el-icon>
           </div>

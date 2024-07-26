@@ -262,7 +262,7 @@ const bodyRect = ref({ ffsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft
 
 const updateScroll = async() => {
   columnList.value = gridRef?.value?.getColumns()
-  const tableBody = tableRef.value.querySelector('.vxe-table--body-wrapper')
+  const tableBody = tableRef?.value?.querySelector('.vxe-table--body-wrapper')
   if(!tableBody) return
   await nextTick()
   await new Promise(resolve => setTimeout(resolve, 100))
