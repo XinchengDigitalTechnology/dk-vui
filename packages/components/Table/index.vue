@@ -401,10 +401,17 @@ const sortChange = (val) => {
   }
 }
 
-provide('table', { getForm, setForm, formConfig })
+const emit = defineEmits(['form-reset'])
+const handleFormReset = () => {
+  emit('form-reset', form.value)
+  resetAndQuery()
+}
+
+provide('table', { getForm, setForm, formConfig, query })
 
 // 暴露属性及方法
 defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, getQueryForm, resetAndQuery, setPager, updateScroll, $table: gridRef })
+
 </script>
 
 <template>
@@ -417,7 +424,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
             <div class="vx-table__form-handle">
               <slot name="form_handle">
                 <el-button type="primary" @click="query">查询</el-button>
-                <el-button @click="resetAndQuery">重置</el-button>
+                <el-button @click="handleFormReset">重置</el-button>
                 <SaveForm v-if="formConfig.save" @query="query" />
                 <template v-if="slots.includes('high_form')">
                   <HighForm @query="query" @reset="resetAndQuery">

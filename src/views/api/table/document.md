@@ -25,6 +25,12 @@ column.item不传slots时，默认用 VText 组件渲染，支持设置 line 参
 | save    | 保存方法 | function({ model_type, name, [mainKey], conditions }) | -      |
 | remove  | 删除方法 | function({ [mainKey] })                               | -      |
 
+## table Event
+
+| 事件名  | 说明     | 参数 |
+| ------- | -------- |  ------ |
+| form-reset | 只对 form-config 配置时有效，表单重置时会触发该事件     |  { form }      |
+
 ## Table Exposes
 
 | Method        | 说明                         | 类型                          |

@@ -4,6 +4,10 @@
 
 ## 版本升级
 
+- 2024-7-31 v0.1.27
+1. 增加 VBatchInput 组件
+2. VTable 组件增加 form-reset 事件
+
 - 2024-7-11 v0.1.24
 1. 增加 VUpload 组件
 
