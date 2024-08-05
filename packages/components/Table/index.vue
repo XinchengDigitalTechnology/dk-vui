@@ -443,7 +443,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
         <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
           <slot :name="name" v-bind="row"></slot>
         </template>
-        <template #pager>
+        <template v-if="!pageHidden || merge.crossSlip" #pager>
           <div class="v-pagination-container">
             <Pagination v-if="!pageHidden" v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" v-model:pageNum="pager.pageNum" :total="pager.total"
               @change="pageChange" />
