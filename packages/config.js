@@ -8,7 +8,7 @@ export default {
     columnConfig: { resizable: true }, // 每一列是否启用列宽调整
     checkboxConfig: { checkField: '_CHECKED_', highlight: true }, // 绑定选中属性（行数据中必须存在该字段，否则无效）
     scrollY: { enabled: true, gt: 0, oSize: 4 }, // 默认启用虚拟滚动
-    sortConfig: { remote: true, trigger: 'cell', orders: ['desc', 'asc', 'null'] }, // 默认远程排序
+    sortConfig: { remote: true, trigger: 'cell', orders: ['desc', 'asc', null] }, // 默认远程排序
     formConfig: {
       proxy: { // 保存搜索条件
         mainKey: 'sc_id', // 主键

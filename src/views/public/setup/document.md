@@ -93,7 +93,8 @@ DKVui.setup({
     edit: Boolean, // 是否是表单页
     leftConfig: {
       width: 200, // 左侧宽度
-      collapse: false // 是否可折叠
+      collapse: false, // 是否可折叠
+      collapseValue: false, // 折叠默认值
     },
     footerConfig: {
       height: 50, // 底部高度

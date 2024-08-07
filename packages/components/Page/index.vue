@@ -129,6 +129,7 @@ provide('updateTip', updateTip)
       overflow: hidden;
       z-index: 1;
       background: #CCCCCC;
+      transition: all .2s;
       cursor: pointer;
       &:hover{
         background-color: #aaa;
