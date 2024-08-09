@@ -1,5 +1,5 @@
 <template>
-  <VPage style="background: #f5f5f5;" :left-config="{collapse: true}">
+  <VPage style="background: #f5f5f5;" :left-config="{width: 200, collapse: true, collapseValue: false, drag: true, showArrow: true}">
     <template #left>
       <el-tree :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]" :props="defaultProps" />
     </template>
@@ -79,6 +79,7 @@ const tableRef = ref(null)
 const create = table => {
   console.log('tableRef.value', tableRef.value)
 }
+
 // 模拟分页接口
 const findPageList = (pageNum, pageSize) => {
   return new Promise(resolve => {
@@ -93,6 +94,7 @@ const findPageList = (pageNum, pageSize) => {
   })
 }
 const tableOptins = reactive({
+  showHeaderOverflow: true,
   id: 'id',
   formConfig: {
     save: '/purchase/manage/plan',
@@ -114,7 +116,7 @@ const tableOptins = reactive({
     { type: 'checkbox', width: 50, fixed: 'left' },
     { type: 'seq', width: 60, fixed: 'left' },
     {
-      title: '字体颜色', width: 150, slots: {
+      title: '字体颜色', width: 150, field: 'aaa', sortable: true, slots: {
         default: ({ row }) => <div>
           <VText value='标题颜色#666' />
           <VText value='正文颜色#333' />

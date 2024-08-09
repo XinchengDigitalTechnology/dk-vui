@@ -105,3 +105,80 @@ export const setup = (options) => {
   }
   XEUtils.merge(GlobalConfig, options)
 }
+
+/**
+ * @description 绑定事件 on(element, event, handler)
+ */
+export const on = (function() {
+  if (document.addEventListener) {
+    return function(element, event, handler, options = false) {
+      if (element && event && handler) {
+        element.addEventListener(event, handler, options)
+      }
+    }
+  } else {
+    return function(element, event, handler) {
+      if (element && event && handler) {
+        element.attachEvent('on' + event, handler)
+      }
+    }
+  }
+})(document)
+
+/**
+ * @description 解绑事件 off(element, event, handler)
+ */
+export const off = (function() {
+  if (document.removeEventListener) {
+    return function(element, event, handler, options = false) {
+      if (element && event) {
+        element.removeEventListener(event, handler, options)
+      }
+    }
+  } else {
+    return function(element, event, handler) {
+      if (element && event) {
+        element.detachEvent('on' + event, handler)
+      }
+    }
+  }
+})(document)
+
+/**
+ * * 计算鼠标移动距离
+ * @param {object} functions
+ */
+export const onMousemove = function(fns) {
+  const { start, moveing, end } = fns
+  start && start()
+
+  let startX = 0
+  let moveX = 0
+  let startY = 0
+  let moveY = 0
+
+  document.onselectstart = function() { return false }
+  document.ondragstart = function() { return false }
+
+  const handleMouseMove = (e) => {
+    if (e) {
+      !startX && (startX = e.clientX)
+      !startY && (startY = e.clientY)
+      moveX = e.clientX - startX
+      moveY = e.clientY - startY
+    }
+
+    moveing && moveing(moveX, moveY)
+  }
+
+  const handleMouseUp = () => {
+    end && end(moveX, moveY)
+
+    off(document, 'mousemove', handleMouseMove)
+    off(document, 'mouseup', handleMouseUp)
+    document.onselectstart = null
+    document.ondragstart = null
+  }
+  on(document, 'mousemove', handleMouseMove)
+  on(document, 'mouseup', handleMouseUp)
+}

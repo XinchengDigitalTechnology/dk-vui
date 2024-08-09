@@ -94,7 +94,13 @@ DKVui.setup({
     leftConfig: {
       width: 200, // 左侧宽度
       collapse: false, // 是否可折叠
-      collapseValue: false, // 折叠默认值
+      collapseValue: false, // 是否默认折叠
+      showArrow: true, // 是否显示箭头按钮
+      arrowClass: '', // 箭头class
+      drag: false, // 宽度是否可拖动
+      dragLineClass: '', // 拖动线条 class
+      dragMinWidth: 50, // 拖动时的最小宽度
+      dragMaxWidth: 500, // 拖动时的最大宽度
     },
     footerConfig: {
       height: 50, // 底部高度

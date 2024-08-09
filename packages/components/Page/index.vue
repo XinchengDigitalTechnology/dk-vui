@@ -2,6 +2,7 @@
 import XEUtils from 'xe-utils'
 import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import GlobalConfig from "~/packages/config"
+import { onMousemove } from '~/packages/utils'
 
 // 分为列表页和表单页，默认是列表页
 const props = defineProps({
@@ -13,7 +14,7 @@ const props = defineProps({
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()))])
 
-const leftConfig = XEUtils.merge({}, GlobalConfig.page.leftConfig, props.leftConfig)
+const leftConfig = ref(XEUtils.merge({}, GlobalConfig.page.leftConfig, props.leftConfig))
 const footerConfig = XEUtils.merge({}, GlobalConfig.page.footerConfig, props.footerConfig)
 
 const footerWidth = ref(0)
@@ -25,6 +26,31 @@ const resize = ({ width }, target) => {
     w += 6
   }
   footerWidth.value = w
+}
+
+const moveX = ref(0)
+const isMove = ref(false)
+const start = (val) => {
+  moveX.value = 0
+  isMove.value = true
+  document.body.style.cursor = 'col-resize'
+}
+
+const moveing = (val) => {
+  moveX.value = val
+}
+
+const end = (val) => {
+  leftConfig.value.width += val
+  moveX.value = 0
+  isMove.value = false
+  document.body.style.cursor = ''
+}
+
+const transition = computed(() => isMove.value ? '' : '.2s')
+
+const mousedown = () => {
+  onMousemove({ start, moveing, end })
 }
 
 // 滚动处理
@@ -40,7 +66,21 @@ onActivated(() => {
 })
 
 // 折叠处理
-const collapse = ref(leftConfig.collapseValue || false)
+const collapse = ref(leftConfig.value.collapseValue || false)
+const leftWidth = computed(() => {
+  let w = 0
+  if (collapse.value) return w
+  const { width, dragMinWidth, dragMaxWidth } = leftConfig.value
+  w = width + moveX.value
+  if (dragMinWidth) {
+    w = Math.max(w, dragMinWidth)
+  }
+  if (dragMaxWidth) {
+    w = Math.min(w, dragMaxWidth)
+  }
+  return w + 'px'
+})
+
 
 // 页面级气泡
 const tipRef = ref()
@@ -56,7 +96,7 @@ provide('updateTip', updateTip)
 </script>
 
 <template>
-  <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" :style="{'--left-width': collapse ? 0 : leftConfig.width+'px'}" v-dom-resize="resize" v-bind="$attrs"
+  <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" :style="{'--left-width': leftWidth}" v-dom-resize="resize" v-bind="$attrs"
     @scroll="handleScroll">
     <template v-if="edit">
       <slot />
@@ -69,15 +109,19 @@ provide('updateTip', updateTip)
         </div>
       </template>
     </template>
-    <div v-else class="v-page__body" :class="{ 'is--left': slots.includes('left') }">
-      <div class="v-page__body-left" v-if="slots.includes('left')">
+    <div v-else class="v-page__body" :style="{ paddingLeft: slots.includes('left') && leftWidth,transition }">
+      <div class="v-page__body-left" v-if="slots.includes('left')" :style="{transition, boxShadow: !leftConfig.drag && '1px 0 0 0 #e7eaf0'}">
         <slot name="left"></slot>
+        <div v-if="leftConfig.drag" :class="['v-page__body-drag', isMove && 'is-move']" @mousedown="mousedown">
+          <div class="v-page__body-drag-line" :class="leftConfig.dragLineClass"></div>
+        </div>
       </div>
       <slot />
     </div>
-    <div v-if="leftConfig.collapse" class="v-page__body-collapse" @click="collapse=!collapse">
-      <el-icon color="white">
-        <ArrowRightBold  v-if="collapse" />
+    <div v-if="leftConfig.collapse" class="v-page__body-collapse" :class="leftConfig.arrowClass"
+      :style="{left: !leftConfig.drag ? leftWidth : leftWidth ? `calc(${leftWidth} - 2px)` : 0, transition}" @click="collapse=!collapse">
+      <el-icon v-if="leftConfig.showArrow" color="white">
+        <ArrowRightBold v-if="collapse" />
         <ArrowLeftBold v-else />
       </el-icon>
     </div>
@@ -114,13 +158,8 @@ provide('updateTip', updateTip)
     border-radius: 8px 8px 0 0;
     background-color: #fff;
 
-    &.is--left {
-      padding-left: var(--left-width);
-      transition: padding .2s;
-    }
     &-collapse {
       position: absolute;
-      left: var(--left-width);
       top: 50%;
       transform: translate(2px, -15px);
       height: 30px;
@@ -128,10 +167,9 @@ provide('updateTip', updateTip)
       border-radius: 4px;
       overflow: hidden;
       z-index: 1;
-      background: #CCCCCC;
-      transition: all .2s;
+      background-color: #ccc;
       cursor: pointer;
-      &:hover{
+      &:hover {
         background-color: #aaa;
       }
     }
@@ -145,12 +183,34 @@ provide('updateTip', updateTip)
       overflow-x: hidden;
       overflow-y: auto;
       z-index: 1;
-      box-shadow: 1px 0 0 0 rgba($color: #eff3fe, $alpha: 1);
-      transition: all .2s;
     }
 
     &::after {
       content: '';
+    }
+
+    &-drag {
+      width: 5px;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      display: flex;
+      justify-content: center;
+      &-line {
+        content: '';
+        height: 100%;
+        width: 1px;
+        background-color: #e7eaf0;
+      }
+      &:hover,
+      &.is-move {
+        cursor: col-resize;
+        .v-page__body-drag-line {
+          width: 3px;
+          background-color: var(--el-color-primary);
+        }
+      }
     }
   }
 
