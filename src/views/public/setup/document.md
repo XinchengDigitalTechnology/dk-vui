@@ -89,6 +89,9 @@ DKVui.setup({
     clearable: true, // 是否可清空
     types: {} // 配置选项
   },
+  batchInput: {
+    rows: 200, // 限制行数
+  },
   page: {
     edit: Boolean, // 是否是表单页
     leftConfig: {

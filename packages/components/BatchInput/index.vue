@@ -21,9 +21,10 @@
 </template>
 <script setup>
 import { CircleClose } from '@element-plus/icons-vue'
+import GlobalConfig from "~/packages/config"
 const props = defineProps({
   modelValue: { type: String, default: () => '' },
-  rows: { type: [Number, String], default: 200 },
+  rows: { type: [Number, String], default: () => GlobalConfig.batchInput.rows },
 })
 
 const emit = defineEmits(["update:modelValue", "search"])
