@@ -19,6 +19,7 @@
 | --- | --- | --- | --- | 
 | width | 左侧宽度 |boolean |200|
 | collapse | 是否可折叠 |boolean |false|
+| lineClass | 右侧线条 class |boolean |-|
 | collapseValue | 是否默认折叠 |boolean |false|
 | showArrow | 是否显示箭头按钮 |boolean |true|
 | arrowClass | 箭头 class |string |-|
@@ -26,6 +27,7 @@
 | dragLineClass | 拖动线条 class |string |-|
 | dragMinWidth | 拖动时的最小宽度 |number |50|
 | dragMaxWidth | 拖动时的最大宽度 |number |500|
+| duration | 左侧交互动画时长，单位毫秒 |number |200|
 
 ## Slots
 

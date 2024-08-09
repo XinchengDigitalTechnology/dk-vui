@@ -47,7 +47,7 @@ const end = (val) => {
   document.body.style.cursor = ''
 }
 
-const transition = computed(() => isMove.value ? '' : '.2s')
+const transition = computed(() => isMove.value ? 'all' : `${leftConfig.value.duration/1000}s`)
 
 const mousedown = () => {
   onMousemove({ start, moveing, end })
@@ -110,11 +110,12 @@ provide('updateTip', updateTip)
       </template>
     </template>
     <div v-else class="v-page__body" :style="{ paddingLeft: slots.includes('left') && leftWidth,transition }">
-      <div class="v-page__body-left" v-if="slots.includes('left')" :style="{transition, boxShadow: !leftConfig.drag && '1px 0 0 0 #e7eaf0'}">
+      <div class="v-page__body-left" v-if="slots.includes('left')" :style="{transition}">
         <slot name="left"></slot>
         <div v-if="leftConfig.drag" :class="['v-page__body-drag', isMove && 'is-move']" @mousedown="mousedown">
           <div class="v-page__body-drag-line" :class="leftConfig.dragLineClass"></div>
         </div>
+        <div v-else class="v-page__body-line" :class="leftConfig.lineClass"></div>
       </div>
       <slot />
     </div>
@@ -187,6 +188,15 @@ provide('updateTip', updateTip)
 
     &::after {
       content: '';
+    }
+
+    &-line {
+      width: 1px;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      background-color: #e7eaf0;
     }
 
     &-drag {

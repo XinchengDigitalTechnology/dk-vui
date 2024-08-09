@@ -89,13 +89,16 @@ export default {
     leftConfig: {
       width: 200, // 左侧宽度
       collapse: false, // 是否可折叠
+      lineClass: false, // 右侧线条 class
       collapseValue: false, // 是否默认折叠
       showArrow: true, // 是否显示箭头按钮
       arrowClass: '', // 箭头class
       drag: false, // 宽度是否可拖动
-      dragLineClass: '', // 拖动线条 class
+      dragLineClass: '', // 可拖动线条 class
       dragMinWidth: 50, // 拖动时的最小宽度
       dragMaxWidth: 500, // 拖动时的最大宽度
+      dragMaxWidth: 500, // 拖动时的最大宽度
+      duration: 200, // 左侧交互动画时长, 单位毫秒
     },
     footerConfig: {
       height: 50, // 底部高度
