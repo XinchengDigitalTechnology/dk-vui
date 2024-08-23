@@ -76,7 +76,7 @@ watch(
     }
 
     .v-HScroll-mouse {
-      top: 110%;
+      top: 1100%;
       opacity: 0;
     }
   }
@@ -95,7 +95,7 @@ watch(
     width: 100%;
     height: 100%;
     left: 0;
-    top: 110%;
+    top: -1100%;
     opacity: 0;
     background: transparent;
     transition: opacity 0.1s;

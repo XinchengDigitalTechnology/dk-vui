@@ -1,7 +1,7 @@
 <script lang="jsx" setup>
 import XEUtils from 'xe-utils'
 import GlobalConfig from "~/packages/config"
-import { ArrowUpBold } from '@element-plus/icons-vue'
+import { ArrowUpBold, QuestionFilled } from '@element-plus/icons-vue'
 import Pagination from './Pagination'
 import SaveForm from './SaveForm'
 import HighForm from './HighForm'
@@ -24,6 +24,29 @@ const initColumn = (columns) => {
     if (!type && !slots) {
       d.slots = {}
       d.slots.default = ({ row }) => <VText value={row[field]} line={line} copy={copy} />
+    }
+    const renders = {
+      title: (value) => <div>{value}</div>,
+      sort: (value) => <VSort value={[{value}]} />,
+      question: (value) => <el-tooltip effect="dark" content={value} placement="top">
+        <el-icon size='16'><QuestionFilled /></el-icon>
+      </el-tooltip>
+    }
+    if(d.slots?.header && Array.isArray(d.slots?.header)) {
+      const headerList = d.slots?.header
+      d.slots.header = () => <div>
+        {
+          headerList.map(h => {
+            let render = []
+            for (const key in h) {
+              if(renders[key]) {
+                render.push(renders[key](h[key]))
+              }
+            }
+            return <div class='vx-table-title'>{render}</div>
+          })
+        }
+      </div>
     }
     return d
   })
@@ -325,7 +348,6 @@ const fixs = computed(() => columnList.value.reduce((acc, cur) => {
   }
   return acc
 }, {lefts: [], rights: []}))
-const {columns} = merge
 const cellStyle = (ags) => {
   const {row, column} = ags
   const {params, id} = column
@@ -393,7 +415,7 @@ const cellClassName = (ags) => {
   return classes
 }
 
-const sortChange = (val) => {
+const sort = (val) => {
   if(attrs.sortConfig?.remote) {
     const {field, order: rule} = val
     setFormField('sort', rule ? {field, rule} : {})
@@ -401,13 +423,16 @@ const sortChange = (val) => {
   }
 }
 
+const clearSort = () => gridRef.value.clearSort()
+
 const emit = defineEmits(['form-reset'])
 const handleFormReset = () => {
+  clearSort()
   emit('form-reset', form.value)
   resetAndQuery()
 }
 
-provide('table', { getForm, setForm, formConfig, query })
+provide('table', { form, getForm, setForm, formConfig, query, sort, clearSort })
 
 // 暴露属性及方法
 defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, getQueryForm, resetAndQuery, setPager, updateScroll, $table: gridRef })
@@ -439,14 +464,13 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
     </div>
     <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
       <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
-        :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="updateScroll" @sortChange="sortChange">
+        :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="updateScroll" @sortChange="sort">
         <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
           <slot :name="name" v-bind="row"></slot>
         </template>
         <template v-if="!pageHidden || merge.crossSlip" #pager>
           <div class="v-pagination-container">
-            <Pagination v-if="!pageHidden" v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" v-model:pageNum="pager.pageNum" :total="pager.total"
-              @change="pageChange" />
+            <Pagination v-if="!pageHidden" v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" v-model:pageNum="pager.pageNum" :total="pager.total" @change="pageChange" />
             <HScroll v-if="merge.crossSlip" :bodyRect="bodyRect" @scroll="handleScrollX" />
           </div>
         </template>

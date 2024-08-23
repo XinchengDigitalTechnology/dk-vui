@@ -76,8 +76,8 @@ devDependencies:
     specifier: ^4.2.5
     version: 4.2.5(vue@3.2.45)
   vxe-table:
-    specifier: ^4.4.2
-    version: 4.4.2(vue@3.2.45)(xe-utils@3.5.11)
+    specifier: ^4.6.17
+    version: 4.6.17(vue@3.2.45)
   xe-utils:
     specifier: ^3.5.11
     version: 3.5.11
@@ -1650,6 +1650,10 @@ packages:
     engines: {node: '>=0.3.1'}
     dev: true
 
+  /dom-zindex@1.0.4:
+    resolution: {integrity: sha512-PNk7u71TJ1C9Lwjjp5nNuQcVWuECFMmr9kZAwi2UbgWUM7jXdTCe4O4x5bhLUa07jpcZUVA5Du3ho7/FXzS9Ng==}
+    dev: true
+
   /dompurify@3.0.6:
     resolution: {integrity: sha512-ilkD8YEnnGh1zJ240uJsW7AzE+2qpbOUYjacomn3AvJ6J4JhKGSZ2nh4wUIXPZrEPppaCLx5jFe8T89Rk8tQ7w==}
     dev: true
@@ -3094,14 +3098,14 @@ packages:
       '@vue/server-renderer': 3.2.45(vue@3.2.45)
       '@vue/shared': 3.2.45
 
-  /vxe-table@4.4.2(vue@3.2.45)(xe-utils@3.5.11):
-    resolution: {integrity: sha512-3UdfSeMZ/D5nfTohcnZQQ2gkFZnhvf0v83usOCwx3B1nzBNKAJumg3QviMEox5SdikT8pq9z4vz3a0pesPPrJw==}
+  /vxe-table@4.6.17(vue@3.2.45):
+    resolution: {integrity: sha512-K9A0qJuV33Xh2NK6L1tXXEXueGyOoRVz7eFvFFpTbLVtm3oCoYl6+BOqD6YTw70R8NKdZZNH+ylmEJug+Qjrrg==}
     peerDependencies:
       vue: ^3.2.28
-      xe-utils: ^3.5.0
     dependencies:
+      dom-zindex: 1.0.4
       vue: 3.2.45
-      xe-utils: 3.5.11
+      xe-utils: 3.5.30
     dev: true
 
   /web-namespaces@2.0.1:
@@ -3127,6 +3131,10 @@ packages:
 
   /xe-utils@3.5.11:
     resolution: {integrity: sha512-lyKc/lTBga1Zb63p+FED8mtxLnYIjSS8PVJM1N64NGdCu/3d1XubaVeke2p91RHssP0ExVAl2LUqZYperoz76Q==}
+    dev: true
+
+  /xe-utils@3.5.30:
+    resolution: {integrity: sha512-5Ez6JUANpMakduiTLxrNObzqMebnM4697KvHW5okedkUjXvYgGvkbg0tABTkvwDW/Pb09v7vT68dzBOeAuOu0g==}
     dev: true
 
   /yallist@3.1.1:

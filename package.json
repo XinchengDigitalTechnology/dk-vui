@@ -1,6 +1,6 @@
 {
   "name": "dk-vui",
-  "version": "0.1.32",
+  "version": "0.1.33",
   "description": "dk-vui",
   "private": false,
   "author": "blryli",
@@ -47,7 +47,7 @@
     "vite": "^4.3.9",
     "vite-plugin-vue-setup-extend": "^0.4.0",
     "vue-router": "^4.2.5",
-    "vxe-table": "^4.4.2",
+    "vxe-table": "^4.6.17",
     "xe-utils": "^3.5.11"
   }
 }

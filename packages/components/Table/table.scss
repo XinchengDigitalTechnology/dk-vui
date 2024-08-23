@@ -9,6 +9,12 @@
   display: flex;
   flex-direction: column;
   position: relative;
+
+  &-title{
+    display: flex;
+    align-items: center;
+    gap: 1px;
+  }
   
   .cell--fixed {
     background-color: #fff;

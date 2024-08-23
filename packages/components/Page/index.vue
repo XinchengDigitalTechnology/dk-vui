@@ -119,7 +119,7 @@ provide('updateTip', updateTip)
       </div>
       <slot />
     </div>
-    <div v-if="leftConfig.collapse" class="v-page__body-collapse" :class="leftConfig.arrowClass"
+    <div v-if="leftConfig.collapse && slots.includes('left')" class="v-page__body-collapse" :class="leftConfig.arrowClass"
       :style="{left: !leftConfig.drag ? leftWidth : leftWidth ? `calc(${leftWidth} - 2px)` : 0, transition}" @click="collapse=!collapse">
       <el-icon v-if="leftConfig.showArrow" color="white">
         <ArrowRightBold v-if="collapse" />
