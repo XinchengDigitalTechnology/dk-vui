@@ -31,7 +31,7 @@ const upload = async () => {
       <Md v-model="text1" view />
 
       <h2>卡片模式</h2>
-      <VUpload v-model="list" drag card />
+      <VUpload v-model="list" drag card :upload="upload" />
       <Md v-model="text2" view />
     </div>
   </VPage>

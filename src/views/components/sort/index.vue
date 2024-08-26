@@ -65,7 +65,7 @@ const tableOptins = reactive({
       }
     },
     {
-      width: 296, slots: {
+      width: 306, slots: {
         header: [
           { title: '标题在前面', question: '提示', sort: 'sort5'},
           { question: '提示', title: '提示在前面', sort: 'sort6'},

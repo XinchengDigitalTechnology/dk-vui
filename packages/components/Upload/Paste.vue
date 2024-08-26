@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-if="load" title="上传附件" v-model="visible" append-to-body :close-on-click-modal="false" :z-index="2000"
+  <el-dialog v-if="load" title="上传附件" v-model="visible" append-to-body :close-on-click-modal="false"
     width="800px" @close="handleClose">
     <Drag :accept="accept" style="width:100%" @file="uploadFile" />
   </el-dialog>
