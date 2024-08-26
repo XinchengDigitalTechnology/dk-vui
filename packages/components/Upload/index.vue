@@ -21,7 +21,7 @@ const props = defineProps({
   required: Boolean, // 是否必填，仅展示样式，校验用el-form-item包一层来处理，也可以使用插槽 title 来自定义标题
   inline: { type: [Boolean, Number], default: true }, // 列表是否在一行展示，默认一行展示三个，传入数字可控制一行展示数量
   params: { type: Object, default: () => ({}) }, // 上传时的额外参数
-  upload: { type: Function, default: () => GlobalConfig.upload.upload }, //上传方法
+  upload: { type: Function, default: null }, //上传方法
 })
 
 const pasteRef = ref()
@@ -48,7 +48,7 @@ const readFile = async (fileds) => {
     }
     try {
       loadings.upload = true
-      const res = await props.upload(param)
+      const res = await (props.upload || GlobalConfig.upload.upload)(param)
       let { file_preview } = res.data[0]
       const name = file.name.replace(file.lastModified, '')
       const obj = props.edit ? { file_url: file_preview, file_name: name } : file_preview
