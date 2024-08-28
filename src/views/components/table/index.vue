@@ -95,7 +95,7 @@ const findPageList = (pageNum, pageSize) => {
 }
 const tableOptins = reactive({
   showHeaderOverflow: true,
-  id: 'id',
+  id: 'table',
   formConfig: {
     save: '/purchase/manage/plan',
     data: {

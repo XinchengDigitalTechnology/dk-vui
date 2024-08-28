@@ -147,7 +147,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
     </div>
   </div>
   <ViewImage ref="viewImageRef" />
-  <Paste ref="pasteRef" :accept="types.map(d => `.${d}`).join(',')" @success="readFile" />
+  <Paste ref="pasteRef" :accept="types.map(d => `.${d}`).join(',')" :style="{'--size': size+'px'}" @success="readFile" />
 </template>
 
 <style lang="scss">

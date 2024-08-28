@@ -29,7 +29,7 @@ const initColumn = (columns) => {
       title: (value) => <div>{value}</div>,
       sort: (value) => <VSort value={[{value}]} />,
       question: (value) => <el-tooltip effect="dark" content={value} placement="top">
-        <el-icon size='16'><QuestionFilled /></el-icon>
+        <el-icon size='14'><QuestionFilled /></el-icon>
       </el-tooltip>
     }
     if(d.slots?.header && Array.isArray(d.slots?.header)) {
@@ -281,7 +281,7 @@ const headerResize = async ({ width, height }) => {
 }
 
 const tableRef = ref()
-const bodyRect = ref({ ffsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
+const bodyRect = ref({ offsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
 
 const updateScroll = async() => {
   columnList.value = gridRef?.value?.getColumns()

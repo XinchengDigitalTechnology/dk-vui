@@ -78,9 +78,9 @@ const handleSort = (name, s) => {
   }
   &-icon.el-icon {
     height: 8px;
-    color: #aaa;
+    color: var(--vxe-table-column-icon-border-color);;
     &:hover {
-      color: #666;
+      color: var(--vxe-font-color);
       cursor: pointer;
     }
     &.v-sort-icon-active {

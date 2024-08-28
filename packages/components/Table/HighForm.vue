@@ -6,10 +6,10 @@
     @close="handleClose">
     <slot></slot>
     <template #footer>
-      <SaveForm v-if="table.formConfig.save" placement="top" style="float: left;" />
       <el-button @click="close">关 闭</el-button>
-      <el-button @click="reset">重 置</el-button>
       <el-button type="primary" :loading="loadings.submit" @click="submit">查 询</el-button>
+      <el-button @click="reset">重 置</el-button>
+      <SaveForm v-if="table.formConfig.save" placement="top" style="margin-left: 12px" />
     </template>
   </el-dialog>
 </template>

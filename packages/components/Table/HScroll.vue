@@ -26,10 +26,19 @@ watch(
   }
 )
 
+const style = () => {
+  const { scrollWidth, clientWidth, mouseOffset } = props.bodyRect
+  return {
+    '--scrollWidth': (scrollWidth + 12) + 'px',
+    '--clientWidth': (clientWidth + 6) + 'px',
+    '--ratio': ((clientWidth + scrollTop.value) / (scrollWidth + 12)).toFixed(2) * 100 + '%',
+    '--mouseOffset': ((clientWidth > 600 ? 0 : (510 - clientWidth) / 2) - mouseOffset) + 'px'
+  }
+}
+
 </script>
 <template>
-  <div v-if="bodyRect.scrollWidth > bodyRect.clientWidth" class="v-HScroll"
-    :style="{ '--scrollWidth': (bodyRect.scrollWidth + 12) + 'px', '--clientWidth': (bodyRect.clientWidth + 6) + 'px', '--ratio': ((bodyRect.clientWidth + scrollTop) / (bodyRect.scrollWidth + 12)).toFixed(2) * 100 + '%', '--scrollTop': scrollTop + 'px', '--mouseOffset': ((bodyRect.clientWidth > 600 ? 0 : (510 - bodyRect.clientWidth) / 2) - bodyRect.mouseOffset) + 'px' }">
+  <div v-if="bodyRect.scrollWidth > bodyRect.clientWidth" class="v-HScroll" :style="style()">
     <div class="v-HScroll-wrapper">
       <div class="v-HScroll-mouse">
         <svg class="v-HScroll-mouse-icon" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -162,7 +171,7 @@ watch(
   .v-HScroll .v-HScroll-slither-over {
     direction: rtl;
     background-image: url('./1.png'),
-        linear-gradient(to bottom, rgba(#000, 0.1) var(--ratio), transparent 0%);
+      linear-gradient(to bottom, rgba(#000, 0.1) var(--ratio), transparent 0%);
   }
 }
 

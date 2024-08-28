@@ -7,7 +7,7 @@
       支持点击/粘贴/拖拽到此区域上传
     </p>
     <input ref="fileIpt" class="filePaste-ipt" />
-    <input class="file-ipt" type="file" :accept="accept" multiple @change="changeFile" />
+    <input ref="fileRef" class="file-ipt" type="file" :accept="accept" multiple @change="changeFile" />
   </div>
 </template>
 <script setup>
@@ -26,6 +26,7 @@ const handleMouseleave = function (event) {
   fileIpt.value?.removeEventListener('paste', handlePaste)
 }
 
+const fileRef = ref()
 const emit = defineEmits(["file"])
 const handleFileName = (fileList) => {
   let files = Array.from(fileList)
@@ -34,6 +35,7 @@ const handleFileName = (fileList) => {
     renameReportFile.push(new File([files[i]], new Date().getTime() + files[i].name, { type: files[0].type }))
   }
   emit("file", renameReportFile)
+  fileRef.value.value = ''
 }
 const changeFile = (e) => {
   e.preventDefault()
