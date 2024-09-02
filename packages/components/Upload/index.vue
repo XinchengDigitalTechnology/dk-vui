@@ -1,6 +1,6 @@
 <script setup>
 import { VXETable } from "vxe-table"
-import { Delete, CircleClose, CirclePlus } from '@element-plus/icons-vue'
+import { Delete, CircleClose, CirclePlus, View, Download } from '@element-plus/icons-vue'
 import { download } from '~/packages/utils'
 import Paste from './Paste'
 import Drag from './Drag'
@@ -72,7 +72,7 @@ const remove = i => {
 }
 
 const viewImageRef = ref()
-const handleClick = (d) => {
+const view = (d) => {
   viewImageRef?.value.open(d)
 }
 
@@ -87,7 +87,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
         <slot name="title">{{ title }}</slot>
       </div>
       <template v-if="drag">
-        <Drag :accept="types.map(d => `.${d}`).join(',')" @file="readFile" />
+        <Drag :accept="types.map(d => `.${d}`).join(',')" :disabled="disabled" @file="readFile" />
       </template>
       <template v-else-if="!disabled">
         <el-divider direction="vertical" />
@@ -104,9 +104,11 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
     <template v-if="card">
       <div v-for="(d, i) in list" :key="i" class="v-upload-card">
         <div class="v-upload-card-item">
-          <VImage :src="d" :list="list" :size="size+'px'" />
+          <VImage :src="d" :size="size+'px'" class="v-upload-card-img" :view="false" @click="view(d)" />
           <div class="v-upload-card-remove">
-            <el-icon @click="remove(i)"><CircleClose /></el-icon>
+            <el-icon v-if="!disabled" @click="remove(i)">
+              <CircleClose />
+            </el-icon>
           </div>
         </div>
       </div>
@@ -115,30 +117,40 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
       <div v-for="(d, i) in list" :key="i" class="v-upload-list-item">
         <template v-if="edit">
           <div style="width: calc(100% - 100px);">
-            <el-input v-model="d.file_name" placeholder="请输入" class="w-full" />
+            <el-input v-model="d.file_name" placeholder="请输入" :disabled="disabled" class="w-full" />
           </div>
           <div class="v-upload-handle">
-            <span class="w-8">
-              <VText value="查看" type="button" @click="handleClick(d.file_url)" />
-            </span>
-            <span class="w-8 ml-1">
-              <VText value="下载" type="button" @click="download(d.file_url)" />
-            </span>
-            <el-button type="danger" link icon="Delete" :disabled="disabled" class="ml-1" @click="remove(i)">
-              <el-icon><Delete /></el-icon>
+            <el-button type="primary" title="查看" link @click="view(d.file_url)">
+              <el-icon size="14">
+                <View />
+              </el-icon>
+            </el-button>
+            <el-button type="primary" title="下载" link @click="download(d.file_url)">
+              <el-icon size="14">
+                <Download />
+              </el-icon>
+            </el-button>
+            <el-button type="danger" title="删除" link :disabled="disabled" @click="remove(i)">
+              <el-icon size="14">
+                <Delete />
+              </el-icon>
             </el-button>
           </div>
         </template>
         <template v-else>
           <div style="width: calc(100% - 100px);">
-            <VText :value="getName(d)" type="button" style="max-height: 28px!important;" @click="handleClick(d)" />
+            <VText :value="getName(d)" type="button" style="max-height: 28px!important;" @click="view(d)" />
           </div>
           <div class="v-upload-handle">
-            <span class="w-8">
-              <VText value="下载" type="button" @click="download(d)" />
-            </span>
-            <el-button type="danger" link :disabled="disabled" style="margin-left: 8px;" @click="remove(i)">
-              <el-icon><Delete /></el-icon>
+            <el-button type="primary" title="下载" link @click="download(d.file_url)">
+              <el-icon size="14">
+                <Download />
+              </el-icon>
+            </el-button>
+            <el-button type="danger" title="删除" link :disabled="disabled" @click="remove(i)">
+              <el-icon size="14">
+                <Delete />
+              </el-icon>
             </el-button>
           </div>
         </template>
@@ -147,7 +159,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
     </div>
   </div>
   <ViewImage ref="viewImageRef" />
-  <Paste ref="pasteRef" :accept="types.map(d => `.${d}`).join(',')" :style="{'--size': size+'px'}" @success="readFile" />
+  <Paste ref="pasteRef" :accept="types.map(d => `.${d}`).join(',')" :disabled="disabled" :style="{'--size': size+'px'}" @success="readFile" />
 </template>
 
 <style lang="scss">
@@ -189,7 +201,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
       width: 100%;
       display: flex;
       align-items: center;
-      column-gap: 1rem;
+      gap: 5px;
       overflow: hidden;
     }
   }
@@ -197,7 +209,12 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
   &-handle {
     display: flex;
     flex: 0 0 90px;
+    gap: 3px;
+    align-items: center;
     max-height: 28px !important;
+    .el-button {
+      margin-left: 0 !important;
+    }
   }
 
   &-card {
@@ -217,6 +234,9 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
         object-fit: contain;
       }
     }
+    &-img{
+      cursor: pointer;
+    }
     &-remove {
       position: absolute;
       right: -5px;
@@ -227,7 +247,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
       transition: opacity 0.2s;
       color: #333;
       display: none;
-      opacity: .6;
+      opacity: 0.6;
       .el-icon {
         font-size: 18px;
         cursor: pointer;
@@ -241,7 +261,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
     }
     &:hover {
       .v-upload-card-remove {
-        display: block
+        display: block;
       }
     }
   }

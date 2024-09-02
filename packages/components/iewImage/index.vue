@@ -47,7 +47,7 @@ defineExpose({ open })
       </div>
     </template>
     <div class="flex items-center justify-center">
-      <VImage :src="src" size="700px" />
+      <VImage :src="src" size="700px" :view="false" />
     </div>
   </el-dialog>
 </template>

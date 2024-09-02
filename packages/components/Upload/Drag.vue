@@ -1,13 +1,13 @@
 <template>
-  <div tabindex="0" :class="['v-drag', { 'v-drag-active': active }]" ref="upload" v-bind="$attrs" @drop="handleDrop" @dragleave="handleDragleave" @dragenter="handleDragenter" @dragover="handleDragenter" @mouseenter="handleMouseenter" @mouseleave="handleMouseleave">
+  <div tabindex="0" :class="['v-drag', { 'v-drag-active': active, 'is--disabled': disabled }]" ref="upload" v-bind="$attrs" @drop="handleDrop" @dragleave="handleDragleave" @dragenter="handleDragenter" @dragover="handleDragenter" @mouseenter="handleMouseenter" @mouseleave="handleMouseleave">
     <el-icon size="52" color="#a8abb2">
       <UploadFilled />
     </el-icon>
     <p class="v-drag-subtile">
       支持点击/粘贴/拖拽到此区域上传
     </p>
-    <input ref="fileIpt" class="filePaste-ipt" />
-    <input ref="fileRef" class="file-ipt" type="file" :accept="accept" multiple @change="changeFile" />
+    <input ref="fileIpt" class="filePaste-ipt" :disabled="disabled" />
+    <input ref="fileRef" class="file-ipt" type="file" :disabled="disabled" :accept="accept" multiple @change="changeFile" />
   </div>
 </template>
 <script setup>
@@ -15,7 +15,7 @@ import { UploadFilled } from '@element-plus/icons-vue'
 const upload = ref(null)
 const active = ref(false)
 const fileIpt = ref(null)
-defineProps(['accept'])
+defineProps(['accept', 'disabled'])
 const handleMouseenter = function (event) {
   fileIpt.value.focus()
   // 粘贴
@@ -64,37 +64,28 @@ const handlePaste = (e) => {
 </script>
 
 <style lang="scss" scoped>
-@mixin borderColor($color: #2260FF) {
-  border: 1px dashed $color;
-}
-
 .v-drag {
   position: relative;
   height: var(--size);
   padding: 0 10px;
-  @include borderColor(#DEDEDE);
+  border: 1px dashed #DEDEDE;
   border-radius: 4px;
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: center;
 
-  &:active {
-    @include borderColor
-  }
+  &:active, &:hover, &-active {
+    &:not(.is--disabled) {
 
-  &:hover {
-    @include borderColor
+      border-color: var(--el-color-primary);
+    }
   }
-
-  &-active {
-    @include borderColor
-  }
-
+  
   &-title {
     font-size: 14px;
   }
-
+  
   &-subtile {
     font-size: 12px;
     color: #999999;
@@ -103,12 +94,14 @@ const handlePaste = (e) => {
   }
   .file-ipt {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     opacity: 0;
     cursor: pointer;
+  }
+  &.is--disabled{
+    .file-ipt {
+      cursor: no-drop;
+    }
   }
   
   .filePaste-ipt {

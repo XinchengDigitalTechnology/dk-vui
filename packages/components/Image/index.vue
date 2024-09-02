@@ -3,13 +3,14 @@ const props = defineProps({
   src: { type: [String, Array], default: '' }, // 图片url
   size: { type: String, default: '50px' }, // 图片尺寸
   list: { type: Array, default: () => { } }, // 放大列表
+  view: {type: Boolean, default: true},
 })
 
 </script>
 
 <template>
   <div class="v-image" :style="{ '--v-image-size': size }">
-    <el-image v-if="Array.isArray(src)" :src="src[0]" :preview-src-list="src" v-bind="$attrs">
+    <el-image v-if="Array.isArray(src)" :src="src[0]" :preview-src-list="view ? src : []" v-bind="$attrs">
       <template #error>
         <svg class="v-image--error" width="75px" height="74px" viewBox="0 0 75 74" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <title>pic_fail</title>
@@ -41,7 +42,7 @@ const props = defineProps({
         </svg>
       </template>
     </el-image>
-    <el-image v-else :src="src" :preview-src-list="list || [src]" v-bind="$attrs">
+    <el-image v-else :src="src" :preview-src-list="view ? (list || [src]) : []" v-bind="$attrs">
       <template #error>
         <svg class="v-image--error" width="75px" height="74px" viewBox="0 0 75 74" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
           <title>pic_fail</title>
