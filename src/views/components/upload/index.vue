@@ -6,7 +6,7 @@ const img = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLA
 const text = '\r\n```html\r\n<VUpload v-model="list" title="基础上传" />\r\n```\r\n'
 const text1 = '\r\n```html\r\n<VUpload v-model="list" drag />\r\n```\r\n'
 const text2 = '\r\n```html\r\n<VUpload v-model="list" drag card />\r\n```\r\n'
-const text3 = '\r\n```html\r\n<VUpload v-model="list" title="编辑上传" edit />\r\n```\r\n'
+const text3 = '\r\n```html\r\n<VUpload v-model="list1" title="编辑上传" edit />\r\n```\r\n'
 
 const content = ref(doc)
 const list = ref([img])
@@ -37,8 +37,11 @@ const upload = async () => {
       <Md v-model="text2" view />
 
       <h2>编辑模式</h2>
+      <p>
+        绑定值为 list1:
+        <div v-for="(d, i) in list1" :key="i">[{ file_url: url, file_name: {{ d.file_name }} }]</div>
+      </p>
       <VUpload v-model="list1" title="编辑上传" edit :upload="upload" />
-      [{file_url: img, file_name: '图片'}]
       <Md v-model="text3" view />
     </div>
   </VPage>

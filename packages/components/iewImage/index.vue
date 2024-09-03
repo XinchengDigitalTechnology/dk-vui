@@ -39,15 +39,33 @@ defineExpose({ open })
 </script>
 
 <template>
-  <el-dialog v-if="load" title="预览" v-model="visible" append-to-body width="800px" @close="handleClose">
+  <el-dialog v-if="load" title="预览" v-model="visible" append-to-body align-center width="800px" class="view-image" @close="handleClose">
     <template #header>
-      <div class="flex">
+      <div class="view-image-title">
         预览
-        <el-link type="primary" :underline="false" class="ml-auto mr-3" @click="download(src)">下 载</el-link>
+        <el-link type="primary" :underline="false" class="view-image-download" @click="download(src)">下 载</el-link>
       </div>
     </template>
-    <div class="flex items-center justify-center">
+    <div class="view-image-content">
       <VImage :src="src" size="700px" :view="false" />
     </div>
   </el-dialog>
 </template>
+
+<style lang="scss" scoped>
+.view-image{
+  &-title{
+    display: flex;
+    align-items: center;
+  }
+  &-download{
+    margin-left: auto;
+    margin-right: 12px;
+  }
+  &-content{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+</style>

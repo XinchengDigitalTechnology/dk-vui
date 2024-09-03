@@ -4,18 +4,20 @@
       <UploadFilled />
     </el-icon>
     <p class="v-drag-subtile">
-      支持点击/粘贴/拖拽到此区域上传
+      支持点击/粘贴/拖拽到此区域上传<br/>
+      <small class="v-drag-subtile-tip" v-if="tip">{{ tip }}</small>
     </p>
     <input ref="fileIpt" class="filePaste-ipt" :disabled="disabled" />
     <input ref="fileRef" class="file-ipt" type="file" :disabled="disabled" :accept="accept" multiple @change="changeFile" />
   </div>
 </template>
 <script setup>
+import { ElMessage } from "element-plus"
 import { UploadFilled } from '@element-plus/icons-vue'
 const upload = ref(null)
 const active = ref(false)
 const fileIpt = ref(null)
-defineProps(['accept', 'disabled'])
+const props = defineProps(['accept', 'disabled', 'tip', 'fileSize'])
 const handleMouseenter = function (event) {
   fileIpt.value.focus()
   // 粘贴
@@ -26,10 +28,30 @@ const handleMouseleave = function (event) {
   fileIpt.value?.removeEventListener('paste', handlePaste)
 }
 
+const filesizeToMB = (filesize) => {
+    return (filesize / 1024 / 1024).toFixed(2);
+}
+
 const fileRef = ref()
 const emit = defineEmits(["file"])
 const handleFileName = (fileList) => {
+  if(props.disabled) return
   let files = Array.from(fileList)
+  const acceptList = props.accept.replaceAll(',', '').split('.').filter(Boolean)
+  if(props.accept && files.some(d => {
+    const name = d.name.split('.').pop().toLowerCase()
+    return !acceptList.includes(name)
+  })) {
+    ElMessage.error(`上传文件类型必须为 ${acceptList.join('/')}`)
+    return
+  }
+  if(props.fileSize && files.some(d => {
+    console.log('filesizeToMB(d.size)', filesizeToMB(d.size))
+    return filesizeToMB(d.size) > props.fileSize
+  })) {
+    ElMessage.error(`上传文件大小不能超过${props.fileSize}MB`)
+    return
+  }
   let renameReportFile = []
   for (let i in files) {
     renameReportFile.push(new File([files[i]], new Date().getTime() + files[i].name, { type: files[0].type }))
@@ -88,9 +110,13 @@ const handlePaste = (e) => {
   
   &-subtile {
     font-size: 12px;
-    color: #999999;
+    color: #666;
     margin-top: 0;
+    line-height: 24px;
     text-align: center;
+    &-tip{
+      color: #999;
+    }
   }
   .file-ipt {
     position: absolute;

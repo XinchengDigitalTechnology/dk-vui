@@ -6,18 +6,21 @@ import Paste from './Paste'
 import Drag from './Drag'
 import GlobalConfig from "~/packages/config"
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'change'])
 const props = defineProps({
   modelValue: { type: [String, Array] },
   title: { type: String, default: '' }, // 标题，无标题时不展示
-  types: { type: Array, default: () => (['png', 'jpg', 'jpeg']) },
-  limit: { type: [String, Number], default: () => '' },
+  types: { type: Array, default: () => (['png', 'jpg', 'jpeg']) }, // 可上传类型
+  fileSize: { type: Number, default: 5 }, // 文件大小限制
+  limit: { type: [String, Number], default: () => '' }, // 可上传数量
   drag: Boolean, // 是否开启拖动、粘贴上传
   card: Boolean, // 是否使用卡片模式展示
   size: { type: Number, default: () => GlobalConfig.upload.size }, // 卡片模式展示大小
   edit: Boolean, // 是否开启名称编辑功能
   disabled: Boolean, // 是否禁用
   multiple: Boolean, // 是否开启多个上传
+  showTip: {type: Boolean, default: true}, // 是否显示提示文字
+  tip: { type: String, default: '' }, // 提示文字
   required: Boolean, // 是否必填，仅展示样式，校验用el-form-item包一层来处理，也可以使用插槽 title 来自定义标题
   inline: { type: [Boolean, Number], default: true }, // 列表是否在一行展示，默认一行展示三个，传入数字可控制一行展示数量
   params: { type: Object, default: () => ({}) }, // 上传时的额外参数
@@ -32,8 +35,11 @@ const list = computed({
   },
   set(val) {
     emit('update:modelValue', val)
+    emit('change', val)
   }
 })
+
+const tip = computed(() => props.showTip ? `格式为${props.types.join('/')}，不超过${props.fileSize}MB` : '')
 
 // 上传文件
 const loadings = reactive({})
@@ -87,7 +93,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
         <slot name="title">{{ title }}</slot>
       </div>
       <template v-if="drag">
-        <Drag :accept="types.map(d => `.${d}`).join(',')" :disabled="disabled" @file="readFile" />
+        <Drag :accept="types.map(d => `.${d}`).join(',')" :tip="tip" :disabled="disabled" @file="readFile" />
       </template>
       <template v-else-if="!disabled">
         <el-divider direction="vertical" />
@@ -96,9 +102,9 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
             <CirclePlus />
           </el-icon>上传附件
         </el-button>
-        <span class="v-upload-tip">
-          <slot />
-        </span>
+        <small class="v-upload-tip">
+          <slot>{{ tip }}</slot>
+        </small>
       </template>
     </div>
     <template v-if="card">
@@ -159,12 +165,13 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
     </div>
   </div>
   <ViewImage ref="viewImageRef" />
-  <Paste ref="pasteRef" :accept="types.map(d => `.${d}`).join(',')" :disabled="disabled" :style="{'--size': size+'px'}" @success="readFile" />
+  <Paste ref="pasteRef" :accept="types.map(d => `.${d}`).join(',')" :tip="tip" :disabled="disabled" :style="{'--size': size+'px'}" @success="readFile" />
 </template>
 
 <style lang="scss">
 .v-upload {
   width: 100%;
+  line-height: 32px;
 
   &.is-card {
     display: flex;
@@ -175,7 +182,6 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
   &-header {
     display: flex;
     align-items: center;
-    margin-bottom: 5px;
   }
 
   &-title {
@@ -190,7 +196,6 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
 
   &-tip {
     margin-left: 10px;
-    color: #999;
   }
 
   &-list {
@@ -234,7 +239,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
         object-fit: contain;
       }
     }
-    &-img{
+    &-img {
       cursor: pointer;
     }
     &-remove {
@@ -267,9 +272,8 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
   }
 
   small {
-    margin-top: 2px;
     font-size: 12px;
-    color: #888;
+    color: #999;
   }
 }
 </style>
