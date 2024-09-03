@@ -12,7 +12,9 @@
 | clearable          | 是否可清除           | boolean        | true      |
 | multiple          | 是否多选           | boolean        | false      |
 | select          | 是否使用select模式           | boolean        | false      |
-| paste         | 是否使用粘贴功能，存在则开启粘贴功能，粘贴弹窗的标题默认使用传入的placeholder，如果类型为字符串则会作为弹窗的标题                   | boolean/string               | false    |
+| paste         | 是否使用粘贴功能   | boolean  | false    |
+| confusedPaste         | 是否使用模糊粘贴功能快速追加选项   | boolean  | false    |
+| showCheckAll         | 是否使用全选功能   | boolean  | false    |
 
 Select 事件
 

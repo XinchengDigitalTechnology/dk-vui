@@ -10,18 +10,15 @@
     </template>
     <div class="v-batch-input-wrapper">
       <el-input ref="inputRef" v-model="inputValue" :rows="12" :placeholder="`一行一个(最多支持${rows}行)`" type="textarea" style="width: 100%;" @blur="handleBlur" />
-      <div class="v-batch-input-handle">
-        <el-button size="small" @click="clear">清空</el-button>
-        <slot />
-        <el-button size="small" class="v-batch-input-handle-right" @click="close">关闭</el-button>
-        <el-button size="small" type="primary" @click="handleConfirm">搜索</el-button>
-      </div>
+      <Handle :value="inputValue" @clear="clear" @close="close" @submit="handleConfirm" />
     </div>
   </el-popover>
 </template>
 <script setup>
 import { CircleClose } from '@element-plus/icons-vue'
 import GlobalConfig from "~/packages/config"
+import Handle from './Handle.vue'
+
 const props = defineProps({
   modelValue: { type: String, default: () => '' },
   rows: { type: [Number, String], default: () => GlobalConfig.batchInput.rows },
@@ -81,13 +78,6 @@ defineExpose({clear})
 
   &-wrapper{
     width: 380px;
-  }
-  &-handle{
-    display: flex;
-    margin-top: 8px;
-    &-right{
-      margin-left: auto !important;;
-    }
   }
 
   div {

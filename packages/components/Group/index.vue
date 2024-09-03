@@ -19,6 +19,7 @@ export default {
   }
 
   .el-input__wrapper,
+  .el-select__wrapper,
   .el-button,
   .el-select-v2__wrapper,
   .v-group-item {
@@ -31,6 +32,7 @@ export default {
 
       &.el-input__wrapper,
       .el-input__wrapper,
+      .el-select__wrapper,
       .el-input__suffix {
         z-index: 1;
       }
@@ -49,6 +51,7 @@ export default {
 
     &.el-input__wrapper,
     .el-input__wrapper,
+    .el-select__wrapper,
     .el-button,
     .el-select-v2__wrapper,
     &.v-group-item {
@@ -62,6 +65,7 @@ export default {
 
     &.el-input__wrapper,
     .el-input__wrapper,
+    .el-select__wrapper,
     .el-button,
     .el-select-v2__wrapper,
     &.v-group-item {

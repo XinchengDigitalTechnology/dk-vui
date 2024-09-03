@@ -1,5 +1,6 @@
 <script setup>
 import XEUtils from 'xe-utils'
+import Select from './Select'
 import VPaste from './Paste'
 import { store } from './store'
 import GlobalConfig from "~/packages/config"
@@ -12,13 +13,14 @@ const props = defineProps({
   filterable: { type: Boolean, default: () => GlobalConfig.select.filterable },
   clearable: { type: Boolean, default: () => GlobalConfig.select.clearable },
   multiple: Boolean,
+  showCheckAll: { type: Boolean, default: false }, // 是否使用全选功能
   select: { type: Boolean, default: false }, // 是否使用el-select组件渲染
-  paste: { type: [Boolean, String], default: false }, // 粘贴功能，存在则开启粘贴功能，粘贴弹窗的标题默认使用传入的placeholder，如果类型为字符串则会作为弹窗的标题
-  confusedPaste: Boolean,
+  paste: { type: Boolean, default: false }, // 粘贴功能，存在则开启粘贴功能，粘贴弹窗的标题默认使用传入的placeholder，如果类型为字符串则会作为弹窗的标题
+  confusedPaste: Boolean, // 是否使用模糊粘贴
 })
 const attrs = useAttrs()
 // 插槽处理
-let slots = computed(() => Object.keys(useSlots()))
+const slots = computed(() => Object.keys(useSlots()))
 if (props.paste && !props.multiple) {
   console.error('VSelect组件在粘贴模式下，multiple必须为true')
 }
@@ -62,7 +64,7 @@ watch(
     } else {
       opts.value = []
     }
-    if(type) {
+    if (type) {
       store[type].options = opts.value
     }
   },
@@ -87,32 +89,40 @@ const pasteChange = (pastes) => {
   }, [])
   selectValue.value = [...new Set((selectValue.value || []).concat(pastesValue))]
 }
+const showHeader = computed(() => props.multiple && props.showCheckAll)
 </script>
 
 <template>
   <VGroup v-if="(paste || confusedPaste) && multiple">
-    <el-select v-if="select" v-model="selectValue" v-bind="$attrs" :filterable="filterable" :clearable="clearable"
+    <Select v-model="selectValue" popper-class="v-select" v-bind="$attrs" :options="opts" :showHeader="showHeader" :select="select" :filterable="filterable" :clearable="clearable"
       :multiple="multiple" collapse-tags-tooltip @change="handleChange" @visible-change="visibleChange">
-      <el-option v-for="(d, i) in opts" :key="i" :label="d.label" :value="d.value"></el-option>
-    </el-select>
-    <el-select-v2 v-else v-model="selectValue" v-bind="$attrs" :filterable="filterable" :clearable="clearable"
-      :multiple="multiple" :options="opts" collapse-tags-tooltip @change="handleChange" @visible-change="visibleChange">
       <template v-for="name in slots" #[name]="obj">
         <slot :name="name" v-bind="obj" />
       </template>
-    </el-select-v2>
-    <VPaste :title="typeof paste === 'string' ? paste : attrs.placeholder" @change="pasteChange" />
+    </Select>
+    <VPaste @change="pasteChange" />
   </VGroup>
-  <template v-else>
-    <el-select v-if="select" v-model="selectValue" v-bind="$attrs" :filterable="filterable" :clearable="clearable"
-      :multiple="multiple" collapse-tags-tooltip @change="handleChange" @visible-change="visibleChange">
-      <el-option v-for="(d, i) in opts" :key="i" :label="d.label" :value="d.value"></el-option>
-    </el-select>
-    <el-select-v2 v-else v-model="selectValue" v-bind="$attrs" :filterable="filterable" :clearable="clearable"
-      :multiple="multiple" :options="opts" collapse-tags-tooltip @change="handleChange" @visible-change="visibleChange">
-      <template v-for="name in slots" #[name]="obj">
-        <slot :name="name" v-bind="obj" />
-      </template>
-    </el-select-v2>
-  </template>
+  <Select v-else v-model="selectValue" popper-class="v-select" v-bind="$attrs" :options="opts" :showHeader="showHeader" :select="select" :filterable="filterable"
+    :clearable="clearable" :multiple="multiple" collapse-tags-tooltip @change="handleChange" @visible-change="visibleChange">
+    <template v-for="name in slots" #[name]="obj">
+      <slot :name="name" v-bind="obj" />
+    </template>
+  </Select>
 </template>
+
+<style lang="scss">
+.v-select {
+  .v-select-checkAll {
+    width: 100%;
+    line-height: 30px;
+    padding: 0 10px;
+    margin: 2px 0;
+    &:hover {
+      background-color: var(--el-fill-color-light);
+    }
+  }
+  .el-select-dropdown__header {
+    padding: 0;
+  }
+}
+</style>

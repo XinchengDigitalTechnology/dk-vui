@@ -45,6 +45,11 @@ const options = [
       <VSelect v-model="form.field2" placeholder="店铺" multiple collapse-tags confusedPaste :options="options" class="w-400" />
       <Md v-model="paste" view />
 
+      <h2>showCheckAll 全选</h2>
+      <p>multiple 多选模式下，可以使用 showCheckAll 来支持全选功能</p>
+      <VSelect v-model="form.field2" placeholder="店铺" multiple collapse-tags showCheckAll :options="options" class="w-400" />
+      <Md v-model="paste" view />
+
       <h2>配置选项</h2>
       <p>
         使用 types 定义配置，结合 type 参数来使用
@@ -62,10 +67,10 @@ const options = [
 
 <style>
 .w-200 {
-  width: 200px;
+  width: 200px!important;
 }
 
 .w-400 {
-  width: 400px;
+  width: 400px!important;
 }
 </style>

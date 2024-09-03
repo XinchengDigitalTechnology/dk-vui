@@ -39,7 +39,7 @@ const list = computed({
   }
 })
 
-const tip = computed(() => props.showTip ? `格式为${props.types.join('/')}，不超过${props.fileSize}MB` : '')
+const tip = computed(() => props.showTip ? (props.tip || `格式为${props.types.join('/')}，不超过${props.fileSize}MB`) : '')
 
 // 上传文件
 const loadings = reactive({})
@@ -97,14 +97,14 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
       </template>
       <template v-else-if="!disabled">
         <el-divider direction="vertical" />
-        <el-button link size="small" type="primary" :loading="loadings.upload" :disabled="disabled" @click="() => pasteRef.open()">
-          <el-icon v-if="!loadings.upload" style="font-size: 16px;">
+        <el-button link size="small" type="primary" :loading="loadings.upload" :disabled="disabled" style="margin-right: 8px;" @click="() => pasteRef.open()">
+          <el-icon v-if="!loadings.upload" :size="15">
             <CirclePlus />
           </el-icon>上传附件
         </el-button>
-        <small class="v-upload-tip">
+        <span class="v-upload-tip">
           <slot>{{ tip }}</slot>
-        </small>
+        </span>
       </template>
     </div>
     <template v-if="card">
@@ -195,7 +195,8 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
   }
 
   &-tip {
-    margin-left: 10px;
+    font-size: 12px;
+    color: #999;
   }
 
   &-list {
@@ -269,11 +270,6 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
         display: block;
       }
     }
-  }
-
-  small {
-    font-size: 12px;
-    color: #999;
   }
 }
 </style>

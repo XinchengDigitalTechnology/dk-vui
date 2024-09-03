@@ -5,7 +5,7 @@
     </el-icon>
     <p class="v-drag-subtile">
       支持点击/粘贴/拖拽到此区域上传<br/>
-      <small class="v-drag-subtile-tip" v-if="tip">{{ tip }}</small>
+      <span class="v-upload-tip" v-if="tip">{{ tip }}</span>
     </p>
     <input ref="fileIpt" class="filePaste-ipt" :disabled="disabled" />
     <input ref="fileRef" class="file-ipt" type="file" :disabled="disabled" :accept="accept" multiple @change="changeFile" />
@@ -114,9 +114,6 @@ const handlePaste = (e) => {
     margin-top: 0;
     line-height: 24px;
     text-align: center;
-    &-tip{
-      color: #999;
-    }
   }
   .file-ipt {
     position: absolute;
