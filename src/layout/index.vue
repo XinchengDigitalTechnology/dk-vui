@@ -1,7 +1,23 @@
 <script setup>
 import { routes } from '../router'
 import { useRoute } from 'vue-router'
+import { useColorMode } from "@vueuse/core"
+ import {setConfig} from 'vxe-table'
+
 const route = useRoute()
+
+const mode = useColorMode({
+  attribute: "class",
+  modes: { light: "light", grey: "grey", dark: "dark" },
+})
+
+const modeChange = val => {
+  setConfig({theme: val === 'dark' ? 'dark' : 'light'})
+}
+
+onMounted(() => {
+  modeChange(mode.value)
+})
 
 const maps = {
   components: '组件',
@@ -38,6 +54,11 @@ console.log('menus', menus)
 <template>
   <div class="app-header">
     <div class="logo">dk-vui</div>
+    <el-radio-group v-model="mode" style="margin-left: auto;" @change="modeChange">
+      <el-radio-button label="light" value="light" />
+      <el-radio-button label="grey" value="grey" />
+      <el-radio-button label="dark" value="dark" />
+    </el-radio-group>
   </div>
   <div class="app-container">
     <el-scrollbar class="menu">
@@ -81,7 +102,7 @@ console.log('menus', menus)
   line-height: 50px;
   padding: 0 20px;
   border-bottom: 1px solid var(--el-menu-border-color);
-  background: rgba($color: #fff, $alpha: 0.9);
+  background: var( --el-bg-color);
   z-index: 100;
 
   .logo {
@@ -102,7 +123,7 @@ console.log('menus', menus)
     top: 50px;
     bottom: 0;
     width: var(--menu-width);
-    background-color: #fff;
+    background-color: var( --el-bg-color);
 
     &-group {
       .menu-item {
@@ -135,7 +156,7 @@ console.log('menus', menus)
 .body {
   height: 100%;
   margin-left: calc(var(--menu-width) + 10px);
-  background-color: #fff;
+  background-color: var(--el-bg-color-overlay);
   border-radius: 6px;
   padding-top: 50px;
 }
@@ -149,8 +170,8 @@ console.log('menus', menus)
   table {
     border-collapse: collapse;
     width: 100%;
-    background-color: var(--bg-color);
-    font-size: 14px;
+    background-color: var(--el-bg-color);
+    font-size: var(--el-font-size-base);
     line-height: 1.5em;
 
     th {

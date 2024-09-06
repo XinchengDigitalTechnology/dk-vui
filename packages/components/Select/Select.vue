@@ -1,7 +1,7 @@
 <template>
   <el-select v-if="$attrs.select" v-model="selectValue" v-bind="$attrs">
     <el-option v-for="(d, i) in $attrs.options" :key="i" :label="d.label" :value="d.value"></el-option>
-    <template v-if="$attrs.showHeader" #header>
+    <template v-if="$attrs.showHeader && $attrs.options.length" #header>
       <Header v-model="selectValue" :options="$attrs.options" />
     </template>
     <template v-for="name in slots" #[name]="obj">
@@ -9,7 +9,7 @@
     </template>
   </el-select>
   <el-select-v2 v-else v-model="selectValue" v-bind="$attrs">
-    <template v-if="$attrs.showHeader" #header>
+    <template v-if="$attrs.showHeader && $attrs.options.length" #header>
       <Header v-model="selectValue" :options="$attrs.options" />
     </template>
     <template v-for="name in slots" #[name]="obj">

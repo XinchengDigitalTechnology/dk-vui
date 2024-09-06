@@ -31,7 +31,7 @@ const pasteRef = ref()
 
 const list = computed({
   get() {
-    return (Array.isArray(props.modelValue) ? props.modelValue : [props.modelValue]).filter(Boolean)
+    return props.modelValue
   },
   set(val) {
     emit('update:modelValue', val)
@@ -232,7 +232,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
       position: relative;
       width: var(--size);
       height: var(--size);
-      border: 1px solid #ddd;
+      border: 1px solid var(--el-border-color);
       border-radius: 6px;
       img {
         width: 100% !important;

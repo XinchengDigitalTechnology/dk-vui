@@ -78,8 +78,8 @@ export default {
     display: flex;
     align-items: center;
     padding: 0 10px;
-    font-size: 14px;
-    color: #3A4259;
+    font-size: var(--el-font-size-base);
+    color: var(--base-sub-text-color);
     white-space: nowrap;
     box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color)) inset;
   }

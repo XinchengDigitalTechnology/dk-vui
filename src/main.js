@@ -5,6 +5,7 @@ import router from './router'
 
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
+import './assets/styles/css-vars.scss'
 
 import ElementPlus from 'element-plus'
 import { ElMessage } from 'element-plus'

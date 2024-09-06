@@ -26,11 +26,14 @@ body,
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
+  background-color: var(--scrollbar-track-bg-color);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #c0c0c0;
+  background-color: var(--scrollbar-thumb-bg-color);
   border-radius: 3px;
+}
+::-webkit-scrollbar-corner {
+  background-color: transparent;
 }
 </style>

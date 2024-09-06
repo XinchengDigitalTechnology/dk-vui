@@ -67,6 +67,11 @@ const style = () => {
 </template>
 
 <style lang="scss" scoped>
+html.dark .v-HScroll-slither-over {
+  &::-webkit-scrollbar-thumb {
+    background: rgba(#fff, 0.14);
+  }
+}
 .v-HScroll {
   position: absolute;
   z-index: 0;

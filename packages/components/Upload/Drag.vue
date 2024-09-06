@@ -90,7 +90,7 @@ const handlePaste = (e) => {
   position: relative;
   height: var(--size);
   padding: 0 10px;
-  border: 1px dashed #DEDEDE;
+  border: 1px dashed var(--el-border-color);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -99,17 +99,16 @@ const handlePaste = (e) => {
 
   &:active, &:hover, &-active {
     &:not(.is--disabled) {
-
       border-color: var(--el-color-primary);
     }
   }
   
   &-title {
-    font-size: 14px;
+    font-size: var(--el-font-size-base);
   }
   
   &-subtile {
-    font-size: 12px;
+    font-size: var(--el-font-size-base);
     color: #666;
     margin-top: 0;
     line-height: 24px;

@@ -1,10 +1,11 @@
 <template>
-  <VPage style="background: #f5f5f5;" :left-config="{width: 200, collapse: true, collapseValue: false, drag: true, showArrow: true}">
+  <VPage :left-config="{width: 200, collapse: true, collapseValue: false, drag: true, showArrow: true}">
     <template #left>
       <el-tree :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]" :props="defaultProps" />
     </template>
     <VTable ref="tableRef" v-bind="tableOptins">
       <template #form="{ form }">
+        <VBatchInput v-model="form.base" style="max-width: 150px" placeholder="普通类型"></VBatchInput>
         <el-input v-model="form.base" style="max-width: 150px" placeholder="普通类型"></el-input>
         <el-select v-model="form.select" multiple style="max-width: 100px">
             <el-option label="选项1" :value="0"></el-option>

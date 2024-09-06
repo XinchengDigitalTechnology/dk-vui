@@ -121,10 +121,12 @@ provide('updateTip', updateTip)
     </div>
     <div v-if="leftConfig.collapse && slots.includes('left')" class="v-page__body-collapse" :class="leftConfig.arrowClass"
       :style="{left: !leftConfig.drag ? leftWidth : leftWidth ? `calc(${leftWidth} - 2px)` : 0, transition}" @click="collapse=!collapse">
-      <el-icon v-if="leftConfig.showArrow" color="white">
-        <ArrowRightBold v-if="collapse" />
-        <ArrowLeftBold v-else />
-      </el-icon>
+      <el-button v-if="leftConfig.showArrow" type="primary">
+        <el-icon color="white">
+          <ArrowRightBold v-if="collapse" />
+          <ArrowLeftBold v-else />
+        </el-icon>
+      </el-button>
     </div>
   </div>
   <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering placement="top" popper-class="app-tip" :offset="3" enterable />
@@ -157,7 +159,7 @@ provide('updateTip', updateTip)
     position: relative;
     height: 100%;
     border-radius: 8px 8px 0 0;
-    background-color: #fff;
+    background-color: var(--el-bg-color);
 
     &-collapse {
       position: absolute;
@@ -167,11 +169,13 @@ provide('updateTip', updateTip)
       line-height: 30px;
       border-radius: 4px;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       z-index: 1;
-      background-color: #ccc;
-      cursor: pointer;
-      &:hover {
-        background-color: #aaa;
+      .el-button{
+        width: 16px;
+        padding: 0;
       }
     }
 
@@ -186,19 +190,6 @@ provide('updateTip', updateTip)
       z-index: 1;
     }
 
-    &::after {
-      content: '';
-    }
-
-    &-line {
-      width: 1px;
-      height: 100%;
-      position: absolute;
-      right: 0;
-      top: 0;
-      background-color: #e7eaf0;
-    }
-
     &-drag {
       width: 5px;
       height: 100%;
@@ -211,7 +202,7 @@ provide('updateTip', updateTip)
         content: '';
         height: 100%;
         width: 1px;
-        background-color: #e7eaf0;
+        background-color: var(--vxe-table-resizable-line-color);
       }
       &:hover,
       &.is-move {
@@ -252,11 +243,6 @@ provide('updateTip', updateTip)
   }
 }
 
-:root {
-  --v-text--title-color: #666;
-  --v-text--content-color: #333;
-}
-
 .v-text {
   display: flex;
   gap: 3px;
@@ -272,13 +258,12 @@ provide('updateTip', updateTip)
   }
 
   &-title {
-    color: var(--v-text--title-color);
+    color: var(--base-sub-text-color);
     white-space: nowrap;
   }
-
   &-content {
     display: inline-block;
-    color: var(--v-text--content-color);
+    color: var(--base-text-color);
     overflow: hidden;
 
     &-wrapper {

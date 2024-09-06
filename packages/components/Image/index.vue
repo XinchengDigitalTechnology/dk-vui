@@ -87,7 +87,7 @@ const props = defineProps({
     height: var(--v-image-size);
     border-radius: 4px;
     overflow: hidden;
-    border: 1px solid #f5f5f5;
+    border: 1px solid var(--el-border-color);
   }
 
   .el-image__wrapper {

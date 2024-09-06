@@ -28,7 +28,7 @@ if (props.paste && !props.multiple) {
 const emit = defineEmits(['update:modelValue', 'change', 'visible-change'])
 const selectValue = computed({
   get() {
-    return !props.modelValue ? (props.multiple ? [] : undefined) : props.modelValue
+    return props.modelValue
   },
   set(val) {
     emit('update:modelValue', val)
