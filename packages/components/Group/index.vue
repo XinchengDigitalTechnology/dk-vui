@@ -52,11 +52,14 @@ export default {
     &.el-input__wrapper,
     .el-input__wrapper,
     .el-select__wrapper,
-    .el-button,
+    &.el-button,
     .el-select-v2__wrapper,
     &.v-group-item {
       border-top-left-radius: 4px;
       border-bottom-left-radius: 4px;
+    }
+    &.el-button{
+      padding: 0 10px;
     }
   }
 
@@ -66,11 +69,14 @@ export default {
     &.el-input__wrapper,
     .el-input__wrapper,
     .el-select__wrapper,
-    .el-button,
+    &.el-button,
     .el-select-v2__wrapper,
     &.v-group-item {
       border-top-right-radius: 4px;
       border-bottom-right-radius: 4px;
+    }
+    &.el-button{
+      padding: 0 10px;
     }
   }
 

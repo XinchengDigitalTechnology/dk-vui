@@ -20,20 +20,4 @@ body,
   box-sizing: border-box;
 }
 
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: var(--scrollbar-track-bg-color);
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb-bg-color);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-corner {
-  background-color: transparent;
-}
 </style>

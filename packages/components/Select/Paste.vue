@@ -1,11 +1,11 @@
 <template>
   <el-popover v-model:visible="visible" trigger="click" placement="bottom-end" :offset="2" :show-arrow="false" width="405px" @show="open" @hide="handleClose">
     <template #reference>
-      <div class="v-group-item v-paste">
+      <el-button>
         <el-icon>
           <Tickets />
         </el-icon>
-      </div>
+      </el-button>
     </template>
     <div class="v-select-paste">
       <el-input ref="inputRef" v-model="inputValue" type="textarea" :autosize="{ minRows: 5, maxRows: 20 }" placeholder="一行一个，不限制数量" />
@@ -56,9 +56,10 @@ const submit = () => {
 <style lang="scss">
 .v-paste {
   cursor: pointer;
-  background-color: var(--el-color-info-light-8);
+  // border: 1px solid rgba($color: #000000, $alpha: .4);
+  background-color: rgba($color: #666, $alpha: .3);
   &:hover {
-    background-color: var(--el-color-info-light-9);
+    background-color: rgba($color: #666, $alpha: .2);
   }
 }
 </style>

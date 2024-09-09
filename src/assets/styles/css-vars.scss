@@ -43,9 +43,6 @@ html {
     // 分页
     .v-pagination-container {
       background-color: var(--base-color);
-      .v-HScroll {
-        background: var(--base-bg-color);
-      }
     }
     --vxe-pager-background-color: var(--el-bg-color) !important; // 分页颜色
     --vxe-input-background-color: transparent;
@@ -128,11 +125,18 @@ html {
 html.dark {
   color-scheme: dark;
   --el-color-primary: #3487ff;
+  --el-color-primary-light-3: #3375b9;
+  --el-color-primary-light-5: #2a598a;
+  --el-color-primary-light-7: #213d5b;
+  --el-color-primary-light-8: #1d3043;
+  --el-color-primary-light-9: #18222c;
+  --el-color-primary-dark-2: #66b1ff;
   --el-color-success: #67c23a;
   --el-color-warning: #e6a23c;
   --el-color-danger: #f56c6c;
   --el-color-error: #f56c6c;
   --el-color-info: #909399;
+  color-scheme: dark;
   --el-box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, 0.36), 0px 8px 20px rgba(0, 0, 0, 0.72);
   --el-box-shadow-light: 0px 0px 12px rgba(0, 0, 0, 0.72);
   --el-box-shadow-lighter: 0px 0px 6px rgba(0, 0, 0, 0.72);

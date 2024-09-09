@@ -87,7 +87,7 @@ const props = defineProps({
     height: var(--v-image-size);
     border-radius: 4px;
     overflow: hidden;
-    border: 1px solid var(--el-border-color);
+    border: 1px solid var(--vxe-table-resizable-line-color);
   }
 
   .el-image__wrapper {

@@ -2,7 +2,7 @@
 import { routes } from '../router'
 import { useRoute } from 'vue-router'
 import { useColorMode } from "@vueuse/core"
- import {setConfig} from 'vxe-table'
+import { setConfig } from 'vxe-table'
 
 const route = useRoute()
 
@@ -12,7 +12,7 @@ const mode = useColorMode({
 })
 
 const modeChange = val => {
-  setConfig({theme: val === 'dark' ? 'dark' : 'light'})
+  setConfig({ theme: val === 'dark' ? 'dark' : 'light' })
 }
 
 onMounted(() => {
@@ -102,7 +102,7 @@ console.log('menus', menus)
   line-height: 50px;
   padding: 0 20px;
   border-bottom: 1px solid var(--el-menu-border-color);
-  background: var( --el-bg-color);
+  background: var(--el-bg-color);
   z-index: 100;
 
   .logo {
@@ -123,7 +123,7 @@ console.log('menus', menus)
     top: 50px;
     bottom: 0;
     width: var(--menu-width);
-    background-color: var( --el-bg-color);
+    background-color: var(--el-bg-color);
 
     &-group {
       .menu-item {

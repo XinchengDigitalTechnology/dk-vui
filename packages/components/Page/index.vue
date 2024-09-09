@@ -190,6 +190,15 @@ provide('updateTip', updateTip)
       z-index: 1;
     }
 
+    &-line {
+      width: 1px;
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      background-color: var(--vxe-table-resizable-line-color);
+    }
+
     &-drag {
       width: 5px;
       height: 100%;

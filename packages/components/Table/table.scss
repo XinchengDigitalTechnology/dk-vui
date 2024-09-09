@@ -28,8 +28,25 @@ html.grey {
 [data-vxe-ui-theme=dark]{
   --scrollbar-track-bg-color: #494949;
   --scrollbar-thumb-bg-color: #686868;
-  --vxe-table-fixed-left-shadow: 3px 0 5px rgba(0,0,0,0.8);
-  --vxe-table-fixed-right-shadow: -3px 0 5px rgba(0,0,0,0.8);
+  --vxe-table-fixed-left-shadow: 3px 0 5px rgba(0,0,0,0.9);
+  --vxe-table-fixed-right-shadow: -3px 0 5px rgba(0,0,0,0.9);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track-bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-bg-color);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-corner {
+  background-color: transparent;
 }
 
 .vx-table {

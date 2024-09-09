@@ -45,7 +45,7 @@ const style = () => {
           xmlns:xlink="http://www.w3.org/1999/xlink">
           <title>shubiao</title>
           <g id="权限" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-            <g id="鼠标滑动滚轮内容横向移动-收起效果" transform="translate(-1036.000000, -1048.000000)" fill="#666666" fill-rule="nonzero">
+            <g id="鼠标滑动滚轮内容横向移动-收起效果" transform="translate(-1036.000000, -1048.000000)" fill="currentColor" fill-rule="nonzero">
               <g id="编组-7" transform="translate(1035.000000, 1046.000000)">
                 <g id="编组-3" transform="translate(0.998143, 1.998143)">
                   <path
@@ -67,9 +67,14 @@ const style = () => {
 </template>
 
 <style lang="scss" scoped>
-html.dark .v-HScroll-slither-over {
-  &::-webkit-scrollbar-thumb {
-    background: rgba(#fff, 0.14);
+html.dark {
+  .v-HScroll-slither-over {
+    &::-webkit-scrollbar-thumb {
+      background: rgba(#fff, 0.14);
+    }
+  }
+  .v-HScroll-mouse{
+    color: #999;
   }
 }
 .v-HScroll {
@@ -124,7 +129,7 @@ html.dark .v-HScroll-slither-over {
       overflow-y: auto;
       width: var(--clientWidth);
       height: var(--clientWidth);
-      background-color: rgba(#000, 0.06);
+      background-color: rgba(#777, 0.15);
       color: #fff;
       opacity: 1;
       background-image: url('./1.png');
@@ -160,10 +165,11 @@ html.dark .v-HScroll-slither-over {
     width: 26px;
     height: 28px;
     border-radius: 12px 12px 9px 9px;
-    background-color: rgba(#000, 0.06);
+    color: #777;
+    background-color: rgba(#888, 0.2);
     background-image: linear-gradient(
       to right,
-      rgba(#000, 0.1) var(--ratio),
+      rgba(#888, 0.4) var(--ratio),
       transparent 0%
     );
     background-size: 100% 100%;
@@ -176,7 +182,7 @@ html.dark .v-HScroll-slither-over {
   .v-HScroll .v-HScroll-slither-over {
     direction: rtl;
     background-image: url('./1.png'),
-      linear-gradient(to bottom, rgba(#000, 0.1) var(--ratio), transparent 0%);
+      linear-gradient(to bottom, rgba(#333, 0.4) var(--ratio), transparent 0%);
   }
 }
 
