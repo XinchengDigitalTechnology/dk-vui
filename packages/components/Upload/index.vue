@@ -31,7 +31,7 @@ const pasteRef = ref()
 
 const list = computed({
   get() {
-    return props.modelValue
+    return props.modelValue || []
   },
   set(val) {
     emit('update:modelValue', val)

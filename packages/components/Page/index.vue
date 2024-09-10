@@ -140,6 +140,7 @@ provide('updateTip', updateTip)
   overflow-y: auto;
   padding: 10px;
   padding-bottom: 0;
+  background-color: transparent;
 
   &.is--full {
     overflow: hidden;

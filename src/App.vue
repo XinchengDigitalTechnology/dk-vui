@@ -15,6 +15,12 @@ body,
   padding: 0;
   margin: 0;
 }
+#app{
+  background-color: #fff;
+}
+html.dark #app{
+  background-color: transparent;
+}
 
 * {
   box-sizing: border-box;

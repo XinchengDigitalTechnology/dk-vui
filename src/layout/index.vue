@@ -2,21 +2,12 @@
 import { routes } from '../router'
 import { useRoute } from 'vue-router'
 import { useColorMode } from "@vueuse/core"
-import { setConfig } from 'vxe-table'
 
 const route = useRoute()
 
 const mode = useColorMode({
   attribute: "class",
   modes: { light: "light", grey: "grey", dark: "dark" },
-})
-
-const modeChange = val => {
-  setConfig({ theme: val === 'dark' ? 'dark' : 'light' })
-}
-
-onMounted(() => {
-  modeChange(mode.value)
 })
 
 const maps = {
@@ -54,7 +45,7 @@ console.log('menus', menus)
 <template>
   <div class="app-header">
     <div class="logo">dk-vui</div>
-    <el-radio-group v-model="mode" style="margin-left: auto;" @change="modeChange">
+    <el-radio-group v-model="mode" style="margin-left: auto;">
       <el-radio-button label="light" value="light" />
       <el-radio-button label="grey" value="grey" />
       <el-radio-button label="dark" value="dark" />
@@ -101,7 +92,7 @@ console.log('menus', menus)
   height: 50px;
   line-height: 50px;
   padding: 0 20px;
-  border-bottom: 1px solid var(--el-menu-border-color);
+  border-bottom: 1px solid rgba($color: #666, $alpha: .3);
   background: var(--el-bg-color);
   z-index: 100;
 
@@ -155,12 +146,11 @@ console.log('menus', menus)
 
 .body {
   height: 100%;
-  margin-left: calc(var(--menu-width) + 10px);
-  background-color: var(--el-bg-color-overlay);
+  margin-left: var(--menu-width);
+  background-color: var(--el-bg-color);
   border-radius: 6px;
   padding-top: 50px;
 }
-
 .page {
   min-height: calc(100% - 30px);
   max-width: 1000px;

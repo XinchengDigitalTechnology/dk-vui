@@ -21,11 +21,16 @@ const selectValue = computed({
   }
 })
 
-watch(selectValue, (val) => {
-  checkAll.value = val.length === props.options.length
-})
+const isCheckAll = () => {
+  checkAll.value = selectValue.value.length === props.options.length && !props.options.some(d => !selectValue.value.includes(d.value))
+}
+
+watch(selectValue, isCheckAll)
+watch(() => props.options.length, isCheckAll)
 
 const handleCheckAll = (val) => {
   selectValue.value = val ? props.options.map(d => d.value) : []
 }
+
+defineExpose({ isCheckAll })
 </script>
