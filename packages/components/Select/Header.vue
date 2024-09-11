@@ -4,7 +4,7 @@
 
 <script setup>
 const props = defineProps({
-  modelValue: { type: [String, Number, Array, Object], default: () => '' },
+  modelValue: { type: [String, Number, Array, Object, Boolean] },
   options: { type: Array, default: () => ([]) },
 })
 const emit = defineEmits(['update:modelValue', 'change'])
@@ -26,7 +26,7 @@ const isCheckAll = () => {
 }
 
 watch(selectValue, isCheckAll)
-watch(() => props.options.length, isCheckAll)
+watch(() => props.options, isCheckAll)
 
 const handleCheckAll = (val) => {
   selectValue.value = val ? props.options.map(d => d.value) : []

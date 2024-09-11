@@ -23,7 +23,7 @@ import Header from './Header'
 
 const slots = computed(() => Object.keys(useSlots()))
 const props = defineProps({
-  modelValue: { type: Object, default: () => ({}) },
+  modelValue: { type: [String, Number, Array, Object, Boolean] },
 })
 const emit = defineEmits(['update:modelValue'])
 

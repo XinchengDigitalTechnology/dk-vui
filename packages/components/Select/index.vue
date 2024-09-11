@@ -6,7 +6,7 @@ import { store } from './store'
 import GlobalConfig from "~/packages/config"
 
 const props = defineProps({
-  modelValue: { type: [String, Number, Array, Object] },
+  modelValue: { type: [String, Number, Array, Object, Boolean] },
   options: [Function, Array],
   types: { type: Object, default: () => GlobalConfig.select.types },
   type: { type: String, default: '' },
@@ -28,7 +28,7 @@ if (props.paste && !props.multiple) {
 const emit = defineEmits(['update:modelValue', 'change', 'visible-change'])
 const selectValue = computed({
   get() {
-    return props.modelValue
+    return props.modelValue || (props.multiple ? [] : '')
   },
   set(val) {
     emit('update:modelValue', val)
@@ -73,13 +73,13 @@ watch(
 
 // 过滤方法
 const filteredOptions = ref(opts.value)
-const remoteMethod = (query) => {
-  if (query !== '') {
+const filterMethod = (query) => {
+  if (query) {
     filteredOptions.value = opts.value.filter(
       (item) => item.label.toLowerCase().includes(query.toLowerCase())
     )
   } else {
-    filteredOptions.value = opts.value;
+    filteredOptions.value = opts.value
   }
 };
 
@@ -102,20 +102,35 @@ const pasteChange = (pastes) => {
   selectValue.value = [...new Set((selectValue.value || []).concat(pastesValue))]
 }
 const showHeader = computed(() => props.multiple && props.showCheckAll)
+
+const _attrs = computed(() => {
+  const {select, filterable, clearable, multiple} = props
+  const ats = {
+    showHeader: showHeader.value,
+    options: filteredOptions.value,
+    select,
+    filterable,
+    clearable,
+    multiple,
+    filterMethod,
+    popperClass: 'v-select',
+    collapseTagsTooltip: true,
+    ...attrs,
+  }
+  return ats
+})
 </script>
 
 <template>
   <VGroup v-if="(paste || confusedPaste) && multiple">
-    <Select v-model="selectValue" popper-class="v-select" v-bind="$attrs" :options="filteredOptions" :showHeader="showHeader" :select="select" :filterable="filterable" :clearable="clearable"
-      :multiple="multiple" collapse-tags-tooltip :remote-method="remoteMethod" remote @change="handleChange" @visible-change="visibleChange">
+    <Select v-model="selectValue" v-bind="_attrs" @change="handleChange" @visible-change="visibleChange">
       <template v-for="name in slots" #[name]="obj">
         <slot :name="name" v-bind="obj" />
       </template>
     </Select>
     <VPaste @change="pasteChange" />
   </VGroup>
-  <Select v-else v-model="selectValue" popper-class="v-select" v-bind="$attrs" :options="filteredOptions" :showHeader="showHeader" :select="select" :filterable="filterable"
-    :clearable="clearable" :multiple="multiple" collapse-tags-tooltip :remote-method="remoteMethod" remote @change="handleChange" @visible-change="visibleChange">
+  <Select v-else v-model="selectValue" v-bind="_attrs" @change="handleChange" @visible-change="visibleChange">
     <template v-for="name in slots" #[name]="obj">
       <slot :name="name" v-bind="obj" />
     </template>

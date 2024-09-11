@@ -1,4 +1,3 @@
-
 html.grey {
   color-scheme: dark;
   --vxe-input-border-color: #bbb;
@@ -19,7 +18,7 @@ html.grey {
   --scrollbar-track-bg-color: #d2d2d2;
   --scrollbar-thumb-bg-color: #a3a2a2;
 }
-html.light{
+html, html.light{
   --scrollbar-track-bg-color: #f1f1f1;
   --scrollbar-thumb-bg-color: #c0c0c0;
   --vxe-table-fixed-left-shadow: 3px 0 5px rgba(0,0,0,0.35);
@@ -283,7 +282,7 @@ html.dark {
     background-color: #fff;
   }
   .header-cell--fixed, .vxe-header--column {
-    background-color: var(--base-table-header-bg-color);
+    background-color: var(--vxe-table-header-background-color);
   }
   .cell--fixed, .header-cell--fixed {
     position: sticky !important;
@@ -314,7 +313,7 @@ html.dark {
   .right-gutter + .vxe-header--gutter{
     position: sticky;
     right: 0;
-    background-color: var(--base-table-header-bg-color);
+    background-color: var(--vxe-table-header-background-color);
     z-index: 1;
   }
   .row--checked, .row--hover{

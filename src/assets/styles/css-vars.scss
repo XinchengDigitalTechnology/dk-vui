@@ -102,7 +102,7 @@ html {
     --el-text-color-placeholder: #bababa;
   }
 
-  &.light {
+  &, &.light {
     --base-color: #fff; // 大色块颜色
     --base-bg-color: #efefef; // 背景颜色
     //  分割线颜色
