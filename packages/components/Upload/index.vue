@@ -63,6 +63,7 @@ const readFile = async (fileds) => {
       } else {
         list.value.push(obj)
       }
+      await 1
       list.value = list.value
       loadings.upload = false
     } catch (error) {

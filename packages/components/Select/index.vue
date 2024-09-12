@@ -58,6 +58,7 @@ watch(
     } else if (XEUtils.isFunction(options)) {
       const res = await options()
       opts.value = (XEUtils.isArray(res) ? res : res.data)
+      if(!store[type]) store[type] = {}
       store[type].update = async function () {
         this.options = await options()
       }
@@ -73,6 +74,9 @@ watch(
 
 // 过滤方法
 const filteredOptions = ref(opts.value)
+watch(opts, (val) => {
+  filteredOptions.value = val
+})
 const filterMethod = (query) => {
   if (query) {
     filteredOptions.value = opts.value.filter(

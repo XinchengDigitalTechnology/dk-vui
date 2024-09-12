@@ -26,7 +26,7 @@ watch(
   }
 )
 
-const style = () => {
+const style = computed(() => {
   const { scrollWidth, clientWidth, mouseOffset } = props.bodyRect
   return {
     '--scrollWidth': (scrollWidth + 12) + 'px',
@@ -34,11 +34,11 @@ const style = () => {
     '--ratio': ((clientWidth + scrollTop.value) / (scrollWidth + 12)).toFixed(2) * 100 + '%',
     '--mouseOffset': ((clientWidth > 600 ? 0 : (510 - clientWidth) / 2) - mouseOffset) + 'px'
   }
-}
+})
 
 </script>
 <template>
-  <div v-if="bodyRect.scrollWidth > bodyRect.clientWidth" class="v-HScroll" :style="style()">
+  <div v-if="bodyRect.scrollWidth > bodyRect.clientWidth" class="v-HScroll" :style="style">
     <div class="v-HScroll-wrapper">
       <div class="v-HScroll-mouse">
         <svg class="v-HScroll-mouse-icon" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +73,7 @@ html.dark {
       background: rgba(#fff, 0.14);
     }
   }
-  .v-HScroll-mouse{
+  .v-HScroll-mouse {
     color: #999;
   }
 }
@@ -89,13 +89,11 @@ html.dark {
     width: 100%;
 
     .v-HScroll-slither {
-      top: 0;
+      display: block;
       cursor: default;
-      opacity: 1;
     }
 
     .v-HScroll-mouse {
-      top: 1100%;
       opacity: 0;
     }
   }
@@ -114,8 +112,7 @@ html.dark {
     width: 100%;
     height: 100%;
     left: 0;
-    top: -1100%;
-    opacity: 0;
+    display: none;
     background: transparent;
     transition: opacity 0.1s;
     overflow: hidden;

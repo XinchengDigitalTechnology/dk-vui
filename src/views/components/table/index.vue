@@ -7,17 +7,14 @@
       <template #form="{ form }">
         <VBatchInput v-model="form.base" style="max-width: 150px" placeholder="普通类型"></VBatchInput>
         <el-input v-model="form.base" style="max-width: 150px" placeholder="普通类型"></el-input>
-        <el-select v-model="form.select" multiple style="max-width: 100px">
-            <el-option label="选项1" :value="0"></el-option>
-            <el-option label="选项2" :value="1"></el-option>
-          </el-select>
+        <VSelect v-model="form.select" :options="options" multiple style="max-width: 150px" />
         <VGroup>
           <div class="v-group-item">带标题</div>
           <el-input v-model="form.base" class="w-40" placeholder="带标题"></el-input>
         </VGroup>
         <el-date-picker v-model="form.date.value" type="daterange" range-separator="至" start-placeholder="日期开始" end-placeholder="日期结束" style="max-width: 300px" />
         <VGroup>
-          <el-select v-model="form.group.type" style="max-width: 100px">
+          <el-select v-model="form.group.type" style="max-width: 150px">
             <el-option label="组合1" :value="0"></el-option>
             <el-option label="组合2" :value="1"></el-option>
           </el-select>
@@ -86,13 +83,16 @@ const findPageList = (pageNum, pageSize) => {
   return new Promise(resolve => {
     setTimeout(() => {
       const item = { name: 'Test1', nickname: 'T1', role: 'Develop', sex: 'Man', age: 28, address: 'Shenzhen' }
-      const list = [...new Array(80).keys()].reduce((acc, cur) => acc.concat({ id: cur, ...item }), [])
+      const list = [...new Array(2).keys()].reduce((acc, cur) => acc.concat({ id: cur, ...item }), [])
       resolve({
         total: list.length,
         data: list.slice((pageNum - 1) * pageSize, pageNum * pageSize)
       })
     }, 1000);
   })
+}
+const options = async() => {
+  return await new Promise(resolve => setTimeout(() => resolve([{label: '选项1', value: 1},{label: '选项2', value: 2}]), 100))
 }
 const tableOptins = reactive({
   showHeaderOverflow: true,
@@ -102,8 +102,9 @@ const tableOptins = reactive({
     data: {
       base: '', // 基础类型
       baseRange: {},
+      select: [],
       date: { value: [], range: true, rangeKeys: ['start_time', 'end_time'] }, // 日期
-      group: { type: 0, value: '' }, // 组合
+      group: { type: 0, value: [] }, // 组合
       dateRange: { type: 'dateRange1', value: [], range: true }, // 组合+日期范围
       sizeRange: { type: 'sizeRange1' }, // 组合+范围
     }
