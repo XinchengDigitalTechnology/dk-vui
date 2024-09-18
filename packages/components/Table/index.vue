@@ -1,11 +1,12 @@
 <script lang="jsx" setup>
 import XEUtils from 'xe-utils'
 import GlobalConfig from "~/packages/config"
-import { ArrowUpBold, QuestionFilled } from '@element-plus/icons-vue'
+import { QuestionFilled } from '@element-plus/icons-vue'
 import Pagination from './Pagination'
 import SaveForm from './SaveForm'
 import HighForm from './HighForm'
-import HScroll from './HScroll.vue'
+import HScroll from './HScroll'
+import Handle from './Handle'
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
@@ -475,11 +476,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
           </div>
         </template>
       </vxe-grid>
-      <div v-if="offsetHeight && offsetHeight === headerHeight" class="vx-table--to-top" @click="toTop">
-        <el-icon>
-          <ArrowUpBold />
-        </el-icon>
-      </div>
+      <Handle v-if="offsetHeight && offsetHeight === headerHeight" class="vx-table--to-top" @toTop="toTop" @reset="handleFormReset" />
     </div>
   </div>
 </template>
