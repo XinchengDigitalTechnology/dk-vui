@@ -395,7 +395,7 @@ html.dark {
     margin-bottom: 10px;
   }
 
-  &--to-top {
+  &--toTop {
     position: absolute;
     right: 10px;
     bottom: 50px;
@@ -406,10 +406,11 @@ html.dark {
     z-index: 10;
 
     &-item{
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 30px;
       height: 30px;
-      line-height: 34px;
-      text-align: center;
       background-color: #999;
       border-radius: 20px;
       cursor: pointer;

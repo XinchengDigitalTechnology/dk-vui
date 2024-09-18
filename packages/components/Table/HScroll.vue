@@ -89,11 +89,13 @@ html.dark {
     width: 100%;
 
     .v-HScroll-slither {
-      display: block;
+      left: 0;
       cursor: default;
+      opacity: 1;
     }
 
     .v-HScroll-mouse {
+      left: -2000px;
       opacity: 0;
     }
   }
@@ -111,8 +113,9 @@ html.dark {
     position: absolute;
     width: 100%;
     height: 100%;
-    left: 0;
-    display: none;
+    left: -2000px;
+    top: 0;
+    opacity: 0;
     background: transparent;
     transition: opacity 0.1s;
     overflow: hidden;

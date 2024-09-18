@@ -260,6 +260,7 @@ const handleScroll = async ({ scrollLeft, scrollTop, isY, $event }) => {
     if (endTop === 0) {
       offsetHeight.value = 0
     }
+    timer = null
     clearTimeout(timer)
   }, 50)
 }
@@ -476,7 +477,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
           </div>
         </template>
       </vxe-grid>
-      <Handle v-if="offsetHeight && offsetHeight === headerHeight" class="vx-table--to-top" @toTop="toTop" @reset="handleFormReset" />
+      <Handle v-if="offsetHeight && offsetHeight === headerHeight" @toTop="toTop" @reset="handleFormReset" />
     </div>
   </div>
 </template>
