@@ -29,7 +29,7 @@ const findPageList = (pageNum, pageSize) => {
 const tableOptins = reactive({
   id: 'sort',
   height: 260,
-  crossSlip: false,
+  crossSlip: true,
   formConfig: {
     data: {
       sort: {}

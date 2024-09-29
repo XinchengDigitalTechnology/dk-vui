@@ -149,7 +149,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
             <VText :value="getName(d)" type="button" style="max-height: 28px!important;" @click="view(d)" />
           </div>
           <div class="v-upload-handle">
-            <el-button type="primary" title="下载" link @click="download(d.file_url)">
+            <el-button type="primary" title="下载" link @click="download(d)">
               <el-icon size="14">
                 <Download />
               </el-icon>

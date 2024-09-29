@@ -89,13 +89,10 @@ html.dark {
     width: 100%;
 
     .v-HScroll-slither {
-      left: 0;
-      cursor: default;
       opacity: 1;
     }
 
     .v-HScroll-mouse {
-      left: -2000px;
       opacity: 0;
     }
   }
@@ -111,10 +108,7 @@ html.dark {
 
   .v-HScroll-slither {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    left: -2000px;
-    top: 0;
+    inset: 0;
     opacity: 0;
     background: transparent;
     transition: opacity 0.1s;
@@ -131,7 +125,6 @@ html.dark {
       height: var(--clientWidth);
       background-color: rgba(#777, 0.15);
       color: #fff;
-      opacity: 1;
       background-image: url('./1.png');
       background-size: auto, 100%;
       background-position: calc(100% - 14px) center, left;
@@ -141,7 +134,6 @@ html.dark {
       }
       &::-webkit-scrollbar-thumb {
         background: rgba(#000, 0.14);
-        cursor: pointer;
       }
       &::-webkit-scrollbar-track {
         background: rgba(#000, 0.01);
