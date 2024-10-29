@@ -27,9 +27,7 @@ const VText = defineComponent({
     const updateTip = inject("updateTip", null)
     let isOverflow = false
     onUnmounted(() => {
-      // console.log(`onUnmounted。11111`)
       updateTip.value = null
-      // window.removeEventListener('resize', handleResize);
     })
 
     const mouseenter = ({ target }) => {
@@ -42,7 +40,6 @@ const VText = defineComponent({
       if (!isOverflow) return
 
       let { left, top } = target.getBoundingClientRect()
-      // console.log(left, top);
       
       updateTip &&
         updateTip({
