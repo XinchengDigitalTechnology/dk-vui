@@ -87,11 +87,39 @@ const tipRef = ref()
 const tip = ref({
   visible: false,
   content: '',
-  ref: null
+  // ref: null
 })
-const updateTip = (val) => {
+// const updateTip = (val) => {
+//   tip.value = val
+// }
+const time = ref(null)
+const updateTip = (val = {}) => {
+  time.value = null
+  if (val.visible) {
+  // console.log(val.rectStyle);
+    // 创建/删除 临时dom
+    const newElem = document.createElement("div")
+    // 设置样式
+    newElem.style.width = Math.floor(val.rectStyle.w) + "px"
+    newElem.style.height = "1px"
+    newElem.style.opacity = 0
+    // newElem.style.position = "absolute"
+    newElem.style.position = "fixed"
+    newElem.style.left = Math.floor(val.rectStyle.left) + "px"
+    newElem.style.top = Math.floor(val.rectStyle.top) + "px"
+    document.getElementById("app").appendChild(newElem)
+    time.value = setTimeout(() => {
+      nextTick(() => {
+        // console.log(newElem)
+        document.getElementById("app").removeChild(newElem)
+      })
+    }, 1000)
+    val.ref = newElem
+  }
   tip.value = val
 }
+
+
 provide('updateTip', updateTip)
 </script>
 
