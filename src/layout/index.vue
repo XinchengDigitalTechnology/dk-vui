@@ -54,8 +54,8 @@ console.log('menus', menus)
   <div class="app-container">
     <el-scrollbar class="menu">
       <div class="menu-list">
-        <template v-for="da in menus">
-          <div class="menu-group" v-if="da.children" :key="da.path">
+        <template v-for="(da, idx) in menus">
+          <div v-if="da.children" :key="idx" class="menu-group">
             <h3 class="menu-title">{{ da.name }}</h3>
             <div v-for="(d, i) in da.children" :key="i" class="menu-item" :class="d.path === route.path && 'is--active'">
               <router-link :to="d.path">
@@ -63,7 +63,7 @@ console.log('menus', menus)
               </router-link>
             </div>
           </div>
-          <div v-else class="menu-item" :key="da.path">
+          <div v-else :key="idx" class="menu-item">
             <router-link :to="da.path">
               <el-link :underline="false">{{ da.name }}</el-link>
             </router-link>
@@ -73,9 +73,10 @@ console.log('menus', menus)
     </el-scrollbar>
     <div class="body">
       <router-view v-slot="{ Component }">
-        <keep-alive>
+        <component :is="Component" />
+        <!-- <keep-alive>
           <component :is="Component" />
-        </keep-alive>
+        </keep-alive> -->
       </router-view>
     </div>
   </div>
