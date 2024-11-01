@@ -11,6 +11,11 @@ const props = defineProps({
   footerConfig: { type: Object, default: () => ({}) },
 })
 
+const pageLoad = ref(true)
+onBeforeUnmount(() => {
+  pageLoad.value = false
+})
+
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()))])
 
@@ -96,40 +101,43 @@ provide('updateTip', updateTip)
 </script>
 
 <template>
-  <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" :style="{'--left-width': leftWidth}" v-dom-resize="resize" v-bind="$attrs"
-    @scroll="handleScroll">
-    <template v-if="edit">
-      <slot />
-      <template v-if="slots.includes('footer')">
-        <div :style="{ width: '100%', height: `${footerConfig.height}px` }"></div>
-        <div class="v-page__footer-wrapper" :style="{ width: footerWidth + 'px', height: `${footerConfig.height}px` }">
-          <div class="v-page__footer" :style="{ 'justify-content': footerConfig.align }">
-            <slot name="footer" />
+  <template v-if="pageLoad">
+    <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" :style="{'--left-width': leftWidth}" v-dom-resize="resize" v-bind="$attrs"
+      @scroll="handleScroll">
+      <template v-if="edit">
+        <slot />
+        <template v-if="slots.includes('footer')">
+          <div :style="{ width: '100%', height: `${footerConfig.height}px` }"></div>
+          <div class="v-page__footer-wrapper" :style="{ width: footerWidth + 'px', height: `${footerConfig.height}px` }">
+            <div class="v-page__footer" :style="{ 'justify-content': footerConfig.align }">
+              <slot name="footer" />
+            </div>
           </div>
-        </div>
+        </template>
       </template>
-    </template>
-    <div v-else class="v-page__body" :style="{ paddingLeft: slots.includes('left') && leftWidth,transition }">
-      <div class="v-page__body-left" v-if="slots.includes('left')" :style="{transition}">
-        <slot name="left"></slot>
-        <div v-if="leftConfig.drag" :class="['v-page__body-drag', isMove && 'is-move']" @mousedown="mousedown">
-          <div class="v-page__body-drag-line" :class="leftConfig.dragLineClass"></div>
+      <div v-else class="v-page__body" :style="{ paddingLeft: slots.includes('left') && leftWidth,transition }">
+        <div class="v-page__body-left" v-if="slots.includes('left')" :style="{transition}">
+          <slot name="left"></slot>
+          <div v-if="leftConfig.drag" :class="['v-page__body-drag', isMove && 'is-move']" @mousedown="mousedown">
+            <div class="v-page__body-drag-line" :class="leftConfig.dragLineClass"></div>
+          </div>
+          <div v-else class="v-page__body-line" :class="leftConfig.lineClass"></div>
         </div>
-        <div v-else class="v-page__body-line" :class="leftConfig.lineClass"></div>
+        <slot />
       </div>
-      <slot />
+      <div v-if="leftConfig.collapse && slots.includes('left')" class="v-page__body-collapse" :class="leftConfig.arrowClass"
+        :style="{left: !leftConfig.drag ? leftWidth : leftWidth ? `calc(${leftWidth} - 2px)` : 0, transition}" @click="collapse=!collapse">
+        <el-button v-if="leftConfig.showArrow" type="primary">
+          <el-icon color="white">
+            <ArrowRightBold v-if="collapse" />
+            <ArrowLeftBold v-else />
+          </el-icon>
+        </el-button>
+      </div>
+      <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering placement="top" popper-class="app-tip" :offset="3" enterable />
     </div>
-    <div v-if="leftConfig.collapse && slots.includes('left')" class="v-page__body-collapse" :class="leftConfig.arrowClass"
-      :style="{left: !leftConfig.drag ? leftWidth : leftWidth ? `calc(${leftWidth} - 2px)` : 0, transition}" @click="collapse=!collapse">
-      <el-button v-if="leftConfig.showArrow" type="primary">
-        <el-icon color="white">
-          <ArrowRightBold v-if="collapse" />
-          <ArrowLeftBold v-else />
-        </el-icon>
-      </el-button>
-    </div>
-  </div>
-  <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering placement="top" popper-class="app-tip" :offset="3" enterable />
+  </template>
+  <template v-else />
 </template>
 
 <style lang="scss">

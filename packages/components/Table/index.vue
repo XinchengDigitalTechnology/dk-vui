@@ -260,8 +260,8 @@ const handleScroll = async ({ scrollLeft, scrollTop, isY, $event }) => {
     if (endTop === 0) {
       offsetHeight.value = 0
     }
-    timer = null
     clearTimeout(timer)
+    timer = null
   }, 50)
 }
 // const throttleScorll = XEUtils.throttle(handleScroll, 10)
@@ -333,6 +333,7 @@ onActivated(() => {
   atimer = setTimeout(() => {
     activating.value = false
     clearTimeout(atimer)
+    atimer = null
   }, 100)
 })
 

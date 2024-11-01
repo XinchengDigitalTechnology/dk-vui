@@ -55,7 +55,7 @@ console.log('menus', menus)
     <el-scrollbar class="menu">
       <div class="menu-list">
         <template v-for="(da, idx) in menus">
-          <div v-if="da.children" :key="idx" class="menu-group">
+          <div v-if="da.children" :key="da.path" class="menu-group">
             <h3 class="menu-title">{{ da.name }}</h3>
             <div v-for="(d, i) in da.children" :key="i" class="menu-item" :class="d.path === route.path && 'is--active'">
               <router-link :to="d.path">
