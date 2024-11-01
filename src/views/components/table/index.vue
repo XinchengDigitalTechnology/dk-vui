@@ -1,5 +1,5 @@
 <template>
-  <VPage :left-config="{width: 200, collapse: true, collapseValue: false, drag: true, showArrow: true}">
+  <VPage ref="pageRef" :left-config="{width: 200, collapse: true, collapseValue: false, drag: true, showArrow: true}">
     <template #left>
       <el-tree :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]" :props="defaultProps" />
     </template>
@@ -61,6 +61,8 @@
       <template #toolbar_btns>
         <el-button type="primary" class="ml-auto" @click="create(tableRef)">新增</el-button>
         <el-button>批量编辑</el-button>
+        <el-button @click="() => pageRef.unload()">卸载page</el-button>
+        <el-button @click="clearData">清空数据</el-button>
       </template>
     </VTable>
     <template #footer>
@@ -72,18 +74,33 @@
 
 <script setup lang="jsx" name="Index">
 
-const tableRef = ref(null)
+const tableRef = ref()
+const pageRef = ref()
 
 const create = table => {
   console.log('tableRef.value', tableRef.value)
+}
+
+const query = () => {
+  tableRef?.value.query()
+}
+
+const isClearData = ref(false)
+const clearData = () => {
+  isClearData.value = true
+  query()
 }
 
 // 模拟分页接口
 const findPageList = (pageNum, pageSize) => {
   return new Promise(resolve => {
     setTimeout(() => {
+      if(isClearData.value) {
+        resolve({total: 0, data: []})
+        return
+      }
       const item = { name: 'Test1', nickname: 'T1', role: 'Develop', sex: 'Man', age: 28, address: 'Shenzhen' }
-      const list = [...new Array(200).keys()].reduce((acc, cur) => acc.concat({ id: cur, ...item }), [])
+      const list = [...new Array(1000).keys()].reduce((acc, cur) => acc.concat({ id: cur, ...item }), [])
       resolve({
         total: list.length,
         data: list.slice((pageNum - 1) * pageSize, pageNum * pageSize)
@@ -112,7 +129,7 @@ const tableOptins = reactive({
   pagerConfig: {
     layouts: ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total']
   },
-  scrollY: { enabled: true, gt: 0 },
+  scrollY: { enabled: false, gt: 0 },
   rowConfig: { height: 100 },
   columns: [
     { type: 'checkbox', width: 50, fixed: 'left' },

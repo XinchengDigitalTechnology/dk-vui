@@ -33,7 +33,13 @@ export const download = async (urls, blob) => {
         a.download = filename
         a.click()
       }
-      await new Promise(resolve => setTimeout(resolve, 300))
+      await new Promise(resolve => {
+        let timer = setTimeout(() => {
+          clearTimeout(timer)
+          timer = null
+          resolve()
+        }, 300)
+      })
     }
   }
   return true
