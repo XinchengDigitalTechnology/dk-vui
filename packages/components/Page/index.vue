@@ -13,8 +13,12 @@ const props = defineProps({
 
 const pageLoad = ref(true)
 onBeforeUnmount(() => {
-  pageLoad.value = false
+  unload()
 })
+
+const unload = () => {
+  pageLoad.value = false
+}
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()))])
@@ -98,6 +102,8 @@ const updateTip = (val) => {
   tip.value = val
 }
 provide('updateTip', updateTip)
+
+defineExpose({unload})
 </script>
 
 <template>
