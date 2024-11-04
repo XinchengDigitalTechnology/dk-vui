@@ -1,7 +1,6 @@
 import { defineComponent } from "vue"
 import { $copyToClipboard } from "@xqsit94/vue3-copy-to-clipboard"
 import { ElMessage } from "element-plus"
-import { DocumentCopy } from "@element-plus/icons-vue"
 import { inject } from "vue"
 import GlobalConfig from "~/packages/config"
 

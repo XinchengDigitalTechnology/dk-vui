@@ -1,4 +1,5 @@
 export default {
+  keepAliveStore: () => {},
   table: {
     size: 'small',
     height: 'auto',

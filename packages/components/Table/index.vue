@@ -7,6 +7,19 @@ import SaveForm from './SaveForm'
 import HighForm from './HighForm'
 import HScroll from './HScroll'
 import Handle from './Handle'
+import { useRouter } from 'vue-router'
+const keepStore = GlobalConfig.keepAliveStore?.()
+const router = useRouter()
+const routerName = router.currentRoute.value.name
+watch(
+  () => keepStore?.currentKeepAliveList,
+  (val) => {
+    if (!val.includes(routerName)) {
+      console.debug('清空表格数据')
+      gridRef?.value?.reloadData([])
+    }
+  },
+)
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])

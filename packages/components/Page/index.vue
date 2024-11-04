@@ -1,15 +1,29 @@
 <script setup name="VPage">
 import XEUtils from 'xe-utils'
-import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import GlobalConfig from "~/packages/config"
+import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import { onMousemove } from '~/packages/utils'
+import { useRouter } from 'vue-router'
+const keepStore = GlobalConfig.keepAliveStore?.()
+const router = useRouter()
 
 // 分为列表页和表单页，默认是列表页
 const props = defineProps({
   edit: Boolean, // 是否是表单页
   leftConfig: { type: Object, default: () => ({}) },
   footerConfig: { type: Object, default: () => ({}) },
+  unload: { type: Function, default: () => {} },
 })
+const routerName = router.currentRoute.value.name
+watch(
+  () => keepStore?.currentKeepAliveList,
+  (val) => {
+    if (!val.includes(routerName)) {
+      props.unload()
+      unload()
+    }
+  },
+)
 
 const pageLoad = ref(true)
 onBeforeUnmount(() => {
@@ -158,11 +172,7 @@ defineExpose({unload})
       </div>
       <div v-if="leftConfig.collapse && slots.includes('left')" class="v-page__body-collapse" :class="leftConfig.arrowClass"
         :style="{left: !leftConfig.drag ? leftWidth : leftWidth ? `calc(${leftWidth} - 2px)` : 0, transition}" @click="collapse=!collapse">
-        <el-button v-if="leftConfig.showArrow" type="primary">
-          <el-icon color="white">
-            <ArrowRightBold v-if="collapse" />
-            <ArrowLeftBold v-else />
-          </el-icon>
+        <el-button v-if="leftConfig.showArrow" :icon="collapse ? ArrowRightBold : ArrowLeftBold" type="primary">
         </el-button>
       </div>
       <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering placement="top" popper-class="app-tip" :offset="3" enterable />
