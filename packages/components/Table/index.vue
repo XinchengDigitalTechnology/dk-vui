@@ -14,7 +14,7 @@ const routerName = router.currentRoute.value.name
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
 // 搜索表单处理
-const merge = XEUtils.merge({}, XEUtils.clone(GlobalConfig.table, true), useAttrs())
+let merge = XEUtils.merge({}, XEUtils.clone(GlobalConfig.table, true), useAttrs())
 // column不传slots时，默认用 VText组件渲染，支持设置 line 参数
 const initColumn = (columns) => {
   const cols = columns.map(d => {
