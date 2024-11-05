@@ -18,22 +18,26 @@ watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
     if (!val.includes(routerName)) {
-      nextTick(() => {
-        console.log('清空page')
+      const timer = setTimeout(() => {
         props.unload()
         unload()
-      })
+        leftWidth.value = null
+        slots.value = null
+        transition.value = null
+        tip.value = null
+        clearTimeout(timer)
+      }, 200);
     }
   },
 )
 
-const pageLoad = ref(true)
+const show = ref(true)
 onBeforeUnmount(() => {
   unload()
 })
 
 const unload = () => {
-  pageLoad.value = false
+  show.value = false
 }
 
 // 插槽处理
@@ -119,8 +123,6 @@ const tip = ref({
 // }
 const time = ref(null)
 const updateTip = (val = {}) => {
-  console.log({keepStore})
-  console.log({router})
   time.value = null
   if (val.visible) {
     // 创建/删除 临时dom
@@ -150,7 +152,7 @@ defineExpose({unload})
 </script>
 
 <template>
-  <template v-if="pageLoad">
+  <template v-if="show">
     <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" :style="{'--left-width': leftWidth}" v-dom-resize="resize" v-bind="$attrs"
       @scroll="handleScroll">
       <template v-if="edit">

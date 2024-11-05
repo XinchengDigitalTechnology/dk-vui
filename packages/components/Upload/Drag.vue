@@ -46,7 +46,6 @@ const handleFileName = (fileList) => {
     return
   }
   if(props.fileSize && files.some(d => {
-    console.log('filesizeToMB(d.size)', filesizeToMB(d.size))
     return filesizeToMB(d.size) > props.fileSize
   })) {
     ElMessage.error(`上传文件大小不能超过${props.fileSize}MB`)
