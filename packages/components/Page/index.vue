@@ -5,6 +5,7 @@ import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import { onMousemove } from '~/packages/utils'
 const keepStore = GlobalConfig.keepStore(GlobalConfig.pinia)
 const router = GlobalConfig.useRouter()
+const routerName = router.currentRoute.value.name
 
 // 分为列表页和表单页，默认是列表页
 const props = defineProps({
@@ -16,9 +17,12 @@ const props = defineProps({
 watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
-    if (!val.includes(router.currentRoute.value.name)) {
-      // props.unload()
-      // unload()
+    if (!val.includes(routerName)) {
+      nextTick(() => {
+        console.log('清空page')
+        props.unload()
+        unload()
+      })
     }
   },
 )

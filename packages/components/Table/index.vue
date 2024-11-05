@@ -9,13 +9,14 @@ import HScroll from './HScroll'
 import Handle from './Handle'
 const keepStore = GlobalConfig.keepStore(GlobalConfig.pinia)
 const router = GlobalConfig.useRouter()
+const routerName = router.currentRoute.value.name
 watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
     console.log('keepStore', keepStore)
-    console.log('router.currentRoute.value.name', router.currentRoute.value.name)
-    if (!val.includes(router.currentRoute.value.name)) {
-      console.debug('清空表格数据')
+    console.log('routerName', routerName)
+    if (!val.includes(routerName)) {
+      console.log('清空表格数据')
       gridRef?.value?.reloadData([])
     }
   },
