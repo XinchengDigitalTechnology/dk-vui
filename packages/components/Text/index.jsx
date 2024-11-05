@@ -7,8 +7,7 @@ import GlobalConfig from "~/packages/config"
 // const VText = (props, { slots, emit, attrs }) => {
 const VText = defineComponent({
   setup(props, { slots, emit, attrs }) {
-    const { value, title, titlePosition, type, line, copy, disabled, empty } = props
-    const lineNum = +line
+    const lineNum = +props.line
 
     // 样式
     const style =
@@ -62,33 +61,28 @@ const VText = defineComponent({
     const copyText = (e) => {
       e.stopPropagation()
       try {
-        $copyToClipboard(value)
+        $copyToClipboard(props.value)
         ElMessage.success("复制成功")
       } catch (error) {
         ElMessage.error(error || "复制失败")
       }
     }
-
-    const hasSlot = slots.default && slots.default().filter((d) => d.children).length
-
     return () => (
       <div class="v-text">
-        <div class={["v-text-wrapper", titlePosition === "top" ? "is--wrap" : ""]}>
-          {title ? <span class="v-text-title">{title}:</span> : ""}
-          {(!slots.default && !(value + "")) || (slots.default && !hasSlot) ? (
-            empty
+        <div class={["v-text-wrapper", props.titlePosition === "top" ? "is--wrap" : ""]}>
+          {props.title ? <span class="v-text-title">{props.title}:</span> : ""}
+          {!slots.default?.() && !props.value ? (
+            props.empty
           ) : (
             <div class="v-text-content-wrapper" style={{ maxHeight: lineNum * 24 + "px" }} onMouseenter={mouseenter} onMouseleave={mouseleave} {...attrs}>
-              {hasSlot
-                ? slots.default()
-                : [
-                    <div class={`v-text-content${type ? " is--" + type : ""}${disabled ? " is--disabled" : ""}`} style={style}>
-                      {value}
+              { slots.default?.() || [
+                    <div class={`v-text-content${props.type ? " is--" + props.type : ""}${props.disabled ? " is--disabled" : ""}`} style={style}>
+                      {props.value}
                     </div>,
-                    <div class="v-text-content-wrap">{value}</div>,
+                    <div class="v-text-content-wrap">{props.value}</div>,
                   ]}
               {/* 未溢出时的复制 */}
-              {copy && !isOverflow ? (
+              {props.copy && !isOverflow ? (
                 <div class="v-text-btns" title="复制" onClick={copyText}>
                   {/* <el-icon>
               <DocumentCopy />
@@ -110,7 +104,7 @@ const VText = defineComponent({
           )}
         </div>
         {/* 溢出时的复制 */}
-        {copy && isOverflow ? (
+        {props.copy && isOverflow ? (
           <div class="v-text-btns" title="复制" onClick={copyText}>
             {/* <el-icon>
         <DocumentCopy />

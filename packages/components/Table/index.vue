@@ -9,7 +9,7 @@ import HScroll from './HScroll'
 import Handle from './Handle'
 const keepStore = GlobalConfig.keepStore(GlobalConfig.pinia)
 const router = GlobalConfig.useRouter()
-const routerName = router.currentRoute.value.name
+const routerName = router?.currentRoute?.value?.name
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
