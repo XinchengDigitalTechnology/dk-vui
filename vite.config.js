@@ -28,7 +28,8 @@ export default defineConfig({
     },
     lib: {
       entry: './packages/index.js',
-      name: 'dk-vui'
+      name: 'dk-vui',
+      formats: ['es', 'umd'],
     }
   },
   resolve: {

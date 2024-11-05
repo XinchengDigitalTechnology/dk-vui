@@ -10,12 +10,12 @@ import './assets/styles/css-vars.scss'
 import ElementPlus from 'element-plus'
 import { ElMessage } from 'element-plus'
 import 'element-plus/dist/index.css'
-
 const app = createApp(App)
 app.use(VXETable)
 app.use(ElementPlus)
 let num = 2
 app.use(DKVui)
+
 DKVui.setup({
   table: {
     scrollHideForm: true

@@ -3,9 +3,8 @@ import XEUtils from 'xe-utils'
 import GlobalConfig from "~/packages/config"
 import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import { onMousemove } from '~/packages/utils'
-import { useRouter } from 'vue-router'
-const keepStore = GlobalConfig.keepAliveStore?.()
-const router = useRouter()
+const keepStore = GlobalConfig.keepStore(GlobalConfig.pinia)
+const router = GlobalConfig.useRouter()
 
 // 分为列表页和表单页，默认是列表页
 const props = defineProps({
@@ -14,13 +13,12 @@ const props = defineProps({
   footerConfig: { type: Object, default: () => ({}) },
   unload: { type: Function, default: () => {} },
 })
-const routerName = router.currentRoute.value.name
 watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
-    if (!val.includes(routerName)) {
-      props.unload()
-      unload()
+    if (!val.includes(router.currentRoute.value.name)) {
+      // props.unload()
+      // unload()
     }
   },
 )
@@ -117,6 +115,8 @@ const tip = ref({
 // }
 const time = ref(null)
 const updateTip = (val = {}) => {
+  console.log({keepStore})
+  console.log({router})
   time.value = null
   if (val.visible) {
     // 创建/删除 临时dom

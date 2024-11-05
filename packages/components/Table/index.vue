@@ -7,14 +7,14 @@ import SaveForm from './SaveForm'
 import HighForm from './HighForm'
 import HScroll from './HScroll'
 import Handle from './Handle'
-import { useRouter } from 'vue-router'
-const keepStore = GlobalConfig.keepAliveStore?.()
-const router = useRouter()
-const routerName = router.currentRoute.value.name
+const keepStore = GlobalConfig.keepStore(GlobalConfig.pinia)
+const router = GlobalConfig.useRouter()
 watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
-    if (!val.includes(routerName)) {
+    console.log('keepStore', keepStore)
+    console.log('router.currentRoute.value.name', router.currentRoute.value.name)
+    if (!val.includes(router.currentRoute.value.name)) {
       console.debug('清空表格数据')
       gridRef?.value?.reloadData([])
     }
