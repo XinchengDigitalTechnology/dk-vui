@@ -445,11 +445,6 @@ watch(
     if (!val.includes(routerName)) {
       gridRef?.value?.reloadData([]).then(() => {
         show.value = false
-        form.value = null
-        fixs.value = null
-        tableHeight.value = null
-        slots.value = null
-        merge = null
       })
     }
   },

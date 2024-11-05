@@ -21,10 +21,6 @@ watch(
       const timer = setTimeout(() => {
         props.unload()
         unload()
-        leftWidth.value = null
-        slots.value = null
-        transition.value = null
-        tip.value = null
         clearTimeout(timer)
       }, 200);
     }
