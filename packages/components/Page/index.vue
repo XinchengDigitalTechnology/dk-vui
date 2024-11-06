@@ -12,29 +12,16 @@ const props = defineProps({
   edit: Boolean, // 是否是表单页
   leftConfig: { type: Object, default: () => ({}) },
   footerConfig: { type: Object, default: () => ({}) },
-  unload: { type: Function, default: () => {} },
+  unload: { type: Function, default: () => { } },
 })
 watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
     if (!val.includes(routerName)) {
-      const timer = setTimeout(() => {
-        props.unload()
-        unload()
-        clearTimeout(timer)
-      }, 200);
+      props.unload()
     }
   },
 )
-
-const show = ref(true)
-onBeforeUnmount(() => {
-  unload()
-})
-
-const unload = () => {
-  show.value = false
-}
 
 // 插槽处理
 let slots = computed(() => [...new Set(Object.keys(useSlots()))])
@@ -72,7 +59,7 @@ const end = (val) => {
   document.body.style.cursor = ''
 }
 
-const transition = computed(() => isMove.value ? 'all' : `${leftConfig.value.duration/1000}s`)
+const transition = computed(() => isMove.value ? 'all' : `${leftConfig.value.duration / 1000}s`)
 
 const mousedown = () => {
   onMousemove({ start, moveing, end })
@@ -143,44 +130,39 @@ const updateTip = (val = {}) => {
 
 
 provide('updateTip', updateTip)
-
-defineExpose({unload})
 </script>
 
 <template>
-  <template v-if="show">
-    <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" :style="{'--left-width': leftWidth}" v-dom-resize="resize" v-bind="$attrs"
-      @scroll="handleScroll">
-      <template v-if="edit">
-        <slot />
-        <template v-if="slots.includes('footer')">
-          <div :style="{ width: '100%', height: `${footerConfig.height}px` }"></div>
-          <div class="v-page__footer-wrapper" :style="{ width: footerWidth + 'px', height: `${footerConfig.height}px` }">
-            <div class="v-page__footer" :style="{ 'justify-content': footerConfig.align }">
-              <slot name="footer" />
-            </div>
+  <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" :style="{'--left-width': leftWidth}" v-dom-resize="resize" v-bind="$attrs"
+    @scroll="handleScroll">
+    <template v-if="edit">
+      <slot />
+      <template v-if="slots.includes('footer')">
+        <div :style="{ width: '100%', height: `${footerConfig.height}px` }"></div>
+        <div class="v-page__footer-wrapper" :style="{ width: footerWidth + 'px', height: `${footerConfig.height}px` }">
+          <div class="v-page__footer" :style="{ 'justify-content': footerConfig.align }">
+            <slot name="footer" />
           </div>
-        </template>
-      </template>
-      <div v-else class="v-page__body" :style="{ paddingLeft: slots.includes('left') && leftWidth,transition }">
-        <div class="v-page__body-left" v-if="slots.includes('left')" :style="{transition}">
-          <slot name="left"></slot>
-          <div v-if="leftConfig.drag" :class="['v-page__body-drag', isMove && 'is-move']" @mousedown="mousedown">
-            <div class="v-page__body-drag-line" :class="leftConfig.dragLineClass"></div>
-          </div>
-          <div v-else class="v-page__body-line" :class="leftConfig.lineClass"></div>
         </div>
-        <slot />
+      </template>
+    </template>
+    <div v-else class="v-page__body" :style="{ paddingLeft: slots.includes('left') && leftWidth,transition }">
+      <div class="v-page__body-left" v-if="slots.includes('left')" :style="{transition}">
+        <slot name="left"></slot>
+        <div v-if="leftConfig.drag" :class="['v-page__body-drag', isMove && 'is-move']" @mousedown="mousedown">
+          <div class="v-page__body-drag-line" :class="leftConfig.dragLineClass"></div>
+        </div>
+        <div v-else class="v-page__body-line" :class="leftConfig.lineClass"></div>
       </div>
-      <div v-if="leftConfig.collapse && slots.includes('left')" class="v-page__body-collapse" :class="leftConfig.arrowClass"
-        :style="{left: !leftConfig.drag ? leftWidth : leftWidth ? `calc(${leftWidth} - 2px)` : 0, transition}" @click="collapse=!collapse">
-        <el-button v-if="leftConfig.showArrow" :icon="collapse ? ArrowRightBold : ArrowLeftBold" type="primary">
-        </el-button>
-      </div>
-      <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering placement="top" popper-class="app-tip" :offset="3" enterable />
+      <slot />
     </div>
-  </template>
-  <template v-else />
+    <div v-if="leftConfig.collapse && slots.includes('left')" class="v-page__body-collapse" :class="leftConfig.arrowClass"
+      :style="{left: !leftConfig.drag ? leftWidth : leftWidth ? `calc(${leftWidth} - 2px)` : 0, transition}" @click="collapse=!collapse">
+      <el-button v-if="leftConfig.showArrow" :icon="collapse ? ArrowRightBold : ArrowLeftBold" type="primary">
+      </el-button>
+    </div>
+    <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering placement="top" popper-class="app-tip" :offset="3" enterable />
+  </div>
 </template>
 
 <style lang="scss">
@@ -225,7 +207,7 @@ defineExpose({unload})
       align-items: center;
       justify-content: center;
       z-index: 1;
-      .el-button{
+      .el-button {
         width: 16px;
         padding: 0;
       }

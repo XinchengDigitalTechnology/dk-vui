@@ -438,16 +438,13 @@ const handleFormReset = () => {
   resetAndQuery()
 }
 
-const show = ref(true)
 const showFrom = ref(true)
 watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
     if (!val.includes(routerName)) {
       showFrom.value = false
-      gridRef?.value?.reloadData([]).then(() => {
-        show.value = false
-      })
+      gridRef?.value?.reloadData([])
     }
   },
 )
@@ -460,47 +457,44 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
 </script>
 
 <template>
-  <template v-if="show">
-    <div ref="tableRef" class="vx-table" v-dom-resize="tableResize">
-      <div class="vx-table__header" :style="{ height: `${offsetHeight ? (headerHeight - offsetHeight) + 'px' : 'auto'}` }">
-        <div v-dom-resize="headerResize" :style="{ transform: `translateY(${-offsetHeight + 'px'})` }">
-          <div v-if="slots.includes('form')" class="vx-table__form">
-            <div class="vx-table__form-content">
-              <slot v-if="showFrom" name="form" v-bind="{ form }" />
-              <div class="vx-table__form-handle">
-                <slot name="form_handle">
-                  <el-button type="primary" @click="query">查询</el-button>
-                  <el-button @click="handleFormReset">重置</el-button>
-                  <SaveForm v-if="formConfig.save" @query="query" />
-                  <template v-if="slots.includes('high_form')">
-                    <HighForm @query="query" @reset="resetAndQuery">
-                      <slot name="high_form" v-bind="{ form }" />
-                    </HighForm>
-                  </template>
-                </slot>
-              </div>
+  <div ref="tableRef" class="vx-table" v-dom-resize="tableResize">
+    <div class="vx-table__header" :style="{ height: `${offsetHeight ? (headerHeight - offsetHeight) + 'px' : 'auto'}` }">
+      <div v-dom-resize="headerResize" :style="{ transform: `translateY(${-offsetHeight + 'px'})` }">
+        <div v-if="slots.includes('form')" class="vx-table__form">
+          <div class="vx-table__form-content">
+            <slot v-if="showFrom" name="form" v-bind="{ form }" />
+            <div class="vx-table__form-handle">
+              <slot name="form_handle">
+                <el-button type="primary" @click="query">查询</el-button>
+                <el-button @click="handleFormReset">重置</el-button>
+                <SaveForm v-if="formConfig.save" @query="query" />
+                <template v-if="slots.includes('high_form')">
+                  <HighForm @query="query" @reset="resetAndQuery">
+                    <slot name="high_form" v-bind="{ form }" />
+                  </HighForm>
+                </template>
+              </slot>
             </div>
           </div>
         </div>
       </div>
-      <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
-        <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
-          :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="updateScroll" @sortChange="sort">
-          <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
-            <slot :name="name" v-bind="row"></slot>
-          </template>
-          <template v-if="!pageHidden || merge.crossSlip" #pager>
-            <div class="v-pagination-container">
-              <Pagination v-if="!pageHidden" v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" v-model:pageNum="pager.pageNum" :total="pager.total" @change="pageChange" />
-              <HScroll v-if="merge.crossSlip" :bodyRect="bodyRect" @scroll="handleScrollX" />
-            </div>
-          </template>
-        </vxe-grid>
-        <Handle v-if="offsetHeight && offsetHeight === headerHeight" @toTop="toTop" @reset="handleFormReset" />
-      </div>
     </div>
-  </template>
-  <template v-else />
+    <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
+      <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
+        :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="updateScroll" @sortChange="sort">
+        <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
+          <slot :name="name" v-bind="row"></slot>
+        </template>
+        <template v-if="!pageHidden || merge.crossSlip" #pager>
+          <div class="v-pagination-container">
+            <Pagination v-if="!pageHidden" v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" v-model:pageNum="pager.pageNum" :total="pager.total" @change="pageChange" />
+            <HScroll v-if="merge.crossSlip" :bodyRect="bodyRect" @scroll="handleScrollX" />
+          </div>
+        </template>
+      </vxe-grid>
+      <Handle v-if="offsetHeight && offsetHeight === headerHeight" @toTop="toTop" @reset="handleFormReset" />
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
