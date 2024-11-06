@@ -442,6 +442,7 @@ const showFrom = ref(true)
 watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
+    console.log('table routerName', routerName)
     if (!val.includes(routerName)) {
       showFrom.value = false
       gridRef?.value?.reloadData([])

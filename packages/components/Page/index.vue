@@ -17,6 +17,7 @@ const props = defineProps({
 watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
+    console.log('page routerName', routerName)
     if (!val.includes(routerName)) {
       props.unload()
     }
