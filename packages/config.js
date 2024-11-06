@@ -1,7 +1,6 @@
 export default {
   keepStore: () => {},
   useRouter: () => {},
-  pinia: {},
   table: {
     size: 'small',
     height: 'auto',
