@@ -439,10 +439,12 @@ const handleFormReset = () => {
 }
 
 const show = ref(true)
+const showFrom = ref(true)
 watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
     if (!val.includes(routerName)) {
+      showFrom.value = false
       gridRef?.value?.reloadData([]).then(() => {
         show.value = false
       })
@@ -464,7 +466,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
         <div v-dom-resize="headerResize" :style="{ transform: `translateY(${-offsetHeight + 'px'})` }">
           <div v-if="slots.includes('form')" class="vx-table__form">
             <div class="vx-table__form-content">
-              <slot name="form" v-bind="{ form }" />
+              <slot v-if="showFrom" name="form" v-bind="{ form }" />
               <div class="vx-table__form-handle">
                 <slot name="form_handle">
                   <el-button type="primary" @click="query">查询</el-button>

@@ -71,7 +71,7 @@ const VText = defineComponent({
       <div class="v-text">
         <div class={["v-text-wrapper", props.titlePosition === "top" ? "is--wrap" : ""]}>
           {props.title ? <span class="v-text-title">{props.title}:</span> : ""}
-          {!slots.default?.() && !props.value ? (
+          {!slots.default?.() && !props.value && props.value !== 0 ? (
             props.empty
           ) : (
             <div class="v-text-content-wrapper" style={{ maxHeight: lineNum * 24 + "px" }} onMouseenter={mouseenter} onMouseleave={mouseleave} {...attrs}>
