@@ -84,9 +84,6 @@ const VText = defineComponent({
               {/* 未溢出时的复制 */}
               {props.copy && !isOverflow ? (
                 <div class="v-text-btns" title="复制" onClick={copyText}>
-                  {/* <el-icon>
-              <DocumentCopy />
-            </el-icon> */}
                   <svg t="1730196002806" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="27108" width="16" height="16">
                     <path
                       d="M771.712 164.928c45.76 0 83.328 34.88 87.616 79.488l0.384 8.512v336c0 45.76-34.88 83.328-79.552 87.616l-8.448 0.384h-63.424v-64h63.424a24 24 0 0 0 23.488-19.2l0.512-4.8v-336a24 24 0 0 0-19.2-23.488l-4.8-0.512h-336a24 24 0 0 0-23.488 19.2l-0.512 4.8v62.144h-64v-62.144c0-45.76 34.88-83.328 79.552-87.616l8.448-0.384h336z"
@@ -106,9 +103,6 @@ const VText = defineComponent({
         {/* 溢出时的复制 */}
         {props.copy && isOverflow ? (
           <div class="v-text-btns" title="复制" onClick={copyText}>
-            {/* <el-icon>
-        <DocumentCopy />
-      </el-icon> */}
             <svg t="1730196002806" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="27108" width="16" height="16">
               <path
                 d="M771.712 164.928c45.76 0 83.328 34.88 87.616 79.488l0.384 8.512v336c0 45.76-34.88 83.328-79.552 87.616l-8.448 0.384h-63.424v-64h63.424a24 24 0 0 0 23.488-19.2l0.512-4.8v-336a24 24 0 0 0-19.2-23.488l-4.8-0.512h-336a24 24 0 0 0-23.488 19.2l-0.512 4.8v62.144h-64v-62.144c0-45.76 34.88-83.328 79.552-87.616l8.448-0.384h336z"

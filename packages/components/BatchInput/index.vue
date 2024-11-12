@@ -17,9 +17,13 @@
             <path fill="#909399"
               d="M670.72 449.097143a192.365714 192.365714 0 1 0 191.634286 192.365714 192.365714 192.365714 0 0 0-191.634286-192.365714z m0 320.365714a128 128 0 1 1 128-128 128 128 0 0 1-128 128z" />
           </svg>
-          <el-icon class="v-batch-input-clear" @mouseenter="disabled = true" @mouseleave="disabled = false" @click="clear">
-            <CircleClose />
-          </el-icon>
+          <svg class="v-batch-input-clear" @mouseenter="disabled = true" @mouseleave="disabled = false" @click="clear" t="1731313372920" viewBox="0 0 1024 1024" version="1.1"
+            xmlns="http://www.w3.org/2000/svg" p-id="3649" width="19" height="19">
+            <path d="M512 96a416 416 0 1 1 0 832 416 416 0 0 1 0-832z m0 64a352 352 0 1 0 0 704 352 352 0 0 0 0-704z" p-id="3650" fill="currentColor"></path>
+            <path d="M365.12 387.328a32 32 0 0 1 44.864-45.248l4.096 4.032 244.8 290.56a32 32 0 0 1-44.864 45.248l-4.096-4.032-244.8-290.56z" p-id="3651" fill="currentColor"></path>
+            <path d="M365.12 636.672a32 32 0 0 0 44.864 45.248l4.096-4.032 244.8-290.56a32 32 0 0 0-44.864-45.248l-4.096 4.032-244.8 290.56z" p-id="3652" fill="currentColor">
+            </path>
+          </svg>
         </template>
       </el-input>
     </template>
@@ -30,7 +34,6 @@
   </el-popover>
 </template>
 <script setup>
-import { CircleClose } from '@element-plus/icons-vue'
 import GlobalConfig from "~/packages/config"
 import Handle from './Handle.vue'
 
@@ -107,7 +110,8 @@ defineExpose({ clear })
     }
   }
   &.is--focus {
-    box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-color-primary)) inset;
+    box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-color-primary))
+      inset;
     z-index: 1;
   }
 }

@@ -129,7 +129,6 @@ const tableOptins = reactive({
   pagerConfig: {
     layouts: ['PrevJump', 'PrevPage', 'Jump', 'PageCount', 'NextPage', 'NextJump', 'Sizes', 'Total']
   },
-  scrollY: { enabled: false, gt: 0 },
   rowConfig: { height: 100 },
   columns: [
     { type: 'checkbox', width: 50, fixed: 'left' },

@@ -1,7 +1,6 @@
 <script lang="jsx" setup>
 import XEUtils from 'xe-utils'
 import GlobalConfig from "~/packages/config"
-import { QuestionFilled } from '@element-plus/icons-vue'
 import Pagination from './Pagination'
 import SaveForm from './SaveForm'
 import HighForm from './HighForm'
@@ -12,7 +11,8 @@ const router = GlobalConfig.useRouter()
 const routerName = router?.currentRoute?.value?.name
 
 // 插槽处理
-let slots = computed(() => [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
+const beforeHide = ref(false)
+let slots = computed(() => beforeHide.value ? [] : [...new Set(Object.keys(useSlots()).concat(['toolbar_btns']))])
 // 搜索表单处理
 let merge = XEUtils.merge({}, XEUtils.clone(GlobalConfig.table, true), useAttrs())
 // column不传slots时，默认用 VText组件渲染，支持设置 line 参数
@@ -33,7 +33,7 @@ const initColumn = (columns) => {
       title: (value) => <div>{value}</div>,
       sort: (value) => <VSort value={[{value}]} />,
       question: (value) => <el-tooltip effect="dark" content={value} placement="top">
-        <el-icon size='14'><QuestionFilled /></el-icon>
+        <svg t="1731381128464" class="el-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3511" width="16" height="16"><path d="M512 55.59344445c-252.13048756 0-456.40655555 204.40862871-456.40655555 456.40655555 0 252.13048756 204.40862871 456.40655555 456.40655555 456.40655555S968.40655555 764.13048756 968.40655555 512c0-252.13048756-204.276068-456.40655555-456.40655555-456.40655555z m-0.66280359 751.7518375c-22.00507936 0-39.7682157-17.76313634-39.76821571-39.76821569s17.76313634-39.7682157 39.76821571-39.76821571 39.7682157 17.76313634 39.7682157 39.76821571c0 21.87251863-17.76313634 39.7682157-39.7682157 39.76821569z m182.53611008-388.80058885c-12.32814687 42.94967296-47.05905525 77.54802062-80.72947788 110.95332181-19.75154713 19.61898642-38.3100478 38.17748707-48.78234461 55.01269839-7.42340027 11.93046471-11.66534327 51.96380185-10.86997895 80.46435644 0.66280359 22.00507936-16.70265059 40.29845858-38.70772996 40.82870146h-1.06048574c-21.47483648 0-39.10541211-17.10033275-39.7682157-38.70772995-0.39768215-14.05143621-1.06048575-86.16446736 22.80044366-124.60707588 15.3770434-24.65629374 38.17748707-47.45673741 60.18256643-69.32925604 26.37958309-26.24702237 53.6870912-53.42196976 60.44768788-76.62009559 2.65121438-9.01412889 3.97682157-41.49150505-14.58167909-66.2803595-16.57008987-22.2702008-46.13113022-33.67042263-88.02031744-34.06810479h-1.59072862c-42.28686937 0-71.84790971 14.97936125-90.40641036 45.86600877-13.38863262 22.2702008-16.83521132 45.86600878-17.49801492 51.96380187-0.92792503 21.20971504-18.42593995 38.04492635-39.7682157 38.04492634-22.00507936 0-39.7682157-17.76313634-39.76821571-39.7682157v-1.59072863-0.26512143c0-0.92792503 0.13256073-1.85585006 0.26512145-2.7837751 0.92792503-10.86997897 5.70011091-46.79393381 26.64470452-83.38069227 14.84680053-25.71677949 34.46578693-46.26369093 58.45927708-60.97793074 29.2959189-18.02825779 64.42450944-27.04238668 104.45784658-26.64470451 84.70629945 0.79536432 128.98157961 36.32163701 151.11921968 66.01523806 37.77980492 50.90331611 34.33322622 111.21844325 27.1749474 135.87473699z" p-id="3512"></path></svg>
       </el-tooltip>
     }
     if(d.slots?.header && Array.isArray(d.slots?.header)) {
@@ -440,14 +440,22 @@ const handleFormReset = () => {
 
 const show = ref(true)
 const showFrom = ref(true)
+
+const unload = () => {
+  showFrom.value = false
+  gridRef?.value?.reloadData([]).finally(() => {
+    beforeHide.value = true
+    nextTick(() => {
+      show.value = false
+    })
+  })
+}
+
 watch(
   () => keepStore?.currentKeepAliveList,
   (val) => {
     if (!val.includes(routerName)) {
-      showFrom.value = false
-      gridRef?.value?.reloadData([]).then(() => {
-        show.value = false
-      })
+      unload()
     }
   },
 )
@@ -491,7 +499,8 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
           </template>
           <template v-if="!pageHidden || merge.crossSlip" #pager>
             <div class="v-pagination-container">
-              <Pagination v-if="!pageHidden" v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" v-model:pageNum="pager.pageNum" :total="pager.total" @change="pageChange" />
+              <Pagination v-if="!pageHidden" v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" v-model:pageNum="pager.pageNum" :total="pager.total"
+                @change="pageChange" />
               <HScroll v-if="merge.crossSlip" :bodyRect="bodyRect" @scroll="handleScrollX" />
             </div>
           </template>
@@ -500,7 +509,9 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
       </div>
     </div>
   </template>
-  <template v-else />
+  <template v-else>
+    <div>1</div>
+  </template>
 </template>
 
 <style lang="scss">

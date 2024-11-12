@@ -1,7 +1,6 @@
 <script setup name="VPage">
 import XEUtils from 'xe-utils'
 import GlobalConfig from "~/packages/config"
-import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import { onMousemove } from '~/packages/utils'
 const keepStore = GlobalConfig.keepStore()
 const router = GlobalConfig.useRouter()
@@ -14,30 +13,9 @@ const props = defineProps({
   footerConfig: { type: Object, default: () => ({}) },
   unload: { type: Function, default: () => {} },
 })
-watch(
-  () => keepStore?.currentKeepAliveList,
-  (val) => {
-    if (!val.includes(routerName)) {
-      const timer = setTimeout(() => {
-        props.unload()
-        unload()
-        clearTimeout(timer)
-      }, 100);
-    }
-  },
-)
-
-const show = ref(true)
-onBeforeUnmount(() => {
-  unload()
-})
-
-const unload = () => {
-  show.value = false
-}
 
 // 插槽处理
-let slots = computed(() => [...new Set(Object.keys(useSlots()))])
+let slots = computed(() => beforeHide.value ? [] : [...new Set(Object.keys(useSlots()))])
 
 const leftConfig = ref(XEUtils.merge({}, GlobalConfig.page.leftConfig, props.leftConfig))
 const footerConfig = XEUtils.merge({}, GlobalConfig.page.footerConfig, props.footerConfig)
@@ -134,6 +112,7 @@ const updateTip = (val = {}) => {
     time.value = setTimeout(() => {
       nextTick(() => {
         document.getElementById("app").removeChild(newElem)
+        clearTimeout(time.value)
       })
     }, 10)
     val.ref = newElem
@@ -141,10 +120,31 @@ const updateTip = (val = {}) => {
   tip.value = val
 }
 
+const show = ref(true)
+const beforeHide = ref(false)
+onBeforeUnmount(() => {
+  unload()
+})
+
+const unload = () => {
+  beforeHide.value = true
+  const timer = setTimeout(() => {
+    props.unload()
+    show.value = false
+    clearTimeout(timer)
+  }, 200);
+}
+
+watch(
+  () => keepStore?.currentKeepAliveList,
+  (val) => {
+    if (!val.includes(routerName)) {
+      unload()
+    }
+  },
+)
 
 provide('updateTip', updateTip)
-
-defineExpose({unload})
 </script>
 
 <template>
@@ -180,7 +180,7 @@ defineExpose({unload})
       <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering placement="top" popper-class="app-tip" :offset="3" enterable />
     </div>
   </template>
-  <template v-else />
+  <template v-else><div>1</div></template>
 </template>
 
 <style lang="scss">

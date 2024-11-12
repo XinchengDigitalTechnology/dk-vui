@@ -1,5 +1,4 @@
 <script setup>
-import { ArrowUpBold } from '@element-plus/icons-vue'
 
 const emit = defineEmits(['toTop', 'reset'])
 
@@ -7,9 +6,11 @@ const emit = defineEmits(['toTop', 'reset'])
 <template>
   <div class="vx-table--toTop">
     <div class="vx-table--toTop-item" title="返回顶部" @click="emit('toTop')">
-      <el-icon color="#fff">
-        <ArrowUpBold />
-      </el-icon>
+      <svg t="1731381054590" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4325" width="14" height="14">
+        <path
+          d="M961.57432574 842.44684845a69.42160684 69.42160684 0 0 0 15.13391027-87.47122459l-7.21984709-10.27439783-466.09666816-547.04226169-460.95946925 547.31994811a69.42160684 69.42160684 0 0 0 97.19024952 98.30099528l8.88596569-8.88596569 355.57747008-421.94452622 359.60392334 422.22221264a69.42160684 69.42160684 0 0 0 87.748911 15.13391031l10.1355546-7.21984711z"
+          p-id="4326" fill="#fff"></path>
+      </svg>
     </div>
     <div class="vx-table--toTop-item" title="重置搜索条件" @click="emit('reset')">
       <svg t="1726628281165" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="currentColor" p-id="4603" width="18" height="18">
