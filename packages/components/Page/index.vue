@@ -1,6 +1,7 @@
 <script setup name="VPage">
 import XEUtils from 'xe-utils'
 import GlobalConfig from "~/packages/config"
+import { ArrowLeftBold, ArrowRightBold } from '@element-plus/icons-vue'
 import { onMousemove } from '~/packages/utils'
 const keepStore = GlobalConfig.keepStore()
 const router = GlobalConfig.useRouter()

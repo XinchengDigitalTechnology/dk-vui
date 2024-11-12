@@ -1,5 +1,6 @@
 <script setup>
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Search, Delete } from '@element-plus/icons-vue'
 
 const props = defineProps({
   placement: { type: String, default: 'bottom' },
