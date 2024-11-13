@@ -24,9 +24,6 @@ const VText = defineComponent({
     // 溢出处理
     const updateTip = inject("updateTip", null)
     let isOverflow = false
-    onUnmounted(() => {
-      updateTip.value = null
-    })
 
     const mouseenter = ({ target }) => {
       const valueRef = target.querySelector(".v-text-content")
