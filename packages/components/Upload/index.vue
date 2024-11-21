@@ -171,13 +171,12 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
           </div>
           <div class="v-upload-handle">
             <el-button type="primary" title="下载" link @click="download(d)">
-              <svg t="1731314351025" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4650" width="20" height="20">
+              <svg t="1731314415987" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4808" width="18" height="18">
+                <path d="M477.952 616.768m0-32l0-384q0-32 32-32l0 0q32 0 32 32l0 384q0 32-32 32l0 0q-32 0-32-32Z" p-id="4809" fill="currentColor"></path>
                 <path
-                  d="M512 266.432c120.064 0 227.2 75.776 321.088 223.744a40.64 40.64 0 0 1 0 43.648C739.2 681.792 632.128 757.568 512 757.568c-120.064 0-227.2-75.776-321.088-223.744a40.64 40.64 0 0 1 0-43.648C284.8 342.208 391.872 266.432 512 266.432z m0 64c-86.272 0-167.872 51.84-245.12 161.28L252.992 512l2.88 4.288c76.8 114.944 158.016 172.032 243.84 176.96l12.288 0.32c86.272 0 167.872-51.84 245.12-161.28L770.88 512l-2.752-4.288c-76.8-114.944-158.016-172.032-243.84-176.96L512 330.432z"
-                  p-id="4651" fill="currentColor"></path>
-                <path
-                  d="M512 407.04c58.496 0 105.92 46.976 105.92 104.96 0 57.984-47.424 104.96-105.92 104.96A105.408 105.408 0 0 1 406.08 512c0-57.984 47.424-104.96 105.92-104.96z m0 64a41.408 41.408 0 0 0-41.92 40.96c0 22.464 18.624 40.96 41.92 40.96A41.408 41.408 0 0 0 553.92 512 41.408 41.408 0 0 0 512 471.04z"
-                  p-id="4652" fill="currentColor"></path>
+                  d="M306.304 413.12a32 32 0 0 1 40.832-3.712l4.48 3.712 158.272 158.4 158.464-158.4a32 32 0 0 1 40.832-3.712l4.416 3.712a32 32 0 0 1 3.712 40.832l-3.712 4.48-180.992 180.992a32 32 0 0 1-40.832 3.648l-4.48-3.648-180.992-181.056a32 32 0 0 1 0-45.248z"
+                  p-id="4810" fill="currentColor"></path>
+                <path d="M823.232 776.768a32 32 0 0 1 5.76 63.488l-5.76 0.512H200.768a32 32 0 0 1-5.76-63.488l5.76-0.512h622.464z" p-id="4811" fill="currentColor"></path>
               </svg>
             </el-button>
             <el-button type="danger" title="删除" link :disabled="disabled" @click="remove(i)">
@@ -247,7 +246,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
   &-handle {
     display: flex;
     flex: 0 0 90px;
-    gap: 3px;
+    gap: 1px;
     align-items: center;
     max-height: 28px !important;
     .el-button {
