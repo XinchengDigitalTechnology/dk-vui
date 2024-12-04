@@ -431,7 +431,24 @@ const sort = (val) => {
 
 const clearSort = () => gridRef.value.clearSort()
 
-const emit = defineEmits(['form-reset'])
+const emit = defineEmits(['form-reset', 'checkbox-change', 'checkbox-all'])
+
+const checked = ref(0)
+const checkboxChange = val => {
+  handleChecked()
+  emit('checkbox-change', val)
+}
+
+const checkboxAll = val => {
+  handleChecked()
+  emit('checkbox-all', val)
+}
+
+const handleChecked = () => {
+  const selection = gridRef.value.getCheckboxRecords()
+  checked.value = selection.length
+}
+
 const handleFormReset = () => {
   clearSort()
   emit('form-reset', form.value)
@@ -493,12 +510,15 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
       </div>
       <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
         <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
-          :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="updateScroll" @sortChange="sort">
+          :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="updateScroll" @sortChange="sort" @checkbox-change="checkboxChange" @checkbox-all="checkboxAll">
           <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
             <slot :name="name" v-bind="row"></slot>
           </template>
           <template v-if="!pageHidden || merge.crossSlip" #pager>
             <div class="v-pagination-container">
+              <div>
+                <span v-if="checked" class="v-text-title">已选中 <span style="color: var(--base-text-color)">{{ checked }}</span> 条</span>
+              </div>
               <Pagination v-if="!pageHidden" v-bind="merge.pagerConfig" v-model:pageSize="pager.pageSize" v-model:pageNum="pager.pageNum" :total="pager.total"
                 @change="pageChange" />
               <HScroll v-if="merge.crossSlip" :bodyRect="bodyRect" @scroll="handleScrollX" />

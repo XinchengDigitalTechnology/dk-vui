@@ -109,10 +109,10 @@ const updateTip = (val = {}) => {
     newElem.style.position = "fixed"
     newElem.style.left = Math.floor(val.rectStyle.left) + "px"
     newElem.style.top = Math.floor(val.rectStyle.top) + "px"
-    document.getElementById("main-app").appendChild(newElem)
+    document.body.appendChild(newElem)
     time.value = setTimeout(() => {
       nextTick(() => {
-        document.getElementById("main-app").removeChild(newElem)
+        document.body.removeChild(newElem)
         clearTimeout(time.value)
       })
     }, 10)
