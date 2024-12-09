@@ -199,6 +199,7 @@ if (qr) {
       }
       return data
     }).catch(() => []).finally(() => {
+      checked.value = 0
       updateScroll()
     })
   }
