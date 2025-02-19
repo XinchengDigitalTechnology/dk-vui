@@ -389,15 +389,15 @@ const cellClassName = (ags) => {
   let classes = ''
   if(row) {
     if(typeof attrs.cellClassName === 'function') {
-      style = attrs.cellClassName(ags)
+      classes = attrs.cellClassName(ags)
     } else if(typeof attrs.cellClassName === 'string') {
-      attrs.cellClassName
+      classes = attrs.cellClassName
     }
   } else {
     if(typeof attrs.headerCellClassName === 'function') {
-      style = attrs.headerCellClassName(ags)
+      classes = attrs.headerCellClassName(ags)
     } else if(typeof attrs.headerCellClassName === 'string') {
-      attrs.headerCellClassName
+      classes = attrs.headerCellClassName
     }
   }
   if(params) {
