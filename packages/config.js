@@ -14,7 +14,7 @@ export default {
     formConfig: {
       proxy: { // 保存搜索条件
         mainKey: 'sc_id', // 主键
-        isSort: !false, // 是否排序
+        isSort: false, // 是否排序
         query: async (obj) => { // 查询方法
           const { save } = obj.formConfig
           if (!obj.formConfig.save) {
