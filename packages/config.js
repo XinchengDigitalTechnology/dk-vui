@@ -14,6 +14,7 @@ export default {
     formConfig: {
       proxy: { // 保存搜索条件
         mainKey: 'sc_id', // 主键
+        isSort: !false, // 是否排序
         query: async (obj) => { // 查询方法
           const { save } = obj.formConfig
           if (!obj.formConfig.save) {
@@ -46,7 +47,20 @@ export default {
           const _table_form_save = JSON.parse(localStorage.getItem('DK_VUI_TABLE_FROM_SAVE')) || { [save]: [] }
           _table_form_save[save].unshift({ name, sc_id: Date.now(), conditions })
           localStorage.setItem('DK_VUI_TABLE_FROM_SAVE', JSON.stringify(_table_form_save))
-        }
+        },
+        sort: async (obj) => {
+          // 排序方法
+          if (!obj.formConfig.save) {
+            console.error("请配置 formConfig.save 字段")
+            return
+          }
+          const { formConfig, list } = obj
+          const { save } = formConfig
+          const _table_form_save = JSON.parse(localStorage.getItem("DK_VUI_TABLE_FROM_SAVE"))
+          _table_form_save[save] = list
+          localStorage.setItem("DK_VUI_TABLE_FROM_SAVE", JSON.stringify(_table_form_save))
+        },
+
       }
     },
     rowConfig: {
