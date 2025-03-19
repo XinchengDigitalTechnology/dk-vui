@@ -95,12 +95,12 @@ const clearData = () => {
 const findPageList = (pageNum, pageSize) => {
   return new Promise(resolve => {
     setTimeout(() => {
+      const item = { name: 'Test1', nickname: 'T1', role: 'Develop', sex: 'Man', age: 28, address: 'Shenzhen' }
+      const list = [...new Array(200).keys()].reduce((acc, cur) => acc.concat({ id: cur, ...item }), [])
       if(isClearData.value) {
         resolve({total: 0, data: []})
         return
       }
-      const item = { name: 'Test1', nickname: 'T1', role: 'Develop', sex: 'Man', age: 28, address: 'Shenzhen' }
-      const list = [...new Array(200).keys()].reduce((acc, cur) => acc.concat({ id: cur, ...item }), [])
       resolve({
         total: list.length,
         data: list

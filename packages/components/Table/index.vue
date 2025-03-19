@@ -261,7 +261,7 @@ const handleScroll = async ({ scrollLeft, scrollTop, isY, $event }) => {
   clearTimeout(timer)
   timer = setTimeout(() => {
     const endTop = gridRef?.value.getScroll().scrollTop
-    if (endTop === 0) {
+    if (endTop < 10) {
       offsetHeight.value = 0
     }
     clearTimeout(timer)
@@ -291,12 +291,17 @@ const bodyRect = ref({ offsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLef
 
 const updateScroll = async() => {
   columnList.value = gridRef?.value?.getColumns()
-  const tableBody = tableRef?.value?.querySelector('.vxe-table--body-wrapper')
-  if(!tableBody) return
+  const tableBodyWrapper = tableRef?.value?.querySelector('.vxe-table--body-wrapper')
+  const tableBody = tableRef?.value?.querySelector('.vxe-table--body')
+  if(!tableBodyWrapper) return
   await nextTick()
   await new Promise(resolve => setTimeout(resolve, 100))
-  const { scrollWidth, clientWidth, scrollHeight,clientHeight } = tableBody
+  const { scrollWidth, clientWidth, scrollHeight,clientHeight } = tableBodyWrapper
+  const {clientHeight: dataHeight} = tableBody
   bodyRect.value = { ...bodyRect.value, scrollWidth, clientWidth, scrollHeight, clientHeight, mouseOffset: clientWidth > 900 ? 0 : Math.min(240, 900 - clientWidth) }
+  if(dataHeight < clientHeight) {
+    offsetHeight.value = 0
+  }
 }
 
 const tableResize = ({ width }) => {
