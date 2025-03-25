@@ -55,7 +55,7 @@ const handleFileName = (fileList) => {
   }
   let renameReportFile = []
   for (let i in files) {
-    renameReportFile.push(new File([files[i]], new Date().getTime() + files[i].name, { type: files[0].type }))
+    renameReportFile.push(new File([files[i]], files[i].name, { type: files[0].type }))
   }
   emit("file", renameReportFile)
   fileRef.value.value = ''

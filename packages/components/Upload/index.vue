@@ -55,7 +55,7 @@ const readFile = async (fileds) => {
       loadings.upload = true
       const res = await (props.upload || GlobalConfig.upload.upload)(param)
       let { file_preview, file_key } = res.data[0]
-      const file_name = file_key || file.name.replace(file.lastModified, '')
+      const file_name = file_key || file.name
       const obj = props.edit ? { file_url: file_preview, file_name } : file_preview
       if (+limit === 1) {
         list.value = [obj]
