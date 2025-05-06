@@ -159,6 +159,10 @@ const pageChange = ({ type, pageNum, pageSize }) => {
 const setPager = ({ pageNum, pageSize } = {}) => {
   pageChange({ type: pageNum ? 'current' : 'size', pageNum: pageNum || pager.pageNum, pageSize: pageSize || pager.pageSize })
 }
+// 异步设置 total
+const setPagerTotal = (total=0) => {
+  pager.total = total
+}
 
 // 代理query请求，把form参数修改为当前组件form
 let qr = attrs.proxyConfig?.ajax?.query
@@ -486,7 +490,7 @@ watch(
 provide('table', { form, getForm, setForm, formConfig, query, sort, clearSort })
 
 // 暴露属性及方法
-defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, getQueryForm, resetAndQuery, setPager, updateScroll, $table: gridRef })
+defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, getQueryForm, resetAndQuery, setPager, setPagerTotal, updateScroll, $table: gridRef })
 
 </script>
 
