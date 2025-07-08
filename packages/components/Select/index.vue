@@ -71,22 +71,6 @@ watch(
   },
   { immediate: true }
 )
-
-// 过滤方法
-const filteredOptions = ref(opts.value)
-watch(opts, (val) => {
-  filteredOptions.value = val
-})
-const filterMethod = (query) => {
-  if (query) {
-    filteredOptions.value = opts.value.filter(
-      (item) => item.label.toLowerCase().includes(query.toLowerCase())
-    )
-  } else {
-    filteredOptions.value = opts.value
-  }
-};
-
 const handleChange = (value) => {
   const option = opts.value.find(d => d.value === value)
   emit('change', { value, option })
@@ -111,12 +95,11 @@ const _attrs = computed(() => {
   const {select, filterable, clearable, multiple} = props
   const ats = {
     showHeader: showHeader.value,
-    options: filteredOptions.value,
+    options: opts.value,
     select,
     filterable,
     clearable,
     multiple,
-    filterMethod,
     popperClass: 'v-select',
     collapseTagsTooltip: true,
     ...attrs,
