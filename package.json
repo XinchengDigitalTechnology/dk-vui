@@ -21,8 +21,8 @@
   },
   "homepage": "https://XinchengDigitalTechnology.github.com/dk-vui",
   "dependencies": {
-    "vue-draggable-plus": "^0.5.6",
-    "vue": "3.2.45"
+    "vue": "3.2.45",
+    "vue-draggable-plus": "^0.5.6"
   },
   "devDependencies": {
     "@bytemd/plugin-breaks": "^1.21.0",
@@ -41,7 +41,7 @@
     "@vueuse/core": "^11.0.3",
     "@xqsit94/vue3-copy-to-clipboard": "^1.1.0",
     "bytemd": "^1.21.0",
-    "element-plus": "^2.6.0",
+    "element-plus": "^2.10.3",
     "highlight.js": "^11.9.0",
     "sass": "^1.63.6",
     "typescript": "^5.3.3",
