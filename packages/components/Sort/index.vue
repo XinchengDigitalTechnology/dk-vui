@@ -93,6 +93,9 @@ const handleSort = (name, s) => {
     }
     &.v-sort-icon-active {
       color: var(--el-color-primary);
+      path {
+        color: var(--el-color-primary) !important;
+      }
     }
   }
 }
