@@ -245,7 +245,9 @@ const { scrollHideForm } = attrs
 const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + offsetHeight.value : attrs.height)
 
 let timer = null
-const handleScroll = async ({ scrollLeft, scrollTop, isY, $event }) => {
+const handleScroll = async (ags) => {
+  const { scrollLeft, scrollTop, isY, $event } = ags
+  attrs.onScroll && attrs.onScroll(ags)
   const { scrollHeight, clientHeight } = $event.target
   bodyRect.value.scrollLeft = scrollLeft
   if (!scrollHideForm || !headerHeight.value) return
@@ -432,11 +434,17 @@ const cellClassName = (ags) => {
 }
 
 const sort = (val) => {
+  attrs.onSortChange && attrs.onSortChange(val)
   if(attrs.sortConfig?.remote) {
     const {field, order: rule} = val
     setFormField('sort', rule ? {field, rule} : {})
     query()
   }
+}
+
+const resizableChange = (ags) => {
+  attrs.onResizableChange && attrs.onResizableChange(ags)
+  updateScroll()
 }
 
 const clearSort = () => gridRef.value.clearSort()
@@ -520,7 +528,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
       </div>
       <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
         <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
-          :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="updateScroll" @sortChange="sort" @checkbox-change="checkboxChange" @checkbox-all="checkboxAll">
+          :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="resizableChange" @sortChange="sort" @checkbox-change="checkboxChange" @checkbox-all="checkboxAll">
           <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
             <slot :name="name" v-bind="row"></slot>
           </template>
