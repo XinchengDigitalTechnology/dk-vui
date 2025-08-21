@@ -11,36 +11,23 @@ export const download = async (urls, blob) => {
   // 批量下载图片
   if (!Array.isArray(urls)) urls = [urls]
   for (const url of urls) {
-    const type = url.substring(url.lastIndexOf('.') + 1).toLowerCase()
-    if (type === 'pdf') {
-      window.open(url, "_blank",
-        'height=700, width=1200, top=200, left=300,toolbar=no, menubar=no, scrollbars=no, resizable=no, location=no, status=no')
-    } else {
-      const filename = url.slice(url.lastIndexOf('/') + 1)
-      if (blob) {
-        // 服务端必须允许跨域
-        const res = await fetch(url)
-        const newblob = await res.blob()
-        const blobUrl = window.URL.createObjectURL(newblob)
-        const a = document.createElement('a')
-        a.href = blobUrl
-        a.download = filename
-        a.click()
-        window.URL.revokeObjectURL(blobUrl)
-      } else {
-        const a = document.createElement('a')
-        a.href = url
-        a.download = filename
-        a.click()
-      }
-      await new Promise(resolve => {
-        let timer = setTimeout(() => {
-          clearTimeout(timer)
-          timer = null
-          resolve()
-        }, 300)
-      })
-    }
+    const filename = url.slice(url.lastIndexOf('/') + 1)
+    // 服务端必须允许跨域
+    const res = await fetch(url)
+    const newblob = await res.blob()
+    const blobUrl = window.URL.createObjectURL(newblob)
+    const a = document.createElement('a')
+    a.href = blobUrl
+    a.download = filename
+    a.click()
+    window.URL.revokeObjectURL(blobUrl)
+    await new Promise(resolve => {
+      let timer = setTimeout(() => {
+        clearTimeout(timer)
+        timer = null
+        resolve()
+      }, 300)
+    })
   }
   return true
 }
