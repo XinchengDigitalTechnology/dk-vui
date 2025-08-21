@@ -296,6 +296,8 @@ const tableRef = ref()
 const bodyRect = ref({ offsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
 
 const updateScroll = async() => {
+  contentHeight.value = contentRef?.value.offsetHeight
+  await nextTick()
   columnList.value = gridRef?.value?.getColumns()
   const tableBodyWrapper = tableRef?.value?.querySelector('.vxe-table--body-wrapper')
   const tableBody = tableRef?.value?.querySelector('.vxe-table--body')
@@ -316,9 +318,13 @@ const tableResize = ({ width }) => {
   updateScroll()
 }
 
-const tableLoad = ({ height }) => {
+const tableLoad = () => {
   if (!scrollHideForm) return
-  contentHeight.value = height
+  let timer = setTimeout(() => {
+    contentHeight.value = contentRef?.value.offsetHeight
+    timer = null
+    clearTimeout(timer)
+  }, 100);
 }
 
 const toTop = () => {
@@ -526,8 +532,8 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
           </div>
         </div>
       </div>
-      <div ref="contentRef" v-dom-load="tableLoad" class="vx-table__content">
-        <vxe-grid ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
+      <div ref="contentRef" class="vx-table__content">
+        <vxe-grid ref="gridRef" v-bind="attrs" v-dom-load="tableLoad" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
           :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="resizableChange" @sortChange="sort" @checkbox-change="checkboxChange" @checkbox-all="checkboxAll">
           <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
             <slot :name="name" v-bind="row"></slot>
