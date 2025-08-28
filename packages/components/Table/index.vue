@@ -296,7 +296,6 @@ const tableRef = ref()
 const bodyRect = ref({ offsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
 
 const updateScroll = async() => {
-  contentHeight.value = contentRef?.value.offsetHeight
   await nextTick()
   columnList.value = gridRef?.value?.getColumns()
   const tableBodyWrapper = tableRef?.value?.querySelector('.vxe-table--body-wrapper')
