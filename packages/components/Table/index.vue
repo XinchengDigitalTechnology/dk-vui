@@ -168,9 +168,11 @@ const setPagerTotal = (total=0) => {
 let qr = attrs.proxyConfig?.ajax?.query
 const loadData = ref(false)
 const pageHidden = ref(false)
+const finish = ref(false)
 if (qr) {
   const { props } = attrs.proxyConfig
   attrs.proxyConfig.ajax.query = (ags) => {
+    finish.value = false
     loadData.value = true
     // 页面跳转携带参数处理
     const { tableForm } = JSON.parse(sessionStorage.getItem('_table_form') || '{}')
@@ -201,6 +203,8 @@ if (qr) {
       if(!data.length) {
         offsetHeight.value = 0
       }
+      if(finish.value) return finish.value
+      finish.value = data
       return data
     }).catch(() => []).finally(() => {
       checked.value = 0
@@ -317,13 +321,14 @@ const tableResize = ({ width }) => {
   updateScroll()
 }
 
-const tableLoad = () => {
+const isTableContentLoad = ref(false)
+const contentLoad = () => {
   if (!scrollHideForm) return
-  let timer = setTimeout(() => {
+  nextTick(() => {
     contentHeight.value = contentRef?.value.offsetHeight
-    timer = null
-    clearTimeout(timer)
-  }, 100);
+    isTableContentLoad.value = true
+    updateScroll()
+  })
 }
 
 const toTop = () => {
@@ -531,8 +536,8 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
           </div>
         </div>
       </div>
-      <div ref="contentRef" class="vx-table__content">
-        <vxe-grid ref="gridRef" v-bind="attrs" v-dom-load="tableLoad" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
+      <div ref="contentRef" class="vx-table__content" v-dom-load="contentLoad">
+        <vxe-grid v-if="isTableContentLoad" ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle" :header-cell-class-name="cellClassName"
           :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="resizableChange" @sortChange="sort" @checkbox-change="checkboxChange" @checkbox-all="checkboxAll">
           <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
             <slot :name="name" v-bind="row"></slot>
