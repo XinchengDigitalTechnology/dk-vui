@@ -195,6 +195,7 @@ if (qr) {
         pageHidden.value = true
         return res
       }
+      if(finish.value) return finish.value
       pager.total = XEUtils.get(res, props.total)
       const data = XEUtils.get(res, props.result).map(d => {
         d._CHECKED_ = false
@@ -203,7 +204,6 @@ if (qr) {
       if(!data.length) {
         offsetHeight.value = 0
       }
-      if(finish.value) return finish.value
       finish.value = data
       return data
     }).catch(() => []).finally(() => {
@@ -228,12 +228,12 @@ watch(
 
 // 查询方法
 const query = async () => {
-  await 1
+  await nextTick()
   // 如果查询条件变化则重置分页
   if (formChange.value) {
     pager.pageNum = 1
   }
-  return gridRef?.value.commitProxy('query')
+  return gridRef?.value?.commitProxy('query')
 }
 const resetAndQuery = () => {
   resetForm()
@@ -323,7 +323,10 @@ const tableResize = ({ width }) => {
 
 const isTableContentLoad = ref(false)
 const contentLoad = () => {
-  if (!scrollHideForm) return
+  if (!scrollHideForm) {
+    isTableContentLoad.value = true
+    return
+  }
   nextTick(() => {
     contentHeight.value = contentRef?.value.offsetHeight
     isTableContentLoad.value = true
