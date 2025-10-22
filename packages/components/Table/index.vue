@@ -459,7 +459,7 @@ const resizableChange = (ags) => {
 
 const clearSort = () => gridRef.value.clearSort()
 
-const emit = defineEmits(['form-reset', 'checkbox-change', 'checkbox-all'])
+const emit = defineEmits(['form-reset', 'checkbox-change', 'checkbox-all', 'unload'])
 
 const checked = ref(0)
 const checkboxChange = val => {
@@ -486,7 +486,9 @@ const handleFormReset = () => {
 const show = ref(true)
 const showFrom = ref(true)
 
-const unload = () => {
+const unload = async () => {
+  emit('unload')
+  await nextTick()
   showFrom.value = false
   gridRef?.value?.reloadData([]).finally(() => {
     beforeHide.value = true
