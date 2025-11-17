@@ -28,7 +28,7 @@
       </el-input>
     </template>
     <div class="v-batch-input-wrapper">
-      <el-input ref="inputRef" v-model="inputValue" :rows="12" :placeholder="`一行一个(最多支持${rows}行)`" type="textarea" style="width: 100%;" @blur="handleBlur" />
+      <el-input ref="inputRef" v-model="inputValue" :rows="12" :placeholder="$attrs.placeholderText || `一行一个(最多支持${rows}行)`" type="textarea" style="width: 100%;" @blur="handleBlur" />
       <Handle :value="inputValue" @clear="clear" @close="close" @submit="handleConfirm" />
     </div>
   </el-popover>

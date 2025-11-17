@@ -12,6 +12,7 @@ export default {
     scrollY: { enabled: true, gt: 0, oSize: 4 }, // 默认启用虚拟滚动
     sortConfig: { remote: true, trigger: 'cell', orders: ['desc', 'asc', null] }, // 默认远程排序
     formConfig: {
+      autoLoad: true, // 是否自动加载搜索表单数据
       proxy: { // 保存搜索条件
         mainKey: 'sc_id', // 主键
         isSort: false, // 是否排序
