@@ -363,11 +363,16 @@ onActivated(() => {
   }, 100)
 })
 
-nextTick(async() => {
-  // 表格加载完毕后，没有加载数据，则主动请求一次
-  if (!loadData.value && merge.autoLoadQuery) await query()
-  columnList.value = gridRef?.value?.getColumns()
-})
+watch(
+  () => isTableContentLoad.value,
+  () => {
+    nextTick(async() => {
+      // 表格加载完毕后，没有加载数据，则主动请求一次
+      if (!loadData.value && merge.autoLoadQuery) await query()
+      columnList.value = gridRef?.value?.getColumns()
+    })
+  }
+)
 
 // 处理固定列
 const columnList = ref(merge.columns)
