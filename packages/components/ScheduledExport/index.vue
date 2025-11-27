@@ -138,8 +138,9 @@ const originOption = ref(getInitialOptions())
 
 // 打开弹窗
 const open = async (params = {}, type = "add") => {
-  if (!window?.APP_GETEWAY?.dexh) {
-    return ElMessage.error("请配置接口地址，内部组件，不允许直接调用")
+  if (!window?.APP_GETEWAY?.dexh || !window?.$httpRequest) {
+    ElMessage.error("内部业务组件，不允许直接调用，请在ERP系统使用")
+    return
   }
 
   // 取消之前未完成的请求
