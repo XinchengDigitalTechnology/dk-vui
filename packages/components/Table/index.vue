@@ -332,6 +332,14 @@ const contentLoad = () => {
   updateScroll()
 }
 
+const tableLoad = () => {
+  nextTick(async() => {
+    // 表格加载完毕后，没有加载数据，则主动请求一次
+    if (!loadData.value && merge.autoLoadQuery) await query()
+    columnList.value = gridRef?.value?.getColumns()
+  })
+}
+
 const toTop = () => {
   gridRef?.value.scrollTo(null, 0).then(res => {
     offsetHeight.value = 0
@@ -362,14 +370,6 @@ onActivated(() => {
     atimer = null
   }, 100)
 })
-
-const tableLoad = () => {
-  nextTick(async() => {
-    // 表格加载完毕后，没有加载数据，则主动请求一次
-    if (!loadData.value && merge.autoLoadQuery) await query()
-    columnList.value = gridRef?.value?.getColumns()
-  })
-}
 
 // 处理固定列
 const columnList = ref(merge.columns)
@@ -537,7 +537,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
       </div>
     </div>
     <div ref="contentRef" class="vx-table__content" v-dom-load="contentLoad">
-      <vxe-grid v-if="isTableContentLoad"  v-dom-load="tableLoad" ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle"
+      <vxe-grid v-show="isTableContentLoad"  v-dom-load="tableLoad" ref="gridRef" v-bind="attrs" :height="tableHeight" :cell-style="cellStyle" :header-cell-style="cellStyle"
         :header-cell-class-name="cellClassName" :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="resizableChange" @sortChange="sort"
         @checkbox-change="checkboxChange" @checkbox-all="checkboxAll">
         <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
