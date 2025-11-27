@@ -1,8 +1,5 @@
 <template>
-  <VPage ref="pageRef" :left-config="{width: 200, collapse: true, collapseValue: false, drag: true, showArrow: true}">
-    <template #left>
-      <el-tree :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]" :props="defaultProps" />
-    </template>
+  <el-dialog title="title" v-model="visible" append-to-body :close-on-click-modal="false" :z-index="2000" width="1000px" @close="handleClose">
     <VTable ref="tableRef" v-bind="tableOptins">
       <template #form="{ form }">
         <VBatchInput v-model="form.base" style="max-width: 150px" placeholder="普通类型"></VBatchInput>
@@ -58,31 +55,23 @@
           </div>
         </el-form>
       </template>
-      <template #toolbar_btns>
-        <el-button type="primary" class="ml-auto" @click="() => dialogRef.open()">新增</el-button>
-        <el-button>批量编辑</el-button>
-        <el-button @click="() => pageRef.unload()">卸载page</el-button>
-        <el-button @click="clearData">清空数据</el-button>
-      </template>
     </VTable>
     <template #footer>
-      <el-button>返 回</el-button>
-      <el-button type="primary">保 存</el-button>
+      <el-button @click="close">关 闭</el-button>
     </template>
-    <Dialog ref="dialogRef" />
-  </VPage>
+  </el-dialog>
 </template>
 
-<script setup lang="jsx" name="Index">
-import Dialog from './Dialog'
-const tableRef = ref()
-const pageRef = ref()
+<script setup lang="jsx">
 
-const create = table => {
-  console.log('tableRef.value', tableRef.value)
-}
+const props = defineProps({
+  options: { type: Object, default: () => ({}) },
+})
+const emit = defineEmits(['close', 'success'])
 
-const dialogRef = ref()
+const load = ref(false)
+const visible = ref(false)
+let loadings = reactive({})
 
 const query = () => {
   tableRef?.value.query()
@@ -115,6 +104,7 @@ const options = async() => {
   return await new Promise(resolve => setTimeout(() => resolve([{label: '选项1', value: 1},{label: '选项2', value: 2}]), 100))
 }
 const tableOptins = reactive({
+  height: 400,
   showHeaderOverflow: true,
   id: 'table',
   formConfig: {
@@ -185,8 +175,8 @@ const tableOptins = reactive({
     {
       title: '链接', minWidth: 150, slots: {
         default: ({ row }) => <div>
-          <VText value='我是链接我是链接我是链接我是链接' type='link' onClick={log} />
-          <VText title='两行' value='我是链接我是链接我是链接我是链接' line={2} type='link' copy onClick={log} />
+          <VText value='我是链接我是链接我是链接我是链接' type='link' />
+          <VText title='两行' value='我是链接我是链接我是链接我是链接' line={2} type='link' copy />
         </div>
       }
     },
@@ -217,62 +207,23 @@ const tableOptins = reactive({
   }
 })
 
-const log = () => {
-  console.log('点击')
+// 打开弹窗
+const open = async () => {
+  if (!load.value) {
+    load.value = true
+    await 1
+  }
+  loadings = reactive({})
+  visible.value = true
+}
+// 关闭弹窗
+const close = () => {
+  visible.value = false
 }
 
-const defaultProps = {
-  children: 'children',
-  label: 'label',
+const handleClose = () => {
+  emit('close')
 }
-const data = [
-  {
-    id: 1,
-    label: 'Level one 1',
-    children: [
-      {
-        id: 4,
-        label: 'Level two 1-1',
-        children: [
-          {
-            id: 9,
-            label: 'Level three 1-1-1',
-          },
-          {
-            id: 10,
-            label: 'Level three 1-1-2',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 2,
-    label: 'Level one 2',
-    children: [
-      {
-        id: 5,
-        label: 'Level two 2-1',
-      },
-      {
-        id: 6,
-        label: 'Level two 2-2',
-      },
-    ],
-  },
-  {
-    id: 3,
-    label: 'Level one 3',
-    children: [
-      {
-        id: 7,
-        label: 'Level two 3-1',
-      },
-      {
-        id: 8,
-        label: 'Level two 3-2',
-      },
-    ],
-  },
-]
+
+defineExpose({ open })
 </script>
