@@ -1,8 +1,7 @@
-import request from "@/utils/request"
-
+const { $httpRequest } = window
 export default {
   drop_down(id) {
-    return request({
+    return $httpRequest({
       baseURL: window.APP_GETEWAY.dexh,
       url: `/export_tpl/${id}`,
       method: "get",
@@ -14,7 +13,7 @@ export default {
    * @param {Object} data - 任务数据
    */
   update(data) {
-    return request({
+    return $httpRequest({
       baseURL: window.APP_GETEWAY.dexh,
       url: `/export_cron/${data.cron_id}`,
       method: "put",
@@ -27,7 +26,7 @@ export default {
    * @param {Object} data - 任务数据
    */
   export_cron(data) {
-    return request({
+    return $httpRequest({
       baseURL: window.APP_GETEWAY.dexh,
       url: `/export_cron`,
       method: "POST",
@@ -37,7 +36,7 @@ export default {
 
   // 任务详情
   exportCronDtl(params) {
-    return request({
+    return $httpRequest({
       baseURL: window.APP_GETEWAY.dexh,
       url: `/export_cron/${params.cron_id}`,
       method: "get",

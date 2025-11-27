@@ -13,7 +13,7 @@
       <el-form :model="formData" :rules="rules" ref="formRef" label-width="100px">
         <!-- 导出模板 -->
         <el-form-item label="导出模板：">
-          <span class="text-gray-600">{{ formData.templateName }}</span>
+          <span>{{ formData.templateName }}</span>
         </el-form-item>
 
         <!-- 导出时间 -->
@@ -138,7 +138,7 @@ const originOption = ref(getInitialOptions())
 
 // 打开弹窗
 const open = async (params = {}, type = "add") => {
-  if (!window.APP_GETEWAY.dexh) {
+  if (!window?.APP_GETEWAY?.dexh) {
     return ElMessage.error("请配置接口地址，内部组件，不允许直接调用")
   }
 
@@ -294,4 +294,29 @@ defineExpose({
 })
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.flex {
+  display: flex;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.text-gray-400 {
+  color: #9ca3af;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+</style>
