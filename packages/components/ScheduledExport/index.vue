@@ -181,6 +181,7 @@ const open = async (params = {}, type = "add") => {
       const detailRes = await api.exportCronDtl(params)
       if (detailRes?.data) {
         const detail = detailRes.data
+        detail.time_point = detail.time_point?.slice(0, 5) // 截取时分部分
         // 剩余次数 = 总次数 - 已执行次数
         detail.limits = detail.limits - (detail.exec_times || 0)
         formData.value = { ...detail, templateName: params?.tpl_name || params?.name }
@@ -243,10 +244,7 @@ const handleConfirm = async () => {
     const params = { ...formData.value }
     const isEdit = !!formData.value.cron_id
 
-    // 新增时需要添加秒数
-    if (!isEdit) {
-      params.time_point = `${formData.value.time_point}:00`
-    }
+    params.time_point = `${formData.value.time_point}:00`
 
     // 调用对应的API
     const apiMethod = isEdit ? api.update : api.export_cron
