@@ -169,12 +169,12 @@ const open = async (params = {}, type = "add") => {
         ...getInitialFormData(),
         tpl_id: params.tpl_id,
         templateName: params.name,
+        condition: params.condition,
         range_field: "",
         range_field_desc: "",
       }
 
-      const { condition = {} } = res.data
-      const range = props.scheduleOption.find((item) => condition?.[item.value]) || {}
+      const range = props.scheduleOption.find((item) => params?.condition?.[item.value]) || {}
       formData.value.range_field = range?.value || ""
       formData.value.range_field_desc = range?.label || ""
     } else {
