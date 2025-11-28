@@ -43,7 +43,7 @@
               <VSelect v-model="formData.range_value" placeholder="请选择" style="width: 240px" :options="originOption.range_value" :fit-input-width="false"> </VSelect>
             </el-form-item>
 
-            <el-tooltip content="时间范围说明：前一周为上周一00:00:00至上周日23:59:59；前一月为上月1号00:00:00至上月最后一天23:59:59" placement="top">
+            <el-tooltip content="新增定时导出任务时，默认保存页面的搜索条件" placement="top">
               <div class="dk-iconfont icon-Warning"></div>
             </el-tooltip>
           </div>
@@ -108,7 +108,6 @@ const rules = {
   cycle_field: [{ required: true, message: "请选择导出周期", trigger: "change" }],
   cycle_value: [{ required: true, message: "请选择导出日期", trigger: "change" }],
   time_point: [{ required: true, message: "请选择导出时间", trigger: "change" }],
-
   range_value: [{ required: true, message: "请选择导出范围", trigger: "change" }],
   limits: [
     { required: true, message: "请输入导出次数", trigger: "blur" },
