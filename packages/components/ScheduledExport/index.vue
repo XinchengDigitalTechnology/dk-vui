@@ -33,13 +33,13 @@
         </el-form-item>
 
         <!-- 导出范围 -->
-        <el-form-item label="导出范围：" prop="range_field">
+        <el-form-item label="导出范围：" prop="range_field" v-if="formData.range_field">
           <div class="flex gap-2">
             <el-select v-model="formData.range_field" placeholder="-" style="width: 120px" disabled>
               <el-option :label="formData.range_field_desc" :value="formData.range_field" />
             </el-select>
 
-            <el-form-item label="" prop="range_value" v-if="formData.range_field">
+            <el-form-item label="" prop="range_value">
               <VSelect v-model="formData.range_value" placeholder="请选择" style="width: 240px" :options="originOption.range_value" :fit-input-width="false"> </VSelect>
             </el-form-item>
 
@@ -52,7 +52,7 @@
         <!-- 导出次数 -->
         <el-form-item :label="formData.cron_id ? '剩余次数：' : '导出次数：'" prop="limits" required>
           <div class="flex items-center gap-2">
-            <el-input-number v-model="formData.limits" :min="1" :max="maxExportCount" controls-position="right" style="width: 150px" />
+            <el-input-number v-model="formData.limits" :min="1" :max="maxExportCount" :precision="0" controls-position="right" style="width: 150px" />
             <span>次</span>
           </div>
           <div class="text-xs text-gray-400 mt-1">说明：定时任务执行次数，按月导出，最高6次；按周导出，最多24次</div>
@@ -108,7 +108,6 @@ const rules = {
   cycle_field: [{ required: true, message: "请选择导出周期", trigger: "change" }],
   cycle_value: [{ required: true, message: "请选择导出日期", trigger: "change" }],
   time_point: [{ required: true, message: "请选择导出时间", trigger: "change" }],
-  range_value: [{ required: true, message: "请选择导出范围", trigger: "change" }],
   limits: [
     { required: true, message: "请输入导出次数", trigger: "blur" },
     { type: "number", min: 1, message: "导出次数至少为1次", trigger: "blur" },
