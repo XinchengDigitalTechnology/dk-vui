@@ -73,10 +73,10 @@ console.log('menus', menus)
     </el-scrollbar>
     <div class="body">
       <router-view v-slot="{ Component }">
-        <component :is="Component" />
-        <!-- <keep-alive>
+        <!-- <component :is="Component" /> -->
+        <keep-alive>
           <component :is="Component" />
-        </keep-alive> -->
+        </keep-alive>
       </router-view>
     </div>
   </div>
