@@ -26,6 +26,12 @@ watch(
   }
 )
 
+onActivated(() => {
+  if(props.bodyRect.scrollLeft) {
+    scrollRef.value.scrollTop = props.bodyRect.scrollLeft
+  }
+})
+
 const style = computed(() => {
   const { scrollWidth, clientWidth, mouseOffset } = props.bodyRect
   return {

@@ -246,7 +246,7 @@ const contentRef = ref()
 const contentHeight = ref()
 const offsetHeight = ref(0)
 const { scrollHideForm } = attrs
-const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + offsetHeight.value : (contentRef.value?.offsetHeight || attrs.height))
+const tableHeight = computed(() => offsetHeight.value ? contentHeight.value + offsetHeight.value : (isTableContentLoad && contentHeight.value || attrs.height))
 
 let timer = null
 const handleScroll = async (ags) => {
@@ -300,7 +300,6 @@ const tableRef = ref()
 const bodyRect = ref({ offsetWidth: 0, scrollWidth: 0, clientWidth: 0, scrollLeft: 0 })
 
 const updateScroll = async() => {
-  console.log('111', 111)
   await nextTick()
   columnList.value = gridRef?.value?.getColumns()
   const tableBodyWrapper = tableRef?.value?.querySelector('.vxe-table--body-wrapper')
@@ -317,7 +316,6 @@ const updateScroll = async() => {
 }
 
 const tableResize = ({ width }) => {
-  console.log('tableResize', {width})
   if (!scrollHideForm || !width) return
   headerResize({ width, height: headerHeight.value })
   updateScroll()
@@ -340,7 +338,6 @@ if (!_table_form) sessionStorage.setItem('_table_form', '{}')
 
 let atimer = null
 onActivated(async() => {
-  isTableContentLoad.value = false
   const { tableForm } = JSON.parse(sessionStorage.getItem('_table_form') || '{}')
   const handleQuery = sessionStorage.getItem('DK_VUI_TABLE_QUERY')
   if (tableForm) {
@@ -351,7 +348,6 @@ onActivated(async() => {
     sessionStorage.removeItem('DK_VUI_TABLE_QUERY')
   }
   await 1
-  isTableContentLoad.value = true
   activating.value = true
   clearTimeout(atimer)
   atimer = setTimeout(() => {
