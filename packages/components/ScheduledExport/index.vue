@@ -22,8 +22,9 @@
             <el-select v-model="formData.cycle_field" placeholder="请选择" style="width: 120px" @change="handlePeriodChange">
               <el-option label="每周" value="weekly" />
               <el-option label="每月" value="monthly" />
+              <el-option label="每日" value="everyday" />
             </el-select>
-            <el-form-item label="" prop="cycle_value">
+            <el-form-item label="" prop="cycle_value" v-if="formData.cycle_field !== 'everyday'">
               <VSelect v-model="formData.cycle_value" placeholder="请选择" style="width: 150px" :options="originOption?.[formData.cycle_field]" :fit-input-width="false"> </VSelect>
             </el-form-item>
             <el-form-item label="" prop="time_point">
@@ -55,7 +56,7 @@
             <el-input-number v-model="formData.limits" :min="1" :max="maxExportCount" :precision="0" controls-position="right" style="width: 150px" />
             <span>次</span>
           </div>
-          <div class="text-xs text-gray-400 mt-1">说明：定时任务执行次数，按月导出，最高6次；按周导出，最多24次</div>
+          <div class="text-xs text-gray-400 mt-1">定时导出任务执行次数，按月导出，最多6次，按周导出，最多24次，按日导出，最多99次。</div>
         </el-form-item>
       </el-form>
     </div>
@@ -116,7 +117,9 @@ const rules = {
 
 // 最大导出次数
 const maxExportCount = computed(() => {
-  return formData.value.cycle_field === "weekly" ? 24 : 6
+  if (formData.value.cycle_field === "everyday") return 99
+  if (formData.value.cycle_field === "weekly") return 24
+  return 6 // monthly
 })
 
 // 周期变化处理
