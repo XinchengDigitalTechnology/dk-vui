@@ -486,7 +486,10 @@ const handleFormReset = () => {
   resetAndQuery()
 }
 
-const showFrom = ref(true)
+const showFrom = ref(false)
+setTimeout(() => {
+  showFrom.value = true
+}, 100);
 const inputRef = ref()
 const unload = async () => {
   emit('unload')
