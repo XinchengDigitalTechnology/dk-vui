@@ -17,7 +17,8 @@
             <path fill="#909399"
               d="M670.72 449.097143a192.365714 192.365714 0 1 0 191.634286 192.365714 192.365714 192.365714 0 0 0-191.634286-192.365714z m0 320.365714a128 128 0 1 1 128-128 128 128 0 0 1-128 128z" />
           </svg>
-          <svg class="v-batch-input-clear" @mouseenter="disabled = true" @mouseleave="disabled = false" @click="clear" t="1731313372920" viewBox="0 0 1024 1024" version="1.1"
+       
+          <svg class="v-batch-input-clear" t="1731313372920" viewBox="0 0 1024 1024" version="1.1"
             xmlns="http://www.w3.org/2000/svg" p-id="3649" width="19" height="19">
             <path d="M512 96a416 416 0 1 1 0 832 416 416 0 0 1 0-832z m0 64a352 352 0 1 0 0 704 352 352 0 0 0 0-704z" p-id="3650" fill="currentColor"></path>
             <path d="M365.12 387.328a32 32 0 0 1 44.864-45.248l4.096 4.032 244.8 290.56a32 32 0 0 1-44.864 45.248l-4.096-4.032-244.8-290.56z" p-id="3651" fill="currentColor"></path>
@@ -80,6 +81,34 @@ const handleConfirm = () => {
   close()
   emit("search")
 }
+
+// 使用元素绑定方法添加事件（不使用ref）
+let clearIcon = null
+
+const handleMouseEnter = () => {
+  disabled.value = true
+}
+
+const handleMouseLeave = () => {
+  disabled.value = false
+}
+
+onMounted(() => {
+  clearIcon = document.querySelector('.v-batch-input-clear')
+  if (clearIcon) {
+    clearIcon.addEventListener('click', clear)
+    clearIcon.addEventListener('mouseenter', handleMouseEnter)
+    clearIcon.addEventListener('mouseleave', handleMouseLeave)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (clearIcon) {
+    clearIcon.removeEventListener('click', clear)
+    clearIcon.removeEventListener('mouseenter', handleMouseEnter)
+    clearIcon.removeEventListener('mouseleave', handleMouseLeave)
+  }
+})
 
 defineExpose({ clear })
 </script>

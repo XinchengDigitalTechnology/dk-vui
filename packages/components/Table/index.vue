@@ -516,7 +516,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
 
 <template>
   <div ref="tableRef" class="vx-table" v-dom-resize="tableResize">
-    <el-input style="width: 100px; display: none" ref="inputRef" />
+    <el-input style="width: 0px;height:0px;" ref="inputRef" />
     <div class="vx-table__header" :style="{ height: `${offsetHeight ? (headerHeight - offsetHeight) + 'px' : 'auto'}` }">
       <div v-dom-resize="headerResize" :style="{ transform: `translateY(${-offsetHeight + 'px'})` }">
         <div v-if="slots.includes('form')" class="vx-table__form">
