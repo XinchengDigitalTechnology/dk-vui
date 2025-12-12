@@ -492,8 +492,8 @@ const unload = async () => {
   emit('unload')
   await nextTick()
   showFrom.value = false
-  inputRef.value.focus()
   gridRef?.value?.reloadData([]).finally(() => {
+    inputRef.value.focus()
     beforeHide.value = true
   })
 }
