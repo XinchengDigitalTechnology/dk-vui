@@ -322,7 +322,9 @@ const tableResize = ({ width }) => {
 }
 
 const isTableContentLoad = ref(false)
-const contentLoad = () => {
+const contentLoad = async() => {
+  showFrom.value = true
+  await nextTick() 
   if (!scrollHideForm) {
     isTableContentLoad.value = true
     return
@@ -487,9 +489,7 @@ const handleFormReset = () => {
 }
 
 const showFrom = ref(false)
-setTimeout(() => {
-  showFrom.value = true
-}, 100);
+
 const inputRef = ref()
 const unload = async () => {
   emit('unload')
