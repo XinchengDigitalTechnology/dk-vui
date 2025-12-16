@@ -126,9 +126,18 @@ onBeforeUnmount(() => {
   unload()
 })
 
+const inputRef = ref()
+const templateShow = ref(false)
+const contentLoad = ()=>{
+  nextTick(()=>{
+    templateShow.value = true
+  })
+}
 const unload = () => {
   beforeHide.value = true
+  templateShow.value = false
   nextTick(() => {
+    inputRef.value.focus()
     props.unload()
   })
 }
@@ -147,7 +156,7 @@ provide('updateTip', updateTip)
 
 <template>
   <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" :style="{'--left-width': leftWidth}" v-dom-resize="resize" v-bind="$attrs"
-    @scroll="handleScroll">
+    @scroll="handleScroll" v-dom-load="contentLoad">
     <template v-if="edit">
       <slot />
       <template v-if="slots.includes('footer')">
@@ -175,6 +184,9 @@ provide('updateTip', updateTip)
       </el-button>
     </div>
     <el-tooltip ref="tipRef" :visible="tip.visible" :content="tip.content" :virtual-ref="tip.ref" virtual-triggering placement="top" popper-class="app-tip" :offset="3" enterable />
+
+     <el-input style="width: 0px;height:0px;" ref="inputRef" />
+     <slot v-if="templateShow" name="dialog" />
   </div>
 </template>
 
