@@ -138,8 +138,8 @@ const contentLoad = ()=>{
 const unload = () => {
   beforeHide.value = true
   templateShow.value = false
+  inputRef.value.focus()
   nextTick(() => {
-    inputRef.value.focus()
     props.unload()
   })
 }
