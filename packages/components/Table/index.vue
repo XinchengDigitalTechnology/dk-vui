@@ -523,7 +523,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
           <div class="vx-table__form-content">
             <slot v-if="showFrom" name="form" v-bind="{ form }" />
             <div class="vx-table__form-handle">
-              <slot name="form_handle">
+              <slot name="form_handle" v-if="showFrom">
                 <el-button type="primary" @click="query">查询</el-button>
                 <el-button @click="handleFormReset">重置</el-button>
                 <SaveForm v-if="formConfig.save" @query="query" />
@@ -543,7 +543,7 @@ defineExpose({ getForm, setForm, setFormField, resetForm, query, initColumn, get
         :header-cell-class-name="cellClassName" :cell-class-name="cellClassName" @scroll="handleScroll" @resizable-change="resizableChange" @sortChange="sort"
         @checkbox-change="checkboxChange" @checkbox-all="checkboxAll">
         <template v-for="name in slots.filter(d => !['form', 'high_form'].includes(d))" #[name]="row">
-          <slot :name="name" v-bind="row"></slot>
+          <slot :name="name" v-bind="row" v-if="showFrom"></slot>
         </template>
         <template v-if="!pageHidden || merge.crossSlip" #pager>
           <div class="v-pagination-container">

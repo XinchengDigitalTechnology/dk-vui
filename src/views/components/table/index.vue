@@ -1,5 +1,5 @@
 <template>
-  <VPage ref="pageRef" :left-config="{width: 200, collapse: true, collapseValue: false, drag: true, showArrow: true}">
+  <VPage ref="pageRef" :left-config="{width: 200, collapse: true, collapseValue: false, drag: true, showArrow: true}" :loadDom="loadDom">
     <template #left>
       <el-tree :data="data" show-checkbox node-key="id" :default-expanded-keys="[2, 3]" :default-checked-keys="[5]" :props="defaultProps" />
     </template>
@@ -69,7 +69,11 @@
       <el-button>返 回</el-button>
       <el-button type="primary">保 存</el-button>
     </template>
-    <Dialog ref="dialogRef" />
+    <!-- <Dialog ref="dialogRef" /> -->
+
+    <template #dialog>
+      <Dialog ref="dialogRef" />
+    </template>
   </VPage>
 </template>
 
@@ -77,7 +81,9 @@
 import Dialog from './Dialog'
 const tableRef = ref()
 const pageRef = ref()
-
+const loadDom = () => {
+  console.log('loadDom')
+}
 const create = table => {
   console.log('tableRef.value', tableRef.value)
 }

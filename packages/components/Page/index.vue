@@ -13,6 +13,7 @@ const props = defineProps({
   leftConfig: { type: Object, default: () => ({}) },
   footerConfig: { type: Object, default: () => ({}) },
   unload: { type: Function, default: () => {} },
+  loadDom: { type: Function, default: () => {} },
 })
 
 // 插槽处理
@@ -130,7 +131,8 @@ const inputRef = ref()
 const templateShow = ref(false)
 const contentLoad = ()=>{
   nextTick(()=>{
-    templateShow.value = true
+    templateShow.value = true 
+    props.loadDom()
   })
 }
 const unload = () => {
@@ -158,7 +160,7 @@ provide('updateTip', updateTip)
   <div ref="pageRef" class="v-page" :class="{ 'is--full': !edit, 'is--edit': edit }" :style="{'--left-width': leftWidth}" v-dom-resize="resize" v-bind="$attrs"
     @scroll="handleScroll" v-dom-load="contentLoad">
     <template v-if="edit">
-      <slot />
+      <slot v-if="templateShow"/>
       <template v-if="slots.includes('footer')">
         <div :style="{ width: '100%', height: `${footerConfig.height}px` }"></div>
         <div class="v-page__footer-wrapper" :style="{ width: footerWidth + 'px', height: `${footerConfig.height}px` }">
