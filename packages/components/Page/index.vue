@@ -129,6 +129,7 @@ onBeforeUnmount(() => {
 
 const inputRef = ref()
 const templateShow = ref(false)
+
 const contentLoad = ()=>{
   nextTick(()=>{
     templateShow.value = true 
@@ -136,10 +137,13 @@ const contentLoad = ()=>{
   })
 }
 const unload = () => {
-  props.unload()
   beforeHide.value = true
-  templateShow.value = false
-  inputRef.value.focus()
+  inputRef?.value?.focus()
+  setTimeout(() => {
+    props?.unload()
+    templateShow.value = false
+    inputRef?.value?.focus()
+  }, 200);
 }
 
 watch(
@@ -176,7 +180,7 @@ provide('updateTip', updateTip)
         </div>
         <div v-else class="v-page__body-line" :class="leftConfig.lineClass"></div>
       </div>
-      <slot />
+      <slot v-if="templateShow"/>
     </div>
     <div v-if="leftConfig.collapse && slots.includes('left')" class="v-page__body-collapse" :class="leftConfig.arrowClass"
       :style="{left: !leftConfig.drag ? leftWidth : leftWidth ? `calc(${leftWidth} - 2px)` : 0, transition}" @click="collapse=!collapse">
