@@ -131,8 +131,8 @@ const inputRef = ref()
 const templateShow = ref(false)
 
 const contentLoad = ()=>{
+  templateShow.value = true
   nextTick(()=>{
-    templateShow.value = true 
     props.loadDom()
   })
 }
