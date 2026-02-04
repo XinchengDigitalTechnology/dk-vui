@@ -7,7 +7,7 @@ import XEUtils from 'xe-utils'
  * @param {boolean} blob 是否转文件流 
  * @returns {Promise}
  */
-export const download = async (urls, blob) => {
+export const download = async (urls, name) => {
   // 批量下载图片
   if (!Array.isArray(urls)) urls = [urls]
   for (const url of urls) {
@@ -18,7 +18,7 @@ export const download = async (urls, blob) => {
     const blobUrl = window.URL.createObjectURL(newblob)
     const a = document.createElement('a')
     a.href = blobUrl
-    a.download = filename
+    a.download = name || filename
     a.click()
     window.URL.revokeObjectURL(blobUrl)
     await new Promise(resolve => {

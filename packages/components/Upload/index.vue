@@ -79,6 +79,7 @@ const remove = i => {
 
 const viewImageRef = ref()
 const view = (d) => {
+  if(['.zip', '.rar'].some(ext => d.toLowerCase().endsWith(ext))) return
   viewImageRef?.value.open(d)
 }
 
@@ -134,7 +135,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
             <el-input v-model="d.file_name" placeholder="请输入" :disabled="disabled" class="w-full" />
           </div>
           <div class="v-upload-handle">
-            <el-button type="primary" title="查看" link @click="view(d.file_url)">
+            <el-button v-if="!['.zip', '.rar'].some(ext => d.file_url.toLowerCase().endsWith(ext))" type="primary" title="查看" link @click="view(d.file_url)">
               <svg t="1731314351025" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4650" width="20" height="20">
                 <path
                   d="M512 266.432c120.064 0 227.2 75.776 321.088 223.744a40.64 40.64 0 0 1 0 43.648C739.2 681.792 632.128 757.568 512 757.568c-120.064 0-227.2-75.776-321.088-223.744a40.64 40.64 0 0 1 0-43.648C284.8 342.208 391.872 266.432 512 266.432z m0 64c-86.272 0-167.872 51.84-245.12 161.28L252.992 512l2.88 4.288c76.8 114.944 158.016 172.032 243.84 176.96l12.288 0.32c86.272 0 167.872-51.84 245.12-161.28L770.88 512l-2.752-4.288c-76.8-114.944-158.016-172.032-243.84-176.96L512 330.432z"
