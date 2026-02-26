@@ -8,7 +8,7 @@
       <slot :name="name" v-bind="obj" />
     </template>
   </el-select>
-  <el-select-v2 v-else v-model="selectValue" v-bind="$attrs" @visible-change="isCheckAll">
+  <el-select-v2 v-else v-model="selectValue" v-bind="$attrs" :fit-input-width="false" @visible-change="isCheckAll">
     <template v-if="$attrs.showHeader && $attrs.options.length" #header>
       <Header ref="headerRef" v-model="selectValue" :options="$attrs.options" />
     </template>
