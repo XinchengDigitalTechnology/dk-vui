@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-if="load" title="上传附件" v-model="visible" append-to-body :close-on-click-modal="false"
     width="800px" @close="handleClose">
-    <Drag :accept="accept" :disabled="disabled" style="width:100%;margin-bottom: 5px;" @file="uploadFile" />
+    <Drag :accept="accept" :disabled="disabled" :fileSize="fileSize" style="width:100%;margin-bottom: 5px;" @file="uploadFile" />
     <small>{{ tip }}</small>
   </el-dialog>
 </template>
@@ -14,6 +14,7 @@ const props = defineProps({
   accept: { type: String, default: '' },
   tip: { type: String, default: '' },
   disabled: Boolean,
+  fileSize: { type: Number, default: 50 }, // 文件大小限制
 })
 const emit = defineEmits(['close', 'success'])
 

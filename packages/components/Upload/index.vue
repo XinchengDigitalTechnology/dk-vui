@@ -4,13 +4,14 @@ import { download } from '~/packages/utils'
 import Paste from './Paste'
 import Drag from './Drag'
 import GlobalConfig from "~/packages/config"
+import { ElMessage } from "element-plus"
 
 const emit = defineEmits(['update:modelValue', 'change'])
 const props = defineProps({
   modelValue: { type: [String, Array] },
   title: { type: String, default: '' }, // 标题，无标题时不展示
   types: { type: Array, default: () => (['png', 'jpg', 'jpeg']) }, // 可上传类型
-  fileSize: { type: Number, default: 5 }, // 文件大小限制
+  fileSize: { type: Number, default: 50 }, // 文件大小限制
   limit: { type: [String, Number], default: () => '' }, // 可上传数量
   drag: Boolean, // 是否开启拖动、粘贴上传
   card: Boolean, // 是否使用卡片模式展示
@@ -40,10 +41,20 @@ const list = computed({
 
 const tip = computed(() => props.showTip ? (props.tip || `格式为${props.types.join('/')}，不超过${props.fileSize}MB`) : '')
 
+const filesizeToMB = (filesize) => {
+  return (filesize / 1024 / 1024).toFixed(2);
+}
+
 // 上传文件
 const loadings = reactive({})
 const readFile = async (fileds) => {
   const files = fileds || await VXETable.readFile({ multiple: props.multiple, types: props.types })
+  if (props.fileSize && files.some(d => {
+    return filesizeToMB(d.size) > props.fileSize
+  })) {
+    ElMessage.error(`上传文件大小不能超过${props.fileSize}MB`)
+    return
+  }
   const { params, limit } = props
   for (const file of files) {
     const param = new FormData()
@@ -94,7 +105,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
         <slot name="title">{{ title }}</slot>
       </div>
       <template v-if="drag">
-        <Drag :accept="types.map(d => `.${d}`).join(',')" :tip="tip" :disabled="disabled" @file="readFile" />
+        <Drag :accept="types.map(d => `.${d}`).join(',')" :tip="tip" :fileSize="fileSize" :disabled="disabled" @file="readFile" />
       </template>
       <template v-else-if="!disabled">
         <el-divider direction="vertical" />
@@ -145,7 +156,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
                   p-id="4652" fill="currentColor"></path>
               </svg>
             </el-button>
-            <el-button type="primary" title="下载" link @click="download(d.file_url)">
+            <el-button type="primary" title="下载" link @click="download(d.file_url, d.file_name)">
               <svg t="1731314415987" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4808" width="18" height="18">
                 <path d="M477.952 616.768m0-32l0-384q0-32 32-32l0 0q32 0 32 32l0 384q0 32-32 32l0 0q-32 0-32-32Z" p-id="4809" fill="currentColor"></path>
                 <path
@@ -197,7 +208,7 @@ const getName = (url) => url?.slice(url.lastIndexOf('/') + 1)
     </div>
   </div>
   <ViewImage ref="viewImageRef" />
-  <Paste ref="pasteRef" :accept="types.map(d => `.${d}`).join(',')" :tip="tip" :disabled="disabled" :style="{'--size': size+'px'}" @success="readFile" />
+  <Paste ref="pasteRef" :accept="types.map(d => `.${d}`).join(',')" :tip="tip" :disabled="disabled" :fileSize="fileSize" :style="{'--size': size+'px'}" @success="readFile" />
 </template>
 
 <style lang="scss">
