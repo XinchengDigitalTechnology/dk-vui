@@ -353,6 +353,7 @@ provide('updateTip', updateTip)
       white-space: pre-wrap;
       z-index: -1;
       opacity: 0;
+      user-select: none;
     }
   }
 
