@@ -3,8 +3,8 @@
     <div class="font-medium text-black">字段列表2</div>
     <div style="width: 432px" class="relative">
       <el-table :data="fields" row-key="field_key" height="600" style="width: 100%" highlight-current-row border ref="tableRef" @selection-change="handleSelectionChange">
-        <el-table-column type="selection" width="55" reserve-selection />
-        <el-table-column type="index" label="序号" width="80" />
+        <el-table-column type="selection" width="50" reserve-selection />
+        <el-table-column type="index" label="序号" width="60" />
         <el-table-column prop="field_name" label="字段" />
         <el-table-column prop="operation" label="排序" width="120">
           <template #default="scope">

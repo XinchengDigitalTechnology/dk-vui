@@ -114,7 +114,7 @@ const templates = ref([])
 
 // 导出模板当前编辑态：只有选中过模板后，字段变更才展示“保存”入口。
 const handleTemplateRow = ref({
-  index: EMPTY_INDEX,
+  index: "",
   change: false,
 })
 // 从全局用户信息派生当前用户，userId 用于判断模板删除权限。
@@ -133,13 +133,13 @@ const getHomeSystem = () => GlobalConfig.derived?.home_system ?? props.home_syst
 const isEditingTemplate = (index) => handleTemplateRow.value.index === String(index) && handleTemplateRow.value.change
 
 const resetTemplateEditState = () => {
-  handleTemplateRow.value.index = EMPTY_INDEX
+  handleTemplateRow.value.index = ""
   handleTemplateRow.value.change = false
 }
 
 // 选中过模板后，字段勾选或排序变化时标记为可保存状态。
 const markTemplateChanged = () => {
-  if (handleTemplateRow.value.index !== EMPTY_INDEX) {
+  if (handleTemplateRow.value.index !== "") {
     handleTemplateRow.value.change = true
   }
 }
