@@ -1,37 +1,18 @@
 <template>
   <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" @close="handleClose" :z-index="2000">
     <div class="flex">
-      <div class="left flex-1 mr-5">
-        <div class="font-medium text-black">字段列表1</div>
-        <div style="width: 432px" class="relative">
-          <el-table :data="exportFields" height="600" style="width: 100%" highlight-current-row @selection-change="handleSelectionChange" border ref="tableRef">
-            <el-table-column type="selection" width="55" />
-            <el-table-column type="index" label="序号" width="80" />
-            <el-table-column prop="field_name" label="字段" />
-            <el-table-column prop="operation" label="排序" width="120">
-              <template #default="scope">
-                <el-link type="primary" :underline="false" @click="moveUp(scope.$index)">上移</el-link>
-                <el-divider direction="vertical" />
-                <el-link type="primary" :underline="false" @click="moveDown(scope.$index)">下移</el-link>
-              </template>
-            </el-table-column>
-          </el-table>
+      <ExportFieldList ref="tableRef" :fields="exportFields" @selection-change="handleSelectionChange" @fields-change="handleFieldsChange" />
 
-          <div
-            class="dk-iconfont icon-ArrowUp bg-[var(--base-primary-dark-bg)] w-[22px] h-[22px] text-center text-[var(--base-color)] pt-[2px] absolute right-[6px] bottom-[16px]"
-            style="border-radius: 50px; z-index: 999"
-            @click="tableUp"
-          ></div>
-        </div>
-      </div>
       <div class="right flex-1">
-        <div class="flex items-center mb-[6px]" v-if="importBtnSlot">
+        <!-- 外部传入 importBtn 插槽时，提示信息放到按钮区上方，避免和自定义按钮布局挤在一起。 -->
+        <div class="flex items-center mb-[6px]" v-if="hasImportBtnSlot">
           <el-tag type="danger">提示:</el-tag>
           <svg-icon icon-class="hint_line01"></svg-icon>导出结果在 <el-link type="primary" :underline="false" @click="navPersonal">个人中心</el-link> 查看
         </div>
 
         <div class="flex justify-between items-end mb-4">
-          <slot v-if="importBtnSlot" :name="importBtnSlot"></slot>
+          <!-- 支持外部接管导出按钮；未提供 importBtn 插槽时使用默认导出按钮。 -->
+          <slot v-if="hasImportBtnSlot" name="importBtn"></slot>
           <template v-else>
             <div v-loading="loading">
               <el-button type="primary" @click="handleImport" :disabled="loading">导出</el-button>
@@ -42,7 +23,10 @@
             </div>
           </template>
         </div>
-        <div class="flex items-center mb-2"><el-input v-model="exportName" class="w-full" placeholder="请输入名称" /><el-button type="primary" plain @click="saveTemplate">保存模版</el-button></div>
+        <div class="flex items-center mb-2">
+          <el-input v-model="exportName" class="w-full" placeholder="请输入名称" />
+          <el-button type="primary" plain @click="saveTemplate">保存模版</el-button>
+        </div>
         <el-table :data="templates" style="width: 100%" highlight-current-row border @row-click="tabRowClick">
           <el-table-column prop="name" label="名称">
             <template #default="{ row, $index }">
@@ -71,24 +55,24 @@
       </div>
     </div>
     <template #footer>
-      <!-- <div class="flex justify-center"> -->
       <el-button @click="handleClose">关闭</el-button>
-      <!-- </div> -->
     </template>
   </el-dialog>
 
-  <VScheduledExport ref="scheduledExportRef" :schedule-option="scheduleOption" />
+  <ScheduledExport ref="scheduledExportRef" :schedule-option="scheduleOption" />
 </template>
 <script setup name="DerivedCenter">
-import { ref, onMounted } from "vue"
+import { ref, computed, useSlots } from "vue"
 
 import { ElMessage, ElMessageBox } from "element-plus"
 import GlobalConfig from "~/packages/config"
 // import action from "@/utils/action.js"
 import api from "./api"
+import ExportFieldList from "./ExportFieldList.vue"
+import ScheduledExport from "../ScheduledExport/index.vue"
 
 const EMPTY_INDEX = ""
-const SELECT_FIELD_MESSAGE = "至少勾选一条导出项"
+
 const MODULE_ALL = "all"
 
 const emit = defineEmits(["query", "callback"])
@@ -107,6 +91,9 @@ const props = defineProps({
   },
 })
 
+const slots = useSlots()
+const hasImportBtnSlot = computed(() => Boolean(slots.importBtn))
+
 const loading = ref(false)
 const visible = ref(false)
 const tableRef = ref()
@@ -119,9 +106,8 @@ const form = ref({
 })
 const exportFields = ref([])
 const multipleSelection = ref([])
-const userId = ref("")
+
 const tagName = ref("")
-const importBtnSlot = ref("")
 const exportName = ref("")
 const templates = ref([])
 
@@ -130,15 +116,19 @@ const handleTemplateRow = ref({
   index: EMPTY_INDEX,
   change: false,
 })
+// 从全局用户信息派生当前用户，userId 用于判断模板删除权限。
+const currentUser = computed(() => window?.userInfo?.user || {})
+const userId = computed(() => currentUser.value.user_id)
 
-const getUser = () => window?.userInfo?.user || {}
-const getUserName = () => getUser().realname || ""
-const getFieldKey = (field = {}) => field?.field_key
+// 统一兜底接口返回值，避免模板字段、模板列表为空时后续数组操作报错。
 const toArray = (value) => (Array.isArray(value) ? value : [])
-const getSelectedFieldKeys = () => multipleSelection.value.map(getFieldKey).filter(Boolean)
-const getCurrentFieldOrder = () => exportFields.value.map(getFieldKey).filter(Boolean)
+// 导出和保存模板只需要字段 key，顺序由当前左侧字段列表决定。
+const getSelectedFieldKeys = () => multipleSelection.value.map((field) => field?.field_key).filter(Boolean)
+const getCurrentFieldOrder = () => exportFields.value.map((field) => field?.field_key).filter(Boolean)
+// 条件和系统来源允许外部不传，统一在构造接口参数时兜底。
 const getSafeCondition = () => form.value.condition || {}
 const getHomeSystem = () => GlobalConfig.derived?.home_system ?? props.home_system ?? 0
+// 只有选中过模板且字段发生变化时，右侧模板行才展示“保存”。
 const isEditingTemplate = (index) => handleTemplateRow.value.index === String(index) && handleTemplateRow.value.change
 
 const resetTemplateEditState = () => {
@@ -146,19 +136,21 @@ const resetTemplateEditState = () => {
   handleTemplateRow.value.change = false
 }
 
+// 选中过模板后，字段勾选或排序变化时标记为可保存状态。
 const markTemplateChanged = () => {
   if (handleTemplateRow.value.index !== EMPTY_INDEX) {
     handleTemplateRow.value.change = true
   }
 }
 
+// 导出和保存模板前必须至少选择一个字段。
 const validateSelectedFields = () => {
   if (multipleSelection.value.length > 0) return true
-  ElMessage.error(SELECT_FIELD_MESSAGE)
+  ElMessage.error("至少勾选一条导出项")
   return false
 }
 
-const buildExportTitle = (name = "") => `${name || ""}${getUserName()}`
+const buildExportTitle = (name = "") => `${name || ""}${currentUser.value.realname || ""}`
 
 const buildExportRecordParams = (extra = {}) => ({
   ...form.value,
@@ -182,7 +174,6 @@ const open = async (item = {}) => {
   visible.value = true
   form.value.condition = item.condition ?? null
   tagName.value = item.tag_name
-  importBtnSlot.value = item.importBtnSlot || ""
 
   try {
     await getTemplate()
@@ -205,10 +196,6 @@ const getTemplate = async () => {
     console.error("[DerivedCenter] 获取模板配置失败:", e)
     throw e
   }
-}
-
-const tableUp = () => {
-  tableRef.value?.setScrollTop(0)
 }
 
 const tabRowClick = () => {
@@ -243,30 +230,9 @@ const handleSelectionChange = (val) => {
   markTemplateChanged()
 }
 
-const moveField = (index, direction) => {
-  const targetIndex = index + direction
-  const isFirst = targetIndex < 0
-  const isLast = targetIndex >= exportFields.value.length
-
-  if (isFirst || isLast) {
-    ElMessage.error(isFirst ? "已经是第一条，不可上移" : "已经是最后一条，不可下移")
-    return
-  }
-
+const handleFieldsChange = (fields) => {
+  exportFields.value = toArray(fields)
   markTemplateChanged()
-  const targetRow = exportFields.value[targetIndex]
-  exportFields.value.splice(targetIndex, 1)
-  exportFields.value.splice(index, 0, targetRow)
-}
-
-// 字段排序会影响模板后续导出的列顺序，因此移动后需要标记当前模板已变更。
-const moveUp = (index) => {
-  moveField(index, -1)
-}
-
-// 字段列表 下移
-const moveDown = (index) => {
-  moveField(index, 1)
 }
 
 const handleImport = async () => {
@@ -379,10 +345,6 @@ const openScheduledExport = async (row) => {
   scheduledExportRef.value?.open({ ...row, condition: getSafeCondition() })
 }
 
-onMounted(() => {
-  userId.value = getUser().user_id
-})
-
 const handleClose = () => {
   exportName.value = ""
   multipleSelection.value = []
@@ -409,7 +371,9 @@ const outerExport = async (module, moduleName, type = "") => {
   try {
     const templateRes = await getTemplateConfig(module)
     const configData = templateRes?.data || {}
-    const allFieldKeys = toArray(configData.export_field).map(getFieldKey).filter(Boolean)
+    const allFieldKeys = toArray(configData.export_field)
+      .map((field) => field?.field_key)
+      .filter(Boolean)
 
     const params = buildExportRecordParams({
       config_id: configData.config_id,
