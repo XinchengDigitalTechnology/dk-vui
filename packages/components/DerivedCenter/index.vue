@@ -27,6 +27,7 @@
           <el-input v-model="exportName" class="w-full" placeholder="请输入名称" />
           <el-button type="primary" plain @click="saveTemplate">保存模版</el-button>
         </div>
+
         <el-table :data="templates" style="width: 100%" highlight-current-row border @row-click="tabRowClick">
           <el-table-column prop="name" label="名称">
             <template #default="{ row, $index }">
@@ -73,14 +74,14 @@ import ScheduledExport from "../ScheduledExport/index.vue"
 
 const EMPTY_INDEX = ""
 
-const MODULE_ALL = "all"
-
 const emit = defineEmits(["query", "callback"])
 const props = defineProps({
+  // 控制定时导出入口是否展示
   schedule: {
     type: Boolean,
     default: false,
   },
+  // 作为定时导出弹窗配置透传给 ScheduledExport 组件
   scheduleOption: {
     type: Array,
     default: () => [],
@@ -377,7 +378,7 @@ const outerExport = async (module, moduleName, type = "") => {
 
     const params = buildExportRecordParams({
       config_id: configData.config_id,
-      fields: type === MODULE_ALL ? allFieldKeys : getSelectedFieldKeys(),
+      fields: type === "all" ? allFieldKeys : getSelectedFieldKeys(),
       title: buildExportTitle(moduleName),
       module,
     })
