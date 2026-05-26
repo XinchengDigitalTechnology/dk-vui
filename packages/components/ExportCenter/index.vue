@@ -1,4 +1,10 @@
 <template>
+  {{ hasPermi }}
+  <VButton type="" @click="open" v-hasPermi="[hasPermi]">
+    <div class="dk-iconfont icon-Upload"></div>
+      导出
+  </VButton>
+
   <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" @close="handleClose" :z-index="2000">
     <div class="flex">
       <ExportFieldList ref="tableRef" :fields="exportFields" @selection-change="handleSelectionChange" @fields-change="handleFieldsChange" />
@@ -68,7 +74,7 @@ import { ref, computed, useSlots } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import GlobalConfig from "~/packages/config"
 // import action from "@/utils/action.js"
-import api from "./api"
+import api from "./api.js"
 import ExportFieldList from "./ExportFieldList.vue"
 import ScheduledExport from "../ScheduledExport/index.vue"
 
@@ -90,6 +96,9 @@ const props = defineProps({
     type: Number,
     default: 3,
   },
+  tag_name: { type: String, default: "" }, // 模块名称
+  hasPermi: { type: String, default: "" }, // 权限
+  getFormData: { type: Function, default: () => {} }, // 获取表单数据
 })
 
 const slots = useSlots()
@@ -108,7 +117,6 @@ const form = ref({
 const exportFields = ref([])
 const multipleSelection = ref([])
 
-const tagName = ref("")
 const exportName = ref("")
 const templates = ref([])
 
@@ -156,7 +164,7 @@ const buildExportTitle = (name = "") => `${name || ""}${currentUser.value.realna
 const buildExportRecordParams = (extra = {}) => ({
   ...form.value,
   ...extra,
-  module: extra.module || tagName.value,
+  module: extra.tag_name || props.tag_name,
 })
 
 const getSortedSelectedFieldKeys = () => {
@@ -166,15 +174,15 @@ const getSortedSelectedFieldKeys = () => {
   return getSelectedFieldKeys().sort((a, b) => (fieldOrderMap.get(a) ?? 0) - (fieldOrderMap.get(b) ?? 0))
 }
 
-const open = async (item = {}) => {
-  if (!item?.tag_name) {
+const open = async () => {
+  if (!props?.tag_name) {
     ElMessage.error("缺少必要参数")
     return
   }
 
   visible.value = true
-  form.value.condition = item.condition ?? null
-  tagName.value = item.tag_name
+  form.value.condition = props.getFormData()
+  console.log(form.value.condition)
 
   try {
     await getTemplate()
@@ -186,7 +194,7 @@ const open = async (item = {}) => {
 
 const getTemplate = async () => {
   try {
-    const res = await getTemplateConfig(tagName.value)
+    const res = await getTemplateConfig(props.tag_name)
     const { config_id = null, config_name = null, templates: tpls = [], export_field: fields = [] } = res?.data || {}
 
     form.value.config_id = config_id
@@ -380,7 +388,7 @@ const outerExport = async (module, moduleName, type = "") => {
       config_id: configData.config_id,
       fields: type === "all" ? allFieldKeys : getSelectedFieldKeys(),
       title: buildExportTitle(moduleName),
-      module,
+      tag_name: module,
     })
 
     const res = await api.exportRord(params)
