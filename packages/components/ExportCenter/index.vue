@@ -34,7 +34,7 @@
           <el-button type="primary" plain @click="saveTemplate">保存模版</el-button>
         </div>
 
-        <el-table :data="templates" style="width: 100%" highlight-current-row border @row-click="tabRowClick">
+        <el-table :data="templates" style="width: 100%" highlight-current-row border>
           <el-table-column prop="name" label="名称">
             <template #default="{ row, $index }">
               <div class="flex">
@@ -83,15 +83,9 @@ const EMPTY_INDEX = ""
 const emit = defineEmits(["query", "callback"])
 const props = defineProps({
   // 控制定时导出入口是否展示
-  schedule: {
-    type: Boolean,
-    default: false,
-  },
+  schedule: { type: Boolean, default: false },
   // 作为定时导出弹窗配置透传给 ScheduledExport 组件
-  scheduleOption: {
-    type: Array,
-    default: () => [],
-  },
+  scheduleOption: { type: Array, default: () => [] },
   home_system: {
     type: Number,
     default: 3,
@@ -207,10 +201,6 @@ const getTemplate = async () => {
   }
 }
 
-const tabRowClick = () => {
-  // 表格行点击事件
-}
-
 // 选择导出模板
 const selectField = (item = {}, index) => {
   if (!tableRef.value) return
@@ -243,7 +233,7 @@ const handleFieldsChange = (fields) => {
   exportFields.value = toArray(fields)
   markTemplateChanged()
 }
-
+// 导出
 const handleImport = async () => {
   if (!validateSelectedFields() || loading.value) return
 

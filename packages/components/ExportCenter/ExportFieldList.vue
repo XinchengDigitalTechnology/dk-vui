@@ -1,6 +1,6 @@
 <template>
   <div class="left flex-1 mr-5">
-    <div class="font-medium text-black">字段列表2</div>
+    <div class="font-medium text-black">字段列表</div>
     <div style="width: 432px" class="relative">
       <el-table :data="fields" row-key="field_key" height="600" style="width: 100%" highlight-current-row border ref="tableRef" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" reserve-selection />
