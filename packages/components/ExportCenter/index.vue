@@ -1,7 +1,7 @@
 <template>
   <VButton type="" @click="open" v-hasPermi="[hasPermi]">
     <div class="dk-iconfont icon-Upload"></div>
-      导出
+      导出1
   </VButton>
 
   <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" @close="handleClose" :z-index="2000">
