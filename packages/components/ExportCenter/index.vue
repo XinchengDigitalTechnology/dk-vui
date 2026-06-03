@@ -1,8 +1,7 @@
 <template>
-  {{ hasPermi }}
   <VButton type="" @click="open" v-hasPermi="[hasPermi]">
     <div class="dk-iconfont icon-Upload"></div>
-      导出5
+      导出
   </VButton>
 
   <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" @close="handleClose" :z-index="2000">
@@ -68,7 +67,7 @@
 
   <ScheduledExport ref="scheduledExportRef" :schedule-option="scheduleOption" />
 </template>
-<script setup name="DerivedCenter">
+<script setup name="ExportCenter">
 import { ref, computed, useSlots } from "vue"
 
 import { ElMessage, ElMessageBox } from "element-plus"
@@ -77,8 +76,6 @@ import GlobalConfig from "~/packages/config"
 import api from "./api.js"
 import ExportFieldList from "./ExportFieldList.vue"
 import ScheduledExport from "../ScheduledExport/index.vue"
-
-const EMPTY_INDEX = ""
 
 const emit = defineEmits(["callback"])
 const props = defineProps({
@@ -129,7 +126,8 @@ const getSelectedFieldKeys = () => multipleSelection.value.map((field) => field?
 const getCurrentFieldOrder = () => exportFields.value.map((field) => field?.field_key).filter(Boolean)
 // condition 不在组件内缓存，每次从父组件获取最新表单条件。
 const getLatestCondition = () => props.getFormData?.() || {}
-const getHomeSystem = () => GlobalConfig.derived?.home_system ?? props.home_system ?? 0
+// home_system 优先使用父组件传参；未传时再使用全局配置兜底。
+const getHomeSystem = () => props.home_system ?? GlobalConfig.derived?.home_system ?? 0
 // 只有选中过模板且字段发生变化时，右侧模板行才展示“保存”。
 const isEditingTemplate = (index) => handleTemplateRow.value.index === String(index) && handleTemplateRow.value.change
 
@@ -181,7 +179,7 @@ const open = async () => {
   try {
     await getTemplate()
   } catch (err) {
-    console.error("[DerivedCenter] 获取模板失败:", err)
+    console.error("[ExportCenter] 获取模板失败:", err)
     ElMessage.error("获取模板失败")
   }
 }
@@ -196,7 +194,7 @@ const getTemplate = async () => {
     templates.value = toArray(tpls)
     exportFields.value = toArray(fields)
   } catch (e) {
-    console.error("[DerivedCenter] 获取模板配置失败:", e)
+    console.error("[ExportCenter] 获取模板配置失败:", e)
     throw e
   }
 }
@@ -248,7 +246,7 @@ const handleImport = async () => {
     ElMessage.success(res.message)
     emit("callback")
   } catch (e) {
-    console.error("[DerivedCenter] 导出失败:", e)
+    console.error("[ExportCenter] 导出失败:", e)
     ElMessage.error("导出失败")
   } finally {
     loading.value = false
@@ -280,7 +278,7 @@ const saveTemplate = async () => {
     exportName.value = ""
     await getTemplate()
   } catch (e) {
-    console.error("[DerivedCenter] 保存模板失败:", e)
+    console.error("[ExportCenter] 保存模板失败:", e)
     ElMessage.error("保存模板失败")
   }
 }
@@ -301,7 +299,7 @@ const updateTemplate = async (row) => {
     resetTemplateEditState()
     await getTemplate()
   } catch (e) {
-    console.error("[DerivedCenter] 更新模板失败:", e)
+    console.error("[ExportCenter] 更新模板失败:", e)
     ElMessage.error("更新模板失败")
   }
 }
@@ -318,7 +316,7 @@ const exportRow = async (row) => {
     ElMessage.success(res.message)
     emit("callback")
   } catch (e) {
-    console.error("[DerivedCenter] 模板导出失败:", e)
+    console.error("[ExportCenter] 模板导出失败:", e)
     ElMessage.error("导出失败")
   }
 }
@@ -335,7 +333,7 @@ const exportDelete = async (row) => {
     await getTemplate()
   } catch (e) {
     if (e === "cancel" || e === "close") return
-    console.error("[DerivedCenter] 删除模板失败:", e)
+    console.error("[ExportCenter] 删除模板失败:", e)
     ElMessage.error("删除模板失败")
   }
 }
@@ -361,7 +359,7 @@ const getTemplateConfig = async (tagName) => {
       tag_name: tagName,
     })
   } catch (e) {
-    console.error("[DerivedCenter] 获取导出配置失败:", e)
+    console.error("[ExportCenter] 获取导出配置失败:", e)
     throw e
   }
 }
@@ -386,7 +384,7 @@ const outerExport = async (module, moduleName, type = "") => {
     ElMessage.success(res.message || "导出成功")
     return res
   } catch (e) {
-    console.error("[DerivedCenter] 外部导出失败:", e)
+    console.error("[ExportCenter] 外部导出失败:", e)
     ElMessage.error("导出失败")
     throw e
   }

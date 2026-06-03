@@ -13,7 +13,7 @@
 
 组件当前由三个文件组成：
 
-- `index.vue`：主组件，包含弹窗、模板管理、导出逻辑、外部方法暴露。
+- `index.vue`：主组件，包含弹窗、模板管理、导出逻辑、slot 方法暴露。
 - `ExportFieldList.vue`：字段列表子组件，负责字段展示、选择、排序和表格方法转发。
 - `api.js`：导出相关接口封装。
 
@@ -111,15 +111,10 @@
 
 ### 当前主要问题
 
-1. 模板中残留了 `{{ hasPermi }}`，会把权限字符串直接渲染到页面上，应删除。
-2. `<script setup name="DerivedCenter">` 与组件目录 `ExportCenter` 不一致，调试、DevTools 展示和错误日志都容易混乱。
-3. `saveTemplate` 使用 `getSelectedFieldKeys()`，而 `updateTemplate` 使用 `getSortedSelectedFieldKeys()`，新建模板和更新模板的字段顺序规则不一致。
-4. `outerExport` 没有主动调用 `getFormData()`，如果弹窗未打开或查询条件变化后没有重新打开，导出的 `condition` 可能为空或过期。
-5. `buildExportRecordParams` 使用 `...form.value` 和 `...extra` 合并，`extra` 可以覆盖内部字段，灵活但边界不够清晰。
-6. `hasPermi` 默认空字符串时仍传给 `v-hasPermi`，如果权限指令没有处理空值，可能导致按钮异常隐藏或权限判断异常。
-7. `importBtn` slot 命名不准确，且没有向 slot 暴露 `handleImport`、`loading`、`selectedFields` 等上下文，父组件接管按钮后很难复用内部导出逻辑。
-8. `navPersonal` 目前为空实现，页面提示“个人中心”可点击，但点击没有效果。
-9. API 方法名存在拼写问题，例如 `exportRord` 应为 `exportRecord`，`exporttpl` 风格也不统一。
+1. `buildExportRecordParams` 使用 `...form.value` 和 `...extra` 合并，`extra` 可以覆盖内部字段，灵活但边界不够清晰。
+2. `hasPermi` 默认空字符串时仍传给 `v-hasPermi`，如果权限指令没有处理空值，可能导致按钮异常隐藏或权限判断异常。
+3. `navPersonal` 目前为空实现，页面提示“个人中心”可点击，但点击没有效果。
+4. API 方法名存在拼写问题，例如 `exportRord` 应为 `exportRecord`，`exporttpl` 风格也不统一。
 
 ## 方法优化建议
 
@@ -174,12 +169,12 @@ open({
 
 ### 4. 自定义按钮 slot 需要暴露上下文（已修复）
 
-当前 `importBtn` slot 保持原有插槽名不变，不建议外部自定义按钮自行调用导出 API。组件已通过作用域插槽把内部导出方法暴露出去，外部按钮直接调用 `handleImport` 即可，导出参数仍由组件内部按现有逻辑组装。
+当前 `importBtn` slot 保持原有插槽名不变。组件已通过作用域插槽把 `outerExport` 暴露出去，外部自定义按钮通过该方法触发导出，不需要通过 `defineExpose` 获取组件实例方法。
 
 ```vue
 <slot
   name="importBtn"
-  v-bind="{ handleImport, loading, selectedFields: multipleSelection }"
+  v-bind="{ outerExport }"
 />
 ```
 
@@ -229,9 +224,7 @@ open({
 
 ## 代码风格建议
 
-- 组件名建议从 `DerivedCenter` 改成 `ExportCenter`。
-- 删除页面上残留的 `{{ hasPermi }}`。
-- 删除未使用的 `EMPTY_INDEX` 和 `query` emit，或真正使用它们。
+- 删除未使用的 `EMPTY_INDEX`。
 - API 方法名统一小驼峰，例如 `exportRecord`、`createExportTemplate`、`updateExportTemplate`、`deleteExportTemplate`。
 - `home_system`、`tag_name` 建议改成前端常用小驼峰 `homeSystem`、`tagName`。如果后端字段必须用下划线，可以只在接口参数转换时使用下划线。
 - 错误日志前缀建议统一成 `[ExportCenter]`。
@@ -240,20 +233,19 @@ open({
 
 ## 推荐优先级
 
-### P0：建议立即处理
+### P0：已修复
 
-- 删除 `{{ hasPermi }}` 页面残留。
-- 将组件名改为 `ExportCenter`。
-- 修复 `saveTemplate` 字段顺序，改用 `getSortedSelectedFieldKeys()`。
-- 修复 `outerExport` 查询条件过期问题。
-- 给 `exportRow` 和 `exportDelete` 补齐错误提示。
+- 已删除 `{{ hasPermi }}` 页面残留。
+- 已将组件名改为 `ExportCenter`。
+- 已修复 `saveTemplate` 字段顺序，改用 `getSortedSelectedFieldKeys()`。
+- 已修复 `outerExport` 查询条件过期问题，统一通过 `getLatestCondition()` 实时获取。
+- 已给 `exportRow` 和 `exportDelete` 补齐错误提示。
 
 ### P1：近期优化
 
-- `importBtn` 重命名为 `exportBtn`，并改成作用域插槽。
-- 删除未使用 emit 和常量。
+- 已删除未使用常量。
+- 已明确 `home_system` 的优先级，父组件传参优先。
 - 统一 API 方法命名。
-- 明确 `home_system` 的优先级。
 - 给外部调用方法改成对象参数，提升可读性和可扩展性。
 
 ### P2：结构演进
