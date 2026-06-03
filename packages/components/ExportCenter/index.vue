@@ -2,7 +2,7 @@
   {{ hasPermi }}
   <VButton type="" @click="open" v-hasPermi="[hasPermi]">
     <div class="dk-iconfont icon-Upload"></div>
-      导出
+      导出5
   </VButton>
 
   <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" @close="handleClose" :z-index="2000">
@@ -18,7 +18,7 @@
 
         <div class="flex justify-between items-end mb-4">
           <!-- 支持外部接管导出按钮；未提供 importBtn 插槽时使用默认导出按钮。 -->
-          <slot v-if="hasImportBtnSlot" name="importBtn"></slot>
+          <slot v-if="hasImportBtnSlot" name="importBtn" v-bind="{ outerExport }"></slot>
           <template v-else>
             <div v-loading="loading">
               <el-button type="primary" @click="handleImport" :disabled="loading">导出</el-button>
@@ -80,7 +80,7 @@ import ScheduledExport from "../ScheduledExport/index.vue"
 
 const EMPTY_INDEX = ""
 
-const emit = defineEmits(["query", "callback"])
+const emit = defineEmits(["callback"])
 const props = defineProps({
   // 控制定时导出入口是否展示
   schedule: { type: Boolean, default: false },
@@ -106,7 +106,6 @@ const scheduledExportRef = ref()
 const form = ref({
   config_id: null,
   config_name: null,
-  condition: null,
 })
 const exportFields = ref([])
 const multipleSelection = ref([])
@@ -128,8 +127,8 @@ const toArray = (value) => (Array.isArray(value) ? value : [])
 // 导出和保存模板只需要字段 key，顺序由当前左侧字段列表决定。
 const getSelectedFieldKeys = () => multipleSelection.value.map((field) => field?.field_key).filter(Boolean)
 const getCurrentFieldOrder = () => exportFields.value.map((field) => field?.field_key).filter(Boolean)
-// 条件和系统来源允许外部不传，统一在构造接口参数时兜底。
-const getSafeCondition = () => form.value.condition || {}
+// condition 不在组件内缓存，每次从父组件获取最新表单条件。
+const getLatestCondition = () => props.getFormData?.() || {}
 const getHomeSystem = () => GlobalConfig.derived?.home_system ?? props.home_system ?? 0
 // 只有选中过模板且字段发生变化时，右侧模板行才展示“保存”。
 const isEditingTemplate = (index) => handleTemplateRow.value.index === String(index) && handleTemplateRow.value.change
@@ -155,11 +154,14 @@ const validateSelectedFields = () => {
 
 const buildExportTitle = (name = "") => `${name || ""}${currentUser.value.realname || ""}`
 
-const buildExportRecordParams = (extra = {}) => ({
-  ...form.value,
-  ...extra,
-  module: extra.tag_name || props.tag_name,
-})
+const buildExportRecordParams = (extra = {}) => {
+  return {
+    ...form.value,
+    condition: getLatestCondition(),
+    ...extra,
+    module: extra.tag_name || props.tag_name,
+  }
+}
 
 const getSortedSelectedFieldKeys = () => {
   const fieldOrderMap = new Map(getCurrentFieldOrder().map((key, index) => [key, index]))
@@ -175,8 +177,6 @@ const open = async () => {
   }
 
   visible.value = true
-  form.value.condition = props.getFormData()
-  console.log(form.value.condition)
 
   try {
     await getTemplate()
@@ -273,8 +273,8 @@ const saveTemplate = async () => {
     const res = await api.exporttpl({
       config_id: form.value.config_id,
       name: templateName,
-      fields: getSelectedFieldKeys(),
-      condition: getSafeCondition(),
+      fields: getSortedSelectedFieldKeys(),
+      condition: getLatestCondition(),
     })
     ElMessage.success(res.data.message)
     exportName.value = ""
@@ -318,7 +318,8 @@ const exportRow = async (row) => {
     ElMessage.success(res.message)
     emit("callback")
   } catch (e) {
-    throw e
+    console.error("[DerivedCenter] 模板导出失败:", e)
+    ElMessage.error("导出失败")
   }
 }
 
@@ -333,15 +334,15 @@ const exportDelete = async (row) => {
     ElMessage.success(res.data.message)
     await getTemplate()
   } catch (e) {
-    if (e === "cancel") return
-    // console.error("删除模板失败:", e)
-    // ElMessage.error("删除模板失败")
+    if (e === "cancel" || e === "close") return
+    console.error("[DerivedCenter] 删除模板失败:", e)
+    ElMessage.error("删除模板失败")
   }
 }
 
 // 打开定时导出弹窗
 const openScheduledExport = async (row) => {
-  scheduledExportRef.value?.open({ ...row, condition: getSafeCondition() })
+  scheduledExportRef.value?.open({ ...row, condition: getLatestCondition() })
 }
 
 const handleClose = () => {
@@ -400,8 +401,4 @@ const navPersonal = () => {
   //   },
   // })
 }
-defineExpose({
-  open,
-  outerExport,
-})
 </script>
