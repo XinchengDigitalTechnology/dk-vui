@@ -104,6 +104,13 @@
 
 .dk-export-center-template {
   flex: 1;
+
+  &__operation {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
   &__name-row {
     display: flex;
     align-items: center;

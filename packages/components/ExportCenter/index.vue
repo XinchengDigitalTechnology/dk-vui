@@ -72,7 +72,7 @@ const props = defineProps({
   schedule: { type: Boolean, default: false },
   // 作为定时导出弹窗配置透传给 ScheduledExport 组件
   scheduleOption: { type: Array, default: () => [] },
-  home_system: { type: Number, default: undefined },
+  home_system: { type: Number, default: null },
   tag_name: { type: String, default: "" }, // 模块名称
   titleAppend: { type: String, default: "" }, // 导出标题后缀
   hasPermi: { type: String, default: "" }, // 权限

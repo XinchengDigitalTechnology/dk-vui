@@ -6,14 +6,7 @@
 
 ```vue
 <template>
-  <ExportCenter
-    tag_name="order_list"
-    title-append="订单导出"
-    has-permi="order:export"
-    :home_system="1"
-    :get-form-data="getExportCondition"
-    @callback="handleExportSuccess"
-  />
+  <ExportCenter tag_name="order_list" title-append="订单导出" has-permi="order:export" :home_system="null" :get-form-data="getExportCondition" @callback="handleExportSuccess" />
 </template>
 
 <script setup>
@@ -39,19 +32,19 @@ const handleExportSuccess = () => {
 - `window.$httpRequest`
 - `window.APP_GETEWAY.dexh`
 - `window.userInfo.user`
-- `GlobalConfig.derived.home_system`，除非已传 `home_system`
+- `GlobalConfig.derived.home_system`，除非已传非 `null` 的 `home_system`
 
 ## 2. Props 使用规则
 
-| Prop | 必填 | 建议写法 | AI 接入说明 |
-| --- | --- | --- | --- |
-| `tag_name` | 是 | 业务模块唯一标识 | 缺少时组件会提示“缺少必要参数”，不会请求配置。 |
-| `getFormData` | 强烈建议 | 返回当前查询条件对象 | 组件每次操作都会重新调用，不要返回缓存对象。 |
-| `hasPermi` | 按业务 | 权限码字符串 | 会传给入口按钮的 `v-hasPermi`。 |
-| `home_system` | 按业务 | 数字系统 ID | 不传时走 `GlobalConfig.derived.home_system`。 |
-| `titleAppend` | 按业务 | 标题后缀 | 导出标题格式为：名称 + 当前用户真实姓名 + 后缀。 |
-| `schedule` | 按业务 | `true` / `false` | 控制模板行是否展示“定时导出”。 |
-| `scheduleOption` | 使用定时导出时建议传 | `[{ label, value }]` | 用来从查询条件中识别定时导出的导出范围字段。 |
+| Prop             | 必填                 | 建议写法              | AI 接入说明                                               |
+| ---------------- | -------------------- | --------------------- | --------------------------------------------------------- |
+| `tag_name`       | 是                   | 业务模块唯一标识      | 缺少时组件会提示“缺少必要参数”，不会请求配置。            |
+| `getFormData`    | 强烈建议             | 返回当前查询条件对象  | 组件每次操作都会重新调用，不要返回缓存对象。              |
+| `hasPermi`       | 按业务               | 权限码字符串          | 会传给入口按钮的 `v-hasPermi`。                           |
+| `home_system`    | 按业务               | 数字系统 ID 或 `null` | 不传或传 `null` 时走 `GlobalConfig.derived.home_system`。 |
+| `titleAppend`    | 按业务               | 标题后缀              | 导出标题格式为：名称 + 当前用户真实姓名 + 后缀。          |
+| `schedule`       | 按业务               | `true` / `false`      | 控制模板行是否展示“定时导出”。                            |
+| `scheduleOption` | 使用定时导出时建议传 | `[{ label, value }]`  | 用来从查询条件中识别定时导出的导出范围字段。              |
 
 ## 3. 后端数据协议
 
@@ -180,12 +173,7 @@ DELETE /export_tpl/:id
 ## 4. 启用定时导出
 
 ```vue
-<ExportCenter
-  tag_name="order_list"
-  :schedule="true"
-  :schedule-option="scheduleOption"
-  :get-form-data="getExportCondition"
-/>
+<ExportCenter tag_name="order_list" :schedule="true" :schedule-option="scheduleOption" :get-form-data="getExportCondition" />
 ```
 
 ```js
@@ -213,10 +201,7 @@ const getExportCondition = () => ({
 如果业务需要多个导出按钮，或需要外部控制按钮布局，可以使用 `importBtn` 插槽。
 
 ```vue
-<ExportCenter
-  tag_name="order_list"
-  :get-form-data="getExportCondition"
->
+<ExportCenter tag_name="order_list" :get-form-data="getExportCondition">
   <template #importBtn="{ outerExport }">
     <el-button type="primary" @click="outerExport('order_list', '订单列表')">
       导出已选字段
@@ -231,11 +216,11 @@ const getExportCondition = () => ({
 
 `outerExport(module, moduleName, type)` 参数说明：
 
-| 参数 | 必填 | 说明 |
-| --- | --- | --- |
-| `module` | 是 | 要导出的模块标识，会作为 `tag_name` 请求导出配置。 |
-| `moduleName` | 是 | 用于拼接导出标题。 |
-| `type` | 否 | 传 `"all"` 时导出该模块所有字段；否则导出当前勾选字段。 |
+| 参数         | 必填 | 说明                                                    |
+| ------------ | ---- | ------------------------------------------------------- |
+| `module`     | 是   | 要导出的模块标识，会作为 `tag_name` 请求导出配置。      |
+| `moduleName` | 是   | 用于拼接导出标题。                                      |
+| `type`       | 否   | 传 `"all"` 时导出该模块所有字段；否则导出当前勾选字段。 |
 
 注意：
 
@@ -244,18 +229,18 @@ const getExportCondition = () => ({
 
 ## 6. 常见修改入口
 
-| 需求 | 修改位置 | 说明 |
-| --- | --- | --- |
-| 改入口按钮文案或图标 | `index.vue` | 修改顶部 `VButton`。 |
-| 改弹窗布局 | `index.vue` | 调整左右区域、提示信息、footer。 |
-| 改字段排序逻辑 | `ExportFieldList.vue` | 修改 `moveField()`。 |
-| 改模板选择回显逻辑 | `useExportTemplate.js` | 修改 `selectField()`。 |
-| 改导出参数 | `useExportCenter.js` | 优先修改 `buildExportRecordParams()`。 |
-| 改导出标题规则 | `useExportCenter.js` | 修改 `buildExportTitle()`。 |
-| 改模板保存校验 | `useExportTemplate.js` | 修改 `saveTemplate()`。 |
-| 改模板更新逻辑 | `useExportTemplate.js` | 修改 `updateTemplate()`。 |
-| 改删除确认文案 | `useExportTemplate.js` | 修改 `exportDelete()`。 |
-| 改接口地址或方法 | `api.js` | 保持调用方方法名稳定，避免连锁修改。 |
+| 需求                 | 修改位置               | 说明                                   |
+| -------------------- | ---------------------- | -------------------------------------- |
+| 改入口按钮文案或图标 | `index.vue`            | 修改顶部 `VButton`。                   |
+| 改弹窗布局           | `index.vue`            | 调整左右区域、提示信息、footer。       |
+| 改字段排序逻辑       | `ExportFieldList.vue`  | 修改 `moveField()`。                   |
+| 改模板选择回显逻辑   | `useExportTemplate.js` | 修改 `selectField()`。                 |
+| 改导出参数           | `useExportCenter.js`   | 优先修改 `buildExportRecordParams()`。 |
+| 改导出标题规则       | `useExportCenter.js`   | 修改 `buildExportTitle()`。            |
+| 改模板保存校验       | `useExportTemplate.js` | 修改 `saveTemplate()`。                |
+| 改模板更新逻辑       | `useExportTemplate.js` | 修改 `updateTemplate()`。              |
+| 改删除确认文案       | `useExportTemplate.js` | 修改 `exportDelete()`。                |
+| 改接口地址或方法     | `api.js`               | 保持调用方方法名稳定，避免连锁修改。   |
 
 ## 7. AI 修改代码时的注意事项
 
@@ -331,4 +316,3 @@ const getExportCondition = () => ({
 - 本人创建的模板显示删除按钮，非本人模板不显示。
 - `schedule = true` 时显示“定时导出”，否则不显示。
 - 使用 `importBtn` 插槽后默认导出按钮不显示，`outerExport(..., "all")` 会导出所有字段。
-

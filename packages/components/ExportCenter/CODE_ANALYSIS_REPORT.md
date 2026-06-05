@@ -38,7 +38,7 @@
 | ---------------- | ---------- | ----------- | -------------------------------------------------------- |
 | `schedule`       | `Boolean`  | `false`     | 是否展示模板行上的“定时导出”入口。                       |
 | `scheduleOption` | `Array`    | `[]`        | 透传给 `ScheduledExport` 的导出范围配置。                |
-| `home_system`    | `Number`   | `undefined` | 查询导出配置时使用的系统标识；未传时取全局配置。         |
+| `home_system`    | `Number`   | `null`      | 查询导出配置时使用的系统标识；未传或传 `null` 时取全局配置。 |
 | `tag_name`       | `String`   | `""`        | 当前业务模块标识，加载导出配置时必填。                   |
 | `titleAppend`    | `String`   | `""`        | 导出标题后缀。                                           |
 | `hasPermi`       | `String`   | `""`        | 传给 `v-hasPermi` 的权限码。                             |

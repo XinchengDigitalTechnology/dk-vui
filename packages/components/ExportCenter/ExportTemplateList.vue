@@ -12,15 +12,17 @@
     </el-table-column>
     <el-table-column prop="operation" label="操作" :width="schedule ? 200 : 120">
       <template #default="{ row }">
-        <el-button type="primary" link :loading="loading" :disabled="loading" @click="$emit('export', row)">导出</el-button>
-        <span v-if="schedule">
-          <el-divider direction="vertical" />
-          <el-button type="primary" link @click="$emit('schedule', row)">定时导出</el-button>
-        </span>
-        <template v-if="row.creator_id == userId">
-          <el-divider direction="vertical" />
-          <el-button type="danger" link @click="$emit('delete', row)">删除</el-button>
-        </template>
+        <div class="dk-export-center-template__operation">
+          <el-button type="primary" link :loading="loading" :disabled="loading" @click="$emit('export', row)">导出</el-button>
+          <span v-if="schedule">
+            <el-divider direction="vertical" />
+            <el-button type="primary" link @click="$emit('schedule', row)">定时导出</el-button>
+          </span>
+          <template v-if="row.creator_id == userId">
+            <el-divider direction="vertical" />
+            <el-button type="danger" link @click="$emit('delete', row)">删除</el-button>
+          </template>
+        </div>
       </template>
     </el-table-column>
   </el-table>
