@@ -1,262 +1,334 @@
-# ExportCenter 组件分析与优化建议
+# ExportCenter AI 使用说明
 
-## 组件定位
+这份文档给 AI 或后续开发者快速理解如何接入、修改和排查 `ExportCenter` 组件使用。
 
-`ExportCenter` 是一个通用导出中心组件，负责围绕某个业务模块的导出配置完成以下能力：
+## 1. 最小接入示例
 
-- 展示导出入口按钮，并通过 `v-hasPermi` 控制权限。
-- 打开“导出中心”弹窗，拉取当前模块的导出字段和模板配置。
-- 支持字段勾选、字段排序、模板选择、模板保存、模板更新、模板删除。
-- 支持按当前字段配置导出，也支持按已保存模板导出。
-- 可选接入定时导出能力。
-- 通过 `importBtn` 作用域插槽暴露 `outerExport`，供自定义按钮在不打开弹窗时主动导出。
+```vue
+<template>
+  <ExportCenter
+    tag_name="order_list"
+    title-append="订单导出"
+    has-permi="order:export"
+    :home_system="1"
+    :get-form-data="getExportCondition"
+    @callback="handleExportSuccess"
+  />
+</template>
 
-组件当前由三个文件组成：
+<script setup>
+import ExportCenter from "@/packages/components/ExportCenter/index.vue"
 
-- `index.vue`：主组件，包含弹窗、模板管理、导出逻辑、slot 方法暴露。
-- `ExportFieldList.vue`：字段列表子组件，负责字段展示、选择、排序和表格方法转发。
-- `api.js`：导出相关接口封装。
+const getExportCondition = () => {
+  return {
+    keyword: searchForm.keyword,
+    status: searchForm.status,
+    start_time: searchForm.dateRange?.[0],
+    end_time: searchForm.dateRange?.[1],
+  }
+}
 
-## 当前功能流程
+const handleExportSuccess = () => {
+  // 可选：刷新页面、关闭弹窗、记录埋点等
+}
+</script>
+```
 
-### 默认导出流程
-
-父组件传入 `tag_name` 和 `getFormData`。用户点击“导出”按钮后，组件执行 `open()`：
-
-- 校验 `tag_name` 是否存在。
-- 打开弹窗。
-- 查询条件不写入 `form`，在导出、保存模板或定时导出时通过 `getFormData()` 实时获取。
-- 调用 `/export_config/one` 获取导出配置。
-- 渲染字段列表和模板列表。
-
-用户勾选字段后点击弹窗内“导出”，组件会调用 `/export_record` 创建导出记录，参数包含：
-
-- `config_id`
-- `config_name`
-- `condition`
-- `fields`
-- `title`
-- `module`
-
-导出完成后触发 `callback` 事件。
-
-### 模板流程
-
-模板相关功能包括：
-
-- `saveTemplate`：保存当前字段选择为新模板。
-- `selectField`：点击模板名称后，将模板字段回显到左侧字段列表。
-- `updateTemplate`：模板字段变化后，保存当前模板的新字段配置。
-- `exportRow`：直接按某个模板导出。
-- `exportDelete`：删除当前用户创建的模板。
-
-### 定时导出流程
-
-当 `schedule` 为 `true` 时，模板操作列展示“定时导出”入口。点击后调用 `ScheduledExport` 组件的 `open()` 方法，并透传当前模板和查询条件。
-
-### 外部导出流程
-
-`importBtn` 插槽暴露 `outerExport(module, moduleName, type)`：
-
-- 根据传入 `module` 重新获取导出配置。
-- 当 `type === "all"` 时，导出该模块全部字段。
-- 否则使用当前组件已选择的字段。
-- 调用 `/export_record` 创建导出记录。
-
-## 外部参数与依赖
-
-### Props
-
-- `schedule`：是否展示定时导出入口，默认 `false`。
-- `scheduleOption`：传给 `ScheduledExport` 的配置数组，默认 `[]`。
-- `home_system`：系统来源，默认 `3`。
-- `tag_name`：导出模块标识，当前组件打开时的必要参数。
-- `hasPermi`：导出按钮权限标识。
-- `getFormData`：父组件传入的查询条件获取函数。
-
-### Slots
-
-- `importBtn`：用于替换默认导出按钮区域。当前命名容易误解，因为实际语义是自定义导出按钮，不是导入按钮。
-
-### Emits
-
-- `callback`：导出成功后触发。
-
-### Slot 暴露
-
-- `importBtn`：作用域插槽会传出 `outerExport(module, moduleName, type)`，用于不打开弹窗直接发起导出。
-
-### 全局依赖
-
-组件和接口当前依赖多个全局对象：
+必须保证宿主环境已经提供：
 
 - `window.$httpRequest`
 - `window.APP_GETEWAY.dexh`
 - `window.userInfo.user`
-- `GlobalConfig.derived.home_system`
-- `v-hasPermi`
-- `svg-icon`
+- `GlobalConfig.derived.home_system`，除非已传 `home_system`
 
-这些依赖降低了组件的独立性，组件在新项目、单元测试、Storybook 或独立包环境中复用时需要额外注入运行时上下文。
+## 2. Props 使用规则
 
-## 代码结构评价
+| Prop | 必填 | 建议写法 | AI 接入说明 |
+| --- | --- | --- | --- |
+| `tag_name` | 是 | 业务模块唯一标识 | 缺少时组件会提示“缺少必要参数”，不会请求配置。 |
+| `getFormData` | 强烈建议 | 返回当前查询条件对象 | 组件每次操作都会重新调用，不要返回缓存对象。 |
+| `hasPermi` | 按业务 | 权限码字符串 | 会传给入口按钮的 `v-hasPermi`。 |
+| `home_system` | 按业务 | 数字系统 ID | 不传时走 `GlobalConfig.derived.home_system`。 |
+| `titleAppend` | 按业务 | 标题后缀 | 导出标题格式为：名称 + 当前用户真实姓名 + 后缀。 |
+| `schedule` | 按业务 | `true` / `false` | 控制模板行是否展示“定时导出”。 |
+| `scheduleOption` | 使用定时导出时建议传 | `[{ label, value }]` | 用来从查询条件中识别定时导出的导出范围字段。 |
 
-### 已经改进的地方
+## 3. 后端数据协议
 
-- 字段列表已从主组件拆到 `ExportFieldList.vue`，主组件负担有所下降。
-- 使用 `computed` 获取当前用户信息和 slot 状态，可读性比旧版更好。
-- 增加了 `toArray`、`validateSelectedFields`、`buildExportRecordParams` 等小函数，降低了部分重复逻辑。
-- 字段排序时使用 `Map`，模板字段较多时比嵌套查找更稳。
-- API 文件集中管理接口，主组件没有直接拼接口路径。
+### 3.1 获取导出配置
 
-### 当前主要问题
+组件打开时调用：
 
-1. `buildExportRecordParams` 使用 `...form.value` 和 `...extra` 合并，`extra` 可以覆盖内部字段，灵活但边界不够清晰。
-2. `hasPermi` 默认空字符串时仍传给 `v-hasPermi`，如果权限指令没有处理空值，可能导致按钮异常隐藏或权限判断异常。
-3. `navPersonal` 目前为空实现，页面提示“个人中心”可点击，但点击没有效果。
-4. API 方法名存在拼写问题，例如 `exportRord` 应为 `exportRecord`，`exporttpl` 风格也不统一。
-
-## 方法优化建议
-
-### 1. 统一字段顺序规则（已修复）
-
-保存模板和更新模板都建议使用同一个字段获取方法：
-
-- 导出当前勾选字段时，可以使用当前表格顺序。
-- 保存模板和更新模板时，必须使用当前字段列表顺序。
-- 避免 Element Plus selection 返回顺序和用户看到的排序不一致。
-
-已将 `saveTemplate` 中的 `fields: getSelectedFieldKeys()` 改成 `fields: getSortedSelectedFieldKeys()`，新建模板和更新模板现在使用一致的字段顺序规则。
-
-### 2. 优化外部导出参数来源（已修复）
-
-`outerExport` 之前依赖已有的 `form.condition`，但外部直接调用时不一定打开过弹窗，查询条件可能为空或过期。
-
-已改为在 `buildExportRecordParams` 构造导出参数时统一通过 `getLatestCondition()` 获取最新查询条件，不再写入 `form.value`：
-
-```js
-const getLatestCondition = () => props.getFormData?.() || {}
-
-const buildExportRecordParams = (extra = {}) => ({
-  ...form.value,
-  condition: getLatestCondition(),
-  ...extra,
-  module: extra.tag_name || props.tag_name,
-})
+```http
+GET /export_config/one
 ```
 
-### 3. 明确组件 API
-
-建议保留一种打开方式，不要同时混用“通过 props 配置”和“通过 open 参数传入配置”两种模式。
-
-当前版本适合定义为 props + 内部按钮驱动：
-
-- `tag_name` 由父组件传入。
-- `getFormData` 由父组件传入。
-- `open()` 保持为组件内部方法，只负责按钮点击后的弹窗打开和初始化数据，不再通过 `defineExpose` 对外暴露。
-
-如果后续要支持多个模块共用同一个实例，则建议改为：
+请求参数：
 
 ```js
-open({
-  tagName,
-  condition,
-  importBtnSlot,
-})
+{
+  home_system: 1,
+  tag_name: "order_list"
+}
 ```
 
-两种模式不要同时保留，避免状态来源不清晰。
+期望返回结构：
 
-### 4. 自定义按钮 slot 需要暴露上下文（已修复）
+```js
+{
+  data: {
+    config_id: 1001,
+    config_name: "订单列表",
+    export_field: [
+      { field_key: "order_no", field_name: "订单号" },
+      { field_key: "status", field_name: "状态" }
+    ],
+    templates: [
+      {
+        tpl_id: 2001,
+        name: "常用字段",
+        fields: ["order_no", "status"],
+        creator_id: 3001
+      }
+    ]
+  }
+}
+```
 
-当前 `importBtn` slot 保持原有插槽名不变。组件已通过作用域插槽把 `outerExport` 暴露出去，外部自定义按钮通过该方法触发导出，不需要通过 `defineExpose` 获取组件实例方法。
+字段要求：
+
+- `export_field` 必须是数组；每项至少包含 `field_key` 和 `field_name`。
+- `templates` 建议是数组；模板字段通过 `fields` 保存字段 key 顺序。
+- `creator_id` 用于前端判断是否展示删除按钮。
+
+### 3.2 新增导出记录
+
+即时导出和模板导出都会调用：
+
+```http
+POST /export_record
+```
+
+即时导出参数示例：
+
+```js
+{
+  config_id: 1001,
+  config_name: "订单列表",
+  condition: { status: "paid" },
+  fields: ["order_no", "status"],
+  title: "订单列表张三订单导出",
+  module: "order_list"
+}
+```
+
+模板导出参数示例：
+
+```js
+{
+  config_id: 1001,
+  config_name: "订单列表",
+  condition: { status: "paid" },
+  fields: [],
+  title: "常用字段张三订单导出",
+  module: "order_list",
+  tpl_id: 2001
+}
+```
+
+注意：模板导出时 `fields` 是空数组，后端需要根据 `tpl_id` 读取模板字段。
+
+### 3.3 保存模板
+
+```http
+POST /export_tpl
+```
+
+参数：
+
+```js
+{
+  config_id: 1001,
+  name: "常用字段",
+  fields: ["order_no", "status"],
+  condition: { status: "paid" }
+}
+```
+
+### 3.4 更新模板
+
+```http
+PUT /export_tpl/:id
+```
+
+参数：
+
+```js
+{
+  id: 2001,
+  name: "常用字段",
+  fields: ["status", "order_no"]
+}
+```
+
+### 3.5 删除模板
+
+```http
+DELETE /export_tpl/:id
+```
+
+## 4. 启用定时导出
 
 ```vue
-<slot
-  name="importBtn"
-  v-bind="{ outerExport }"
+<ExportCenter
+  tag_name="order_list"
+  :schedule="true"
+  :schedule-option="scheduleOption"
+  :get-form-data="getExportCondition"
 />
 ```
 
-### 5. 降低全局依赖
+```js
+const scheduleOption = [
+  { label: "创建时间", value: "create_time" },
+  { label: "更新时间", value: "update_time" },
+]
 
-建议逐步把全局依赖改成可注入依赖：
+const getExportCondition = () => ({
+  create_time: ["2026-01-01", "2026-01-31"],
+  status: "paid",
+})
+```
 
-- 用户信息通过 store、composable 或 prop 获取。
-- 请求实例通过统一 request 模块引入，而不是直接使用 `window.$httpRequest`。
-- 网关地址通过配置模块读取，而不是直接依赖 `window.APP_GETEWAY`。
-- `home_system` 的优先级需要明确：是全局配置优先，还是 props 优先。
+定时导出行为：
 
-当前 `getHomeSystem` 使用 `GlobalConfig.derived?.home_system ?? props.home_system ?? 0`，这意味着父组件传入的 `home_system` 可能被全局配置覆盖。若父组件需要强控制，应改为 `props.home_system ?? GlobalConfig.derived?.home_system ?? 0`。
+1. 用户先保存或选择一个模板。
+2. 点击模板行的“定时导出”。
+3. `ExportCenter` 调用 `ScheduledExport.open({ ...row, condition })`。
+4. `ScheduledExport` 根据 `scheduleOption` 查找 `condition` 中存在的字段，作为导出范围。
+5. 用户配置周期、时间和次数后提交定时任务。
 
-## 组件化封装建议
+## 5. 自定义导出按钮
 
-### 当前拆分程度
+如果业务需要多个导出按钮，或需要外部控制按钮布局，可以使用 `importBtn` 插槽。
 
-`ExportFieldList.vue` 拆分是正确方向，但 `index.vue` 仍同时承担了：
+```vue
+<ExportCenter
+  tag_name="order_list"
+  :get-form-data="getExportCondition"
+>
+  <template #importBtn="{ outerExport }">
+    <el-button type="primary" @click="outerExport('order_list', '订单列表')">
+      导出已选字段
+    </el-button>
 
-- 弹窗布局。
-- 业务参数组装。
-- 模板 CRUD。
-- 字段选择和排序状态。
-- 定时导出入口。
-- 外部导出。
-- 权限展示。
+    <el-button @click="outerExport('order_list', '订单列表', 'all')">
+      导出全部字段
+    </el-button>
+  </template>
+</ExportCenter>
+```
 
-当后续导出中心功能继续增加时，主组件会再次变胖。
+`outerExport(module, moduleName, type)` 参数说明：
 
-### 推荐拆分方向
+| 参数 | 必填 | 说明 |
+| --- | --- | --- |
+| `module` | 是 | 要导出的模块标识，会作为 `tag_name` 请求导出配置。 |
+| `moduleName` | 是 | 用于拼接导出标题。 |
+| `type` | 否 | 传 `"all"` 时导出该模块所有字段；否则导出当前勾选字段。 |
 
-可以按职责继续拆分：
+注意：
 
-- `ExportFieldList.vue`：保留字段列表、排序、选择。
-- `ExportTemplateList.vue`：负责模板列表、选择模板、导出模板、删除模板、定时导出入口展示。
-- `useExportCenter.js`：管理导出中心状态、字段选择、模板加载、参数构建。
-- `useExportTemplate.js`：封装模板保存、更新、删除。
-- `api.js`：统一接口命名并补齐类型注释。
+- 使用插槽后，默认导出按钮不会渲染。
+- 非 `"all"` 模式不会自动校验是否勾选字段，外部按钮如有需要应自行限制。
 
-如果项目后续会迁移 TypeScript，建议提前把接口返回结构整理成类型：
+## 6. 常见修改入口
 
-- `ExportField`
-- `ExportTemplate`
-- `ExportConfig`
-- `ExportRecordPayload`
+| 需求 | 修改位置 | 说明 |
+| --- | --- | --- |
+| 改入口按钮文案或图标 | `index.vue` | 修改顶部 `VButton`。 |
+| 改弹窗布局 | `index.vue` | 调整左右区域、提示信息、footer。 |
+| 改字段排序逻辑 | `ExportFieldList.vue` | 修改 `moveField()`。 |
+| 改模板选择回显逻辑 | `useExportTemplate.js` | 修改 `selectField()`。 |
+| 改导出参数 | `useExportCenter.js` | 优先修改 `buildExportRecordParams()`。 |
+| 改导出标题规则 | `useExportCenter.js` | 修改 `buildExportTitle()`。 |
+| 改模板保存校验 | `useExportTemplate.js` | 修改 `saveTemplate()`。 |
+| 改模板更新逻辑 | `useExportTemplate.js` | 修改 `updateTemplate()`。 |
+| 改删除确认文案 | `useExportTemplate.js` | 修改 `exportDelete()`。 |
+| 改接口地址或方法 | `api.js` | 保持调用方方法名稳定，避免连锁修改。 |
 
-## 代码风格建议
+## 7. AI 修改代码时的注意事项
 
-- 删除未使用的 `EMPTY_INDEX`。
-- API 方法名统一小驼峰，例如 `exportRecord`、`createExportTemplate`、`updateExportTemplate`、`deleteExportTemplate`。
-- `home_system`、`tag_name` 建议改成前端常用小驼峰 `homeSystem`、`tagName`。如果后端字段必须用下划线，可以只在接口参数转换时使用下划线。
-- 错误日志前缀建议统一成 `[ExportCenter]`。
-- 文案中的“模版”建议统一为“模板”。
-- 行内样式如 `width: 432px`、`z-index: 999` 可以迁移到 class 或 scoped style，降低模板噪声。
+1. 不要把 `condition` 缓存在组件状态里；应继续通过 `getLatestCondition()` 每次获取最新查询条件。
+2. 不要直接改写 `props.fields`；字段排序需要复制数组后通过 `fields-change` 通知父层。
+3. 不要绕过 `validateSelectedFields()` 修改保存模板和即时导出逻辑，除非业务明确允许空字段。
+4. 模板导出依赖 `tpl_id`，不要随意把模板导出的 `fields: []` 改成当前勾选字段。
+5. 如果重命名 `exportRord`，需要同步改 `useExportCenter.js` 和 `useExportTemplate.js`，并确认是否还有外部引用。
+6. `handleTemplateRow.index` 使用字符串比较，修改时要同时检查 `isEditingTemplate()` 和 `selectField()`。
+7. 删除按钮只是前端展示控制，不能当作权限安全边界。
+8. 增加新能力时，优先保持当前分层：
+   - 基础导出状态和参数构造放 `useExportCenter.js`
+   - 模板相关行为放 `useExportTemplate.js`
+   - UI 展示和事件转发放 Vue 组件
 
-## 推荐优先级
+## 8. 排查清单
 
-### P0：已修复
+### 打不开弹窗或提示缺少参数
 
-- 已删除 `{{ hasPermi }}` 页面残留。
-- 已将组件名改为 `ExportCenter`。
-- 已修复 `saveTemplate` 字段顺序，改用 `getSortedSelectedFieldKeys()`。
-- 已修复 `outerExport` 查询条件过期问题，统一通过 `getLatestCondition()` 实时获取。
-- 已给 `exportRow` 和 `exportDelete` 补齐错误提示。
+检查：
 
-### P1：近期优化
+- 是否传入 `tag_name`
+- `tag_name` 是否是后端已配置的模块标识
 
-- 已删除未使用常量。
-- 已明确 `home_system` 的优先级，父组件传参优先。
-- 统一 API 方法命名。
-- 给外部调用方法改成对象参数，提升可读性和可扩展性。
+### 字段列表为空
 
-### P2：结构演进
+检查：
 
-- 拆出 `ExportTemplateList.vue`。
-- 抽出 `useExportCenter` 和 `useExportTemplate`。
-- 移除 `window` 强依赖，改为 request/store/config 注入。
-- 引入 TypeScript 类型或至少补齐 JSDoc 数据结构。
+- `/export_config/one` 是否返回 `data.export_field`
+- 字段项是否包含 `field_key`
+- 请求参数 `home_system` 和 `tag_name` 是否正确
 
-## 总体结论
+### 导出失败
 
-当前 `ExportCenter` 已经具备完整导出中心能力，也做了一定组件拆分和工具函数整理，整体可以继续使用。但它仍然偏“业务组件”，对全局环境、后端字段、权限指令和用户信息依赖较强，独立复用性一般。
+检查：
 
-如果只是当前业务线内复用，建议优先处理 P0 问题，成本低、收益明显。如果目标是沉淀为真正的通用组件，则需要继续拆分模板列表、抽离状态逻辑，并把外部依赖改成显式 props、composable 或配置注入。
+- 是否勾选了字段
+- `/export_record` 请求参数中的 `config_id`、`condition`、`fields`、`module` 是否符合后端预期
+- 宿主环境是否提供 `window.$httpRequest` 和 `window.APP_GETEWAY.dexh`
+
+### 模板保存失败
+
+检查：
+
+- 模板名称是否为空
+- 模板名称是否重复
+- 是否至少勾选一个字段
+- `/export_tpl` 是否接受 `condition`
+
+### 选择模板后字段顺序不对
+
+检查：
+
+- 模板 `fields` 是否按期望顺序保存
+- 字段 key 是否能和 `export_field[].field_key` 对上
+- 是否有模板中不存在但字段列表中存在的新字段；这类字段会被排在后方
+
+### 定时导出范围为空
+
+检查：
+
+- 是否传入 `scheduleOption`
+- `scheduleOption[].value` 是否存在于 `getFormData()` 返回的 `condition` 中
+- 当前查询条件是否真的包含对应范围字段
+
+## 9. 推荐测试场景
+
+- 打开弹窗后能正确加载字段和模板。
+- 未勾选字段时，即时导出和保存模板都提示错误。
+- 勾选字段并调整排序后，保存模板的 `fields` 顺序正确。
+- 点击模板名称后，左侧字段能按模板字段顺序回显。
+- 选择模板后修改字段，该模板行出现“保存”入口。
+- 本人创建的模板显示删除按钮，非本人模板不显示。
+- `schedule = true` 时显示“定时导出”，否则不显示。
+- 使用 `importBtn` 插槽后默认导出按钮不显示，`outerExport(..., "all")` 会导出所有字段。
+
