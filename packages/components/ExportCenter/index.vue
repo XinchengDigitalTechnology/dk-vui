@@ -1,7 +1,7 @@
 <template>
   <VButton type="" @click="open" v-hasPermi="[hasPermi]">
     <div class="dk-iconfont icon-Upload"></div>
-      导出1
+      导出
   </VButton>
 
   <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" :before-close="handleBeforeClose" :z-index="2000">
@@ -15,11 +15,11 @@
           <svg-icon icon-class="hint_line01"></svg-icon>导出结果在 <el-link type="primary" :underline="false" @click="navPersonal">个人中心</el-link> 查看
         </div>
 
-        <div class="flex justify-between items-end mb-4">
+        <div class="flex justify-between items-end mb-4" v-loading="loading">
           <!-- 支持外部接管导出按钮；未提供 importBtn 插槽时使用默认导出按钮。 -->
-          <slot v-if="hasImportBtnSlot" name="importBtn" v-bind="{ outerExport }"></slot>
+          <slot v-if="hasImportBtnSlot" name="importBtn" v-bind="{ outerExport, loading }"></slot>
           <template v-else>
-            <div v-loading="loading">
+            <div>
               <el-button type="primary" @click="handleImport" :disabled="loading">导出</el-button>
             </div>
 
@@ -37,6 +37,7 @@
           :templates="templates"
           :schedule="schedule"
           :user-id="userId"
+          :loading="templateExportLoading"
           :is-editing-template="isEditingTemplate"
           @select="selectField"
           @update="updateTemplate"
@@ -106,7 +107,7 @@ const {
   outerExport,
 } = useExportCenter(props, emit)
 
-const { selectField, saveTemplate, updateTemplate, exportRow, exportDelete, openScheduledExport } = useExportTemplate({
+const { templateExportLoading, selectField, saveTemplate, updateTemplate, exportRow, exportDelete, openScheduledExport } = useExportTemplate({
   tableRef,
   scheduledExportRef,
   exportFields,

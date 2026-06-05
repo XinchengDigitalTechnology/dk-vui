@@ -1,5 +1,41 @@
+import { ref } from "vue"
 import { ElMessage, ElMessageBox } from "element-plus"
 import api from "./api.js"
+
+const EXPORT_DEBOUNCE_DELAY = 500
+
+/**
+ * 创建异步方法防抖包装器。
+ * 连续触发时会取消上一次未执行的调用，只在 delay 后执行最后一次。
+ * @param {Function} fn - 需要防抖的异步方法
+ * @param {number} delay - 防抖等待时间
+ * @returns {Function}
+ */
+const createDebouncedAsync = (fn, delay = EXPORT_DEBOUNCE_DELAY) => {
+  let timer = null
+  let resolvePending = null
+
+  return (...args) => {
+    if (timer) {
+      clearTimeout(timer)
+      resolvePending?.()
+    }
+
+    return new Promise((resolve, reject) => {
+      resolvePending = resolve
+      timer = setTimeout(async () => {
+        timer = null
+        resolvePending = null
+
+        try {
+          resolve(await fn(...args))
+        } catch (e) {
+          reject(e)
+        }
+      }, delay)
+    })
+  }
+}
 
 export const useExportTemplate = ({
   tableRef,
@@ -18,6 +54,8 @@ export const useExportTemplate = ({
   getTemplate,
   emit,
 }) => {
+  const templateExportLoading = ref(false)
+
   // 选择导出模板
   const selectField = (item = {}, index) => {
     if (!tableRef.value) return
@@ -95,7 +133,7 @@ export const useExportTemplate = ({
     }
   }
 
-  const exportRow = async (row) => {
+  const executeExportRow = async (row) => {
     try {
       const res = await api.exportRord(
         buildExportRecordParams({
@@ -109,7 +147,18 @@ export const useExportTemplate = ({
     } catch (e) {
       console.error("[ExportCenter] 模板导出失败:", e)
       ElMessage.error("导出失败")
+    } finally {
+      templateExportLoading.value = false
     }
+  }
+
+  // 模板行导出加 500ms 防抖，避免连续点击重复创建导出记录。
+  const debouncedExportRow = createDebouncedAsync(executeExportRow)
+  const exportRow = (row) => {
+    if (templateExportLoading.value) return Promise.resolve()
+
+    templateExportLoading.value = true
+    return debouncedExportRow(row)
   }
 
   const exportDelete = async (row) => {
@@ -135,6 +184,7 @@ export const useExportTemplate = ({
   }
 
   return {
+    templateExportLoading,
     selectField,
     saveTemplate,
     updateTemplate,

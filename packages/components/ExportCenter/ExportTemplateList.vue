@@ -12,7 +12,7 @@
     </el-table-column>
     <el-table-column prop="operation" label="操作" width="200">
       <template #default="{ row }">
-        <el-button type="primary" link @click="$emit('export', row)">导出</el-button>
+        <el-button type="primary" link :loading="loading" :disabled="loading" @click="$emit('export', row)">导出</el-button>
         <span v-if="schedule">
           <el-divider direction="vertical" />
           <el-button type="primary" link @click="$emit('schedule', row)">定时导出</el-button>
@@ -39,6 +39,10 @@ defineProps({
   userId: {
     type: [String, Number],
     default: "",
+  },
+  loading: {
+    type: Boolean,
+    default: false,
   },
   isEditingTemplate: {
     type: Function,
