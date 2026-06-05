@@ -1,5 +1,5 @@
 <template>
-  <VButton type="" @click="open" v-hasPermi="[hasPermi]" v-if="type === 'button'">
+  <VButton type="" @click="open" v-hasPermi="hasPermi ? [hasPermi] : []" v-if="type === 'button'">
     <div class="dk-iconfont icon-Upload"></div>
       导出
   </VButton>
