@@ -3,6 +3,22 @@ import Md from "@/components/Md"
 import doc from "./document.md?raw"
 import { useExportCenterDemo } from "./mock"
 
+const setupContent = ref(`## 全局配置
+
+如果页面没有单独传 \`home_system\`，导出中心会读取 \`DKVui.setup\` 中的 \`derived.home_system\`。点击“个人中心”时，会调用 \`action.setGlobalState\` 通知宿主项目跳转。
+
+\`\`\`js
+DKVui.setup({
+  derived: {
+    home_system: 3
+  },
+  action: action, // 宿主项目在这里处理全局状态或路由跳转
+})
+\`\`\`
+
+- \`derived.home_system\`：导出配置所属系统 ID，会作为 \`/export_config/one\` 的 \`home_system\` 参数。
+- \`action.setGlobalState\`：导出完成提示中的“个人中心”链接会调用它，并传入 \`{ changeMicoTabsPath: { path: "/user/profile", type: "push" } }\`。
+`)
 const content = ref(doc)
 
 const { form, scheduleOption, getFormData, handleExportCallback } = useExportCenterDemo()
@@ -12,6 +28,7 @@ const { form, scheduleOption, getFormData, handleExportCallback } = useExportCen
   <VPage edit>
     <div class="page">
       <h1>ExportCenter 导出中心组件</h1>
+      <Md v-model="setupContent" view />
       <p>用于演示导出字段选择、模板保存、模板导出、定时导出和外部自定义导出按钮。</p>
 
       <el-form :model="form" label-width="90px" inline>

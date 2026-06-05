@@ -2,7 +2,36 @@
 
 这份文档给 AI 或后续开发者快速理解如何接入、修改和排查 `ExportCenter` 组件使用。
 
-## 1. 最小接入示例
+## 1. 全局配置
+
+必须保证宿主环境已经提供：
+
+- `window.$httpRequest`
+- `window.APP_GETEWAY.dexh`
+- `window.userInfo.user`
+- `GlobalConfig.derived.home_system`，除非已传非 `null` 的 `home_system`
+- `GlobalConfig.action.setGlobalState`，用于点击“个人中心”时通知宿主项目跳转
+
+推荐在项目入口通过 `DKVui.setup` 配置：
+
+```js
+DKVui.setup({
+  derived: {
+    home_system: 3
+  },
+  action: {
+    setGlobalState(payload) {
+      // 宿主项目在这里处理全局状态或路由跳转
+      console.log(payload)
+    }
+  }
+})
+```
+
+- `derived.home_system` 会作为 `/export_config/one` 的 `home_system` 请求参数。
+- `action.setGlobalState` 会在点击“个人中心”链接时被调用，参数为 `{ changeMicoTabsPath: { path: "/user/profile", type: "push" } }`。
+
+## 2. 最小接入示例
 
 ```vue
 <template>
@@ -27,14 +56,7 @@ const handleExportSuccess = () => {
 </script>
 ```
 
-必须保证宿主环境已经提供：
-
-- `window.$httpRequest`
-- `window.APP_GETEWAY.dexh`
-- `window.userInfo.user`
-- `GlobalConfig.derived.home_system`，除非已传非 `null` 的 `home_system`
-
-## 2. Props 使用规则
+## 3. Props 使用规则
 
 | Prop             | 必填                 | 建议写法              | AI 接入说明                                               |
 | ---------------- | -------------------- | --------------------- | --------------------------------------------------------- |
@@ -46,7 +68,7 @@ const handleExportSuccess = () => {
 | `schedule`       | 按业务               | `true` / `false`      | 控制模板行是否展示“定时导出”。                            |
 | `scheduleOption` | 使用定时导出时建议传 | `[{ label, value }]`  | 用来从查询条件中识别定时导出的导出范围字段。              |
 
-## 3. 后端数据协议
+## 4. 后端数据协议
 
 ### 3.1 获取导出配置
 
@@ -170,7 +192,7 @@ PUT /export_tpl/:id
 DELETE /export_tpl/:id
 ```
 
-## 4. 启用定时导出
+## 5. 启用定时导出
 
 ```vue
 <ExportCenter tag_name="order_list" :schedule="true" :schedule-option="scheduleOption" :get-form-data="getExportCondition" />
@@ -196,7 +218,7 @@ const getExportCondition = () => ({
 4. `ScheduledExport` 根据 `scheduleOption` 查找 `condition` 中存在的字段，作为导出范围。
 5. 用户配置周期、时间和次数后提交定时任务。
 
-## 5. 自定义导出按钮
+## 6. 自定义导出按钮
 
 如果业务需要多个导出按钮，或需要外部控制按钮布局，可以使用 `exportButton` 插槽。
 插槽只暴露 `outerExport` 方法；导出中的 loading 和防重复提交由组件内部管理，不再作为 slot prop 透出。
@@ -229,7 +251,7 @@ const getExportCondition = () => ({
 - `outerExport` 返回 `Promise`，内部会处理 loading 状态和重复点击拦截。
 - 非 `"all"` 模式不会自动校验是否勾选字段，外部按钮如有需要应自行限制。
 
-## 6. 常见修改入口
+## 7. 常见修改入口
 
 | 需求                 | 修改位置               | 说明                                   |
 | -------------------- | ---------------------- | -------------------------------------- |
@@ -244,7 +266,7 @@ const getExportCondition = () => ({
 | 改删除确认文案       | `useExportTemplate.js` | 修改 `exportDelete()`。                |
 | 改接口地址或方法     | `api.js`               | 保持调用方方法名稳定，避免连锁修改。   |
 
-## 7. AI 修改代码时的注意事项
+## 8. AI 修改代码时的注意事项
 
 1. 不要把 `condition` 缓存在组件状态里；应继续通过 `getLatestCondition()` 每次获取最新查询条件。
 2. 不要直接改写 `props.fields`；字段排序需要复制数组后通过 `fields-change` 通知父层。
@@ -258,7 +280,7 @@ const getExportCondition = () => ({
    - 模板相关行为放 `useExportTemplate.js`
    - UI 展示和事件转发放 Vue 组件
 
-## 8. 排查清单
+## 9. 排查清单
 
 ### 打不开弹窗或提示缺少参数
 
@@ -308,7 +330,7 @@ const getExportCondition = () => ({
 - `scheduleOption[].value` 是否存在于 `getFormData()` 返回的 `condition` 中
 - 当前查询条件是否真的包含对应范围字段
 
-## 9. 推荐测试场景
+## 10. 推荐测试场景
 
 - 打开弹窗后能正确加载字段和模板。
 - 未勾选字段时，即时导出和保存模板都提示错误。
