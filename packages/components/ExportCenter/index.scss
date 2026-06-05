@@ -1,0 +1,120 @@
+.dk-export-center {
+  display: flex;
+  gap: 16px;
+  min-height: 600px;
+  box-sizing: border-box;
+
+  &__right {
+    flex: 1;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+  }
+
+  &__custom-tip,
+  &__default-tip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--el-text-color-regular);
+    font-size: 14px;
+    line-height: 22px;
+
+    .svg-icon {
+      flex: none;
+    }
+  }
+
+  &__custom-tip {
+    margin-bottom: 12px;
+  }
+
+  &__default-tip {
+    justify-content: flex-end;
+    margin-top: 0;
+    margin-left: auto;
+  }
+
+  &__action-bar {
+    margin-bottom: 16px;
+  }
+
+  &__export-button {
+    display: flex;
+    align-items: center;
+  }
+
+  &__template-save {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  &__template-name {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__template-save-button {
+    height: 32px;
+  }
+}
+
+.dk-export-center-field {
+  width: 446px;
+  flex: none;
+
+  &__title {
+    margin-bottom: 12px;
+    color: var(--el-text-color-primary);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  &__table-wrap {
+    position: relative;
+  }
+
+  &__table {
+    width: 100%;
+  }
+
+  &__back-top {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    color: #fff;
+    background-color: var(--el-color-primary);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: var(--el-color-primary-light-3);
+    }
+  }
+}
+
+.dk-export-center-template {
+  flex: 1;
+  &__name-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  &__name-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

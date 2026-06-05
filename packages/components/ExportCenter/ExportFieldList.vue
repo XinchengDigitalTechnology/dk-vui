@@ -1,12 +1,12 @@
 <template>
-  <div class="left flex-1 mr-5">
-    <div class="font-medium text-black">字段列表</div>
-    <div style="width: 432px" class="relative">
-      <el-table :data="fields" row-key="field_key" height="600" style="width: 100%" highlight-current-row border ref="tableRef" @selection-change="handleSelectionChange">
+  <div class="dk-export-center-field">
+    <div class="dk-export-center-field__title">字段列表</div>
+    <div class="dk-export-center-field__table-wrap">
+      <el-table :data="fields" row-key="field_key" height="600" class="dk-export-center-field__table" highlight-current-row border ref="tableRef" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="50" reserve-selection />
         <el-table-column type="index" label="序号" width="60" />
         <el-table-column prop="field_name" label="字段" />
-        <el-table-column prop="operation" label="排序" width="120">
+        <el-table-column prop="operation" label="排序" width="130">
           <template #default="scope">
             <el-link type="primary" :underline="false" @click="moveField(scope.$index, -1)">上移</el-link>
             <el-divider direction="vertical" />
@@ -15,11 +15,7 @@
         </el-table-column>
       </el-table>
 
-      <div
-        class="dk-iconfont icon-ArrowUp bg-[var(--base-primary-dark-bg)] w-[22px] h-[22px] text-center text-[var(--base-color)] pt-[2px] absolute right-[6px] bottom-[16px]"
-        style="border-radius: 50px; z-index: 999"
-        @click="setScrollTop(0)"
-      ></div>
+      <div class="dk-iconfont icon-ArrowUp dk-export-center-field__back-top" @click="setScrollTop(0)"></div>
     </div>
   </div>
 </template>

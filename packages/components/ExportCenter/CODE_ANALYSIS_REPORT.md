@@ -20,44 +20,44 @@
 
 ## 2. 文件职责
 
-| 文件 | 职责 |
-| --- | --- |
-| `index.vue` | 组件入口，组织弹窗 UI、字段列表、模板列表、定时导出弹窗，并连接两个 composable。 |
-| `useExportCenter.js` | 管理弹窗基础状态、配置加载、字段选择、即时导出、关闭清理、外部导出。 |
-| `useExportTemplate.js` | 管理模板选择、模板保存、模板更新、模板导出、模板删除、打开定时导出。 |
-| `ExportFieldList.vue` | 左侧字段表格，负责字段勾选、字段上下移动、暴露表格选择相关方法。 |
-| `ExportTemplateList.vue` | 右侧模板表格，负责展示模板名称、保存入口、导出、定时导出、删除入口。 |
-| `api.js` | 封装导出配置、导出记录、模板增删改查等接口。 |
-| `../ScheduledExport/index.vue` | 定时导出弹窗，`ExportCenter` 通过 ref 调用其 `open` 方法。 |
+| 文件                           | 职责                                                                             |
+| ------------------------------ | -------------------------------------------------------------------------------- |
+| `index.vue`                    | 组件入口，组织弹窗 UI、字段列表、模板列表、定时导出弹窗，并连接两个 composable。 |
+| `useExportCenter.js`           | 管理弹窗基础状态、配置加载、字段选择、即时导出、关闭清理、外部导出。             |
+| `useExportTemplate.js`         | 管理模板选择、模板保存、模板更新、模板导出、模板删除、打开定时导出。             |
+| `ExportFieldList.vue`          | 左侧字段表格，负责字段勾选、字段上下移动、暴露表格选择相关方法。                 |
+| `ExportTemplateList.vue`       | 右侧模板表格，负责展示模板名称、保存入口、导出、定时导出、删除入口。             |
+| `api.js`                       | 封装导出配置、导出记录、模板增删改查等接口。                                     |
+| `../ScheduledExport/index.vue` | 定时导出弹窗，`ExportCenter` 通过 ref 调用其 `open` 方法。                       |
 
 ## 3. 核心数据模型
 
 ### Props
 
-| Prop | 类型 | 默认值 | 说明 |
-| --- | --- | --- | --- |
-| `schedule` | `Boolean` | `false` | 是否展示模板行上的“定时导出”入口。 |
-| `scheduleOption` | `Array` | `[]` | 透传给 `ScheduledExport` 的导出范围配置。 |
-| `home_system` | `Number` | `undefined` | 查询导出配置时使用的系统标识；未传时取全局配置。 |
-| `tag_name` | `String` | `""` | 当前业务模块标识，加载导出配置时必填。 |
-| `titleAppend` | `String` | `""` | 导出标题后缀。 |
-| `hasPermi` | `String` | `""` | 传给 `v-hasPermi` 的权限码。 |
-| `getFormData` | `Function` | `() => {}` | 每次导出、保存模板或打开定时导出时获取当前页面查询条件。 |
+| Prop             | 类型       | 默认值      | 说明                                                     |
+| ---------------- | ---------- | ----------- | -------------------------------------------------------- |
+| `schedule`       | `Boolean`  | `false`     | 是否展示模板行上的“定时导出”入口。                       |
+| `scheduleOption` | `Array`    | `[]`        | 透传给 `ScheduledExport` 的导出范围配置。                |
+| `home_system`    | `Number`   | `undefined` | 查询导出配置时使用的系统标识；未传时取全局配置。         |
+| `tag_name`       | `String`   | `""`        | 当前业务模块标识，加载导出配置时必填。                   |
+| `titleAppend`    | `String`   | `""`        | 导出标题后缀。                                           |
+| `hasPermi`       | `String`   | `""`        | 传给 `v-hasPermi` 的权限码。                             |
+| `getFormData`    | `Function` | `() => {}`  | 每次导出、保存模板或打开定时导出时获取当前页面查询条件。 |
 
 ### 内部状态
 
-| 状态 | 来源 | 说明 |
-| --- | --- | --- |
-| `visible` | `useExportCenter` | 控制导出中心弹窗显示。 |
-| `loading` | `useExportCenter` | 即时导出按钮 loading 和防重复提交状态。 |
-| `form.config_id` | 接口 `/export_config/one` | 当前导出配置 ID。 |
-| `form.config_name` | 接口 `/export_config/one` | 当前导出配置名称，用于默认导出标题。 |
-| `exportFields` | 接口 `/export_config/one` | 左侧字段列表，字段对象至少需要包含 `field_key`、`field_name`。 |
-| `multipleSelection` | `ExportFieldList` 事件 | 当前勾选的字段对象列表。 |
-| `exportName` | 输入框 | 新增导出模板名称。 |
-| `templates` | 接口 `/export_config/one` | 右侧模板列表。 |
-| `handleTemplateRow` | 模板选择和字段变更 | 记录当前选中模板行以及字段是否被改动。 |
-| `userId` | `window.userInfo.user.user_id` | 用于判断模板删除权限。 |
+| 状态                | 来源                           | 说明                                                           |
+| ------------------- | ------------------------------ | -------------------------------------------------------------- |
+| `visible`           | `useExportCenter`              | 控制导出中心弹窗显示。                                         |
+| `loading`           | `useExportCenter`              | 即时导出按钮 loading 和防重复提交状态。                        |
+| `form.config_id`    | 接口 `/export_config/one`      | 当前导出配置 ID。                                              |
+| `form.config_name`  | 接口 `/export_config/one`      | 当前导出配置名称，用于默认导出标题。                           |
+| `exportFields`      | 接口 `/export_config/one`      | 左侧字段列表，字段对象至少需要包含 `field_key`、`field_name`。 |
+| `multipleSelection` | `ExportFieldList` 事件         | 当前勾选的字段对象列表。                                       |
+| `exportName`        | 输入框                         | 新增导出模板名称。                                             |
+| `templates`         | 接口 `/export_config/one`      | 右侧模板列表。                                                 |
+| `handleTemplateRow` | 模板选择和字段变更             | 记录当前选中模板行以及字段是否被改动。                         |
+| `userId`            | `window.userInfo.user.user_id` | 用于判断模板删除权限。                                         |
 
 ## 4. 主要业务流程
 
@@ -178,7 +178,9 @@ scheduledExportRef.value?.open({ ...row, condition: getLatestCondition() })
 如果父组件传入 `#importBtn` 插槽，默认导出按钮不会渲染，插槽会收到：
 
 ```js
-{ outerExport }
+{
+  outerExport
+}
 ```
 
 `outerExport(module, moduleName, type = "")` 的行为：
@@ -191,28 +193,28 @@ scheduledExportRef.value?.open({ ...row, condition: getLatestCondition() })
 
 ## 5. 接口清单
 
-| 方法 | HTTP | URL | 用途 |
-| --- | --- | --- | --- |
-| `drop_down(id)` | `GET` | `/export_tpl/:id` | 获取模板枚举数据；当前 `ExportCenter` 未直接使用。 |
-| `export_cron(data)` | `POST` | `/export_cron` | 新增定时导出任务；当前 `ExportCenter` 未直接使用。 |
-| `exportRord(data)` | `POST` | `/export_record` | 新增导出记录。 |
-| `exporttpl(data)` | `POST` | `/export_tpl` | 新增导出模板。 |
-| `exportTemplateUpdate(data)` | `PUT` | `/export_tpl/:id` | 编辑导出模板。 |
-| `exportTemplateOne(params)` | `GET` | `/export_config/one` | 获取指定模块的导出配置、字段和模板。 |
-| `exportTemplateDelete(id)` | `DELETE` | `/export_tpl/:id` | 删除导出模板。 |
+| 方法                         | HTTP     | URL                  | 用途                                               |
+| ---------------------------- | -------- | -------------------- | -------------------------------------------------- |
+| `drop_down(id)`              | `GET`    | `/export_tpl/:id`    | 获取模板枚举数据；当前 `ExportCenter` 未直接使用。 |
+| `export_cron(data)`          | `POST`   | `/export_cron`       | 新增定时导出任务；当前 `ExportCenter` 未直接使用。 |
+| `exportRord(data)`           | `POST`   | `/export_record`     | 新增导出记录。                                     |
+| `exporttpl(data)`            | `POST`   | `/export_tpl`        | 新增导出模板。                                     |
+| `exportTemplateUpdate(data)` | `PUT`    | `/export_tpl/:id`    | 编辑导出模板。                                     |
+| `exportTemplateOne(params)`  | `GET`    | `/export_config/one` | 获取指定模块的导出配置、字段和模板。               |
+| `exportTemplateDelete(id)`   | `DELETE` | `/export_tpl/:id`    | 删除导出模板。                                     |
 
 ## 6. 事件和插槽
 
 ### Events
 
-| 事件 | 触发时机 |
-| --- | --- |
+| 事件       | 触发时机                           |
+| ---------- | ---------------------------------- |
 | `callback` | 即时导出成功、模板导出成功后触发。 |
 
 ### Slots
 
-| 插槽 | Slot Props | 说明 |
-| --- | --- | --- |
+| 插槽        | Slot Props        | 说明                                                               |
+| ----------- | ----------------- | ------------------------------------------------------------------ |
 | `importBtn` | `{ outerExport }` | 外部接管默认导出按钮区域。传入后默认导出按钮和默认提示布局被替换。 |
 
 ## 7. 关键设计点
@@ -225,15 +227,15 @@ scheduledExportRef.value?.open({ ...row, condition: getLatestCondition() })
 
 ## 8. 风险点和注意事项
 
-| 风险点 | 说明 | 建议 |
-| --- | --- | --- |
-| `tag_name` 必填 | 缺少时无法拉取导出配置。 | 接入时必须传业务模块唯一标识。 |
-| `getFormData` 默认返回 `undefined` | 当前代码用 `props.getFormData?.() || {}` 兜底。 | 父组件建议始终返回普通对象。 |
+| 风险点                                      | 说明                                             | 建议                                       |
+| ------------------------------------------- | ------------------------------------------------ | ------------------------------------------ | ---------- | ---------------------------- |
+| `tag_name` 必填                             | 缺少时无法拉取导出配置。                         | 接入时必须传业务模块唯一标识。             |
+| `getFormData` 默认返回 `undefined`          | 当前代码用 `props.getFormData?.()                |                                            | {}` 兜底。 | 父组件建议始终返回普通对象。 |
 | `outerExport` 非 `all` 模式依赖当前勾选字段 | 如果外部按钮在用户未勾选时调用，会传空字段数组。 | 外部使用时根据业务决定是否先校验勾选字段。 |
-| 模板导出传 `fields: []` | 依赖后端通过 `tpl_id` 找模板字段。 | 后端接口必须支持该协议。 |
-| 删除权限只控制前端展示 | 只对本人创建模板展示删除按钮。 | 后端仍需校验删除权限。 |
-| `window.userInfo` 等全局对象强依赖 | 组件不是纯独立组件。 | 仅在 ERP 宿主环境内使用。 |
-| `api.js` 中 `exportRord` 命名疑似拼写错误 | 实际使用稳定，但语义上应为 `exportRecord`。 | 如需改名，应同时兼容所有调用处。 |
+| 模板导出传 `fields: []`                     | 依赖后端通过 `tpl_id` 找模板字段。               | 后端接口必须支持该协议。                   |
+| 删除权限只控制前端展示                      | 只对本人创建模板展示删除按钮。                   | 后端仍需校验删除权限。                     |
+| `window.userInfo` 等全局对象强依赖          | 组件不是纯独立组件。                             | 仅在 ERP 宿主环境内使用。                  |
+| `api.js` 中 `exportRord` 命名疑似拼写错误   | 实际使用稳定，但语义上应为 `exportRecord`。      | 如需改名，应同时兼容所有调用处。           |
 
 ## 9. 可维护性建议
 
@@ -244,4 +246,3 @@ scheduledExportRef.value?.open({ ...row, condition: getLatestCondition() })
   - `selectField()` 的勾选回显和字段重排。
   - `handleImport()` 的参数构造和防重复提交。
   - `saveTemplate()` 的空名称、重名、空字段校验。
-
