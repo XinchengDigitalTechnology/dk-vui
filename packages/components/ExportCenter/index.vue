@@ -4,7 +4,7 @@
       导出
   </VButton>
 
-  <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" :before-close="handleBeforeClose" :z-index="2000">
+  <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" :before-close="handleBeforeClose" append-to-body>
     <div class="dk-export-center">
       <ExportFieldList ref="tableRef" :fields="exportFields" @selection-change="handleSelectionChange" @fields-change="handleFieldsChange" />
 
