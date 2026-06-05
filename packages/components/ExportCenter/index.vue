@@ -4,7 +4,7 @@
       导出
   </VButton>
 
-  <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" :before-close="handleBeforeClose">
+  <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" :before-close="handleClose" :destroy-on-close="true">
     <div class="dk-export-center">
       <ExportFieldList ref="tableRef" :fields="exportFields" @selection-change="handleSelectionChange" @fields-change="handleFieldsChange" />
 
@@ -50,11 +50,11 @@
       </div>
     </div>
     <template #footer>
-      <el-button @click="handleBeforeClose">关闭</el-button>
+      <el-button @click="handleClose">关闭</el-button>
     </template>
   </el-dialog>
 
-  <ScheduledExport ref="scheduledExportRef" :schedule-option="scheduleOption" />
+  <ScheduledExport v-if="schedule" ref="scheduledExportRef" :schedule-option="scheduleOption" />
 </template>
 <script setup name="ExportCenter">
 import { computed, useSlots } from "vue"
@@ -110,7 +110,7 @@ const {
   outerExport,
 } = useExportCenter(props, emit)
 
-const { templateExportLoading, selectField, saveTemplate, updateTemplate, exportRow, exportDelete, openScheduledExport } = useExportTemplate({
+const { templateExportLoading, selectField, saveTemplate, updateTemplate, exportRow, cancelPendingTemplateExport, exportDelete, openScheduledExport } = useExportTemplate({
   tableRef,
   scheduledExportRef,
   exportFields,
@@ -127,6 +127,11 @@ const { templateExportLoading, selectField, saveTemplate, updateTemplate, export
   getTemplate,
   emit,
 })
+
+const handleClose = (done) => {
+  cancelPendingTemplateExport()
+  handleBeforeClose(done)
+}
 
 // 跳转 个人中心
 const navPersonal = () => {

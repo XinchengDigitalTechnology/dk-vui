@@ -9,17 +9,23 @@ const EXPORT_DEBOUNCE_DELAY = 500
  * 连续触发时会取消上一次未执行的调用，只在 delay 后执行最后一次。
  * @param {Function} fn - 需要防抖的异步方法
  * @param {number} delay - 防抖等待时间
- * @returns {Function}
+ * @returns {{ run: Function, cancel: Function }}
  */
 const createDebouncedAsync = (fn, delay = EXPORT_DEBOUNCE_DELAY) => {
   let timer = null
   let resolvePending = null
 
-  return (...args) => {
-    if (timer) {
-      clearTimeout(timer)
-      resolvePending?.()
-    }
+  const cancel = () => {
+    if (!timer) return
+
+    clearTimeout(timer)
+    timer = null
+    resolvePending?.()
+    resolvePending = null
+  }
+
+  const run = (...args) => {
+    cancel()
 
     return new Promise((resolve, reject) => {
       resolvePending = resolve
@@ -35,6 +41,8 @@ const createDebouncedAsync = (fn, delay = EXPORT_DEBOUNCE_DELAY) => {
       }, delay)
     })
   }
+
+  return { run, cancel }
 }
 
 export const useExportTemplate = ({
@@ -158,7 +166,12 @@ export const useExportTemplate = ({
     if (templateExportLoading.value) return Promise.resolve()
 
     templateExportLoading.value = true
-    return debouncedExportRow(row)
+    return debouncedExportRow.run(row)
+  }
+
+  const cancelPendingTemplateExport = () => {
+    debouncedExportRow.cancel()
+    templateExportLoading.value = false
   }
 
   const exportDelete = async (row) => {
@@ -189,6 +202,7 @@ export const useExportTemplate = ({
     saveTemplate,
     updateTemplate,
     exportRow,
+    cancelPendingTemplateExport,
     exportDelete,
     openScheduledExport,
   }

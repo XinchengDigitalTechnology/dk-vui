@@ -51,6 +51,7 @@ export const useExportCenter = (props, emit) => {
   const visible = ref(false)
   const tableRef = ref()
   const scheduledExportRef = ref()
+  let templateLoadVersion = 0
 
   const form = ref({
     config_id: null,
@@ -208,8 +209,12 @@ export const useExportCenter = (props, emit) => {
    * @returns {Promise<void>}
    */
   const getTemplate = async () => {
+    const loadVersion = ++templateLoadVersion
+
     try {
       const res = await getTemplateConfig(props.tag_name)
+      if (!visible.value || loadVersion !== templateLoadVersion) return
+
       const { config_id = null, config_name = null, templates: tpls = [], export_field: fields = [] } = res?.data || {}
 
       form.value.config_id = config_id
@@ -298,6 +303,7 @@ export const useExportCenter = (props, emit) => {
    * 关闭弹窗时释放字段、模板、选择状态等大对象引用，避免下次打开复用旧数据。
    */
   const clearExportCenterData = () => {
+    templateLoadVersion += 1
     importDebounce.cancel()
     outerExportDebounce.cancel()
     tableRef.value?.clearSelection()
