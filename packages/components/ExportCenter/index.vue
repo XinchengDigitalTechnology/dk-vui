@@ -150,7 +150,7 @@ const validateSelectedFields = () => {
   return false
 }
 
-const buildExportTitle = (name = "") => `${name || ""}${currentUser.value.realname || ""}`
+const buildExportTitle = (name = "") => `${name || ""}${currentUser.value.realname || ""}${props.titleAppend}`
 
 const buildExportRecordParams = (extra = {}) => {
   return {

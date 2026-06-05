@@ -69,7 +69,7 @@ const props = defineProps({
   schedule: { type: Boolean, default: false },
   // 作为定时导出弹窗配置透传给 ScheduledExport 组件
   scheduleOption: { type: Array, default: () => [] },
-  home_system: { type: Number, default: 3 },
+  home_system: { type: Number, default: 0 },
   tag_name: { type: String, default: "" }, // 模块名称
   titleAppend: { type: String, default: "" }, // 导出标题后缀
   hasPermi: { type: String, default: "" }, // 权限
@@ -94,7 +94,6 @@ const {
   getLatestCondition,
   getTemplate,
   isEditingTemplate,
-  resetTemplateEditState,
   validateSelectedFields,
   buildExportTitle,
   buildExportRecordParams,
@@ -121,18 +120,18 @@ const { selectField, saveTemplate, updateTemplate, exportRow, exportDelete, open
   getSortedSelectedFieldKeys,
   buildExportTitle,
   buildExportRecordParams,
-  resetTemplateEditState,
   getTemplate,
   emit,
 })
 
 // 跳转 个人中心
 const navPersonal = () => {
-  // action.setGlobalState({
-  //   changeMicoTabsPath: {
-  //     path: "/user/profile",
-  //     type: "push",
-  //   },
-  // })
+  // GlobalConfig.derived?.home_system
+  GlobalConfig?.action.setGlobalState({
+    changeMicoTabsPath: {
+      path: "/user/profile",
+      type: "push",
+    },
+  })
 }
 </script>

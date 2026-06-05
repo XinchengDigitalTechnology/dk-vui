@@ -15,7 +15,6 @@ export const useExportTemplate = ({
   getSortedSelectedFieldKeys,
   buildExportTitle,
   buildExportRecordParams,
-  resetTemplateEditState,
   getTemplate,
   emit,
 }) => {
@@ -87,7 +86,8 @@ export const useExportTemplate = ({
     try {
       const res = await api.exportTemplateUpdate(params)
       ElMessage.success(res.data.message)
-      resetTemplateEditState()
+      // 保存后继续保留当前模板编辑上下文，后续字段变化时还能再次展示“保存”入口。
+      handleTemplateRow.value.change = false
       await getTemplate()
     } catch (e) {
       console.error("[ExportCenter] 更新模板失败:", e)
