@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="templates" class="dk-export-center-template" highlight-current-row border>
+  <el-table :data="templates" class="dk-export-center-template" highlight-current-row border v-loading="loading">
     <el-table-column prop="name" label="名称">
       <template #default="{ row, $index }">
         <div class="dk-export-center-template__name-row">
@@ -13,7 +13,7 @@
     <el-table-column prop="operation" label="操作" :width="schedule ? 200 : 120">
       <template #default="{ row }">
         <div class="dk-export-center-template__operation">
-          <el-button type="primary" link :loading="loading" :disabled="loading" @click="$emit('export', row)">导出</el-button>
+          <el-button type="primary" link :disabled="loading" @click="$emit('export', row)">导出</el-button>
           <span v-if="schedule">
             <el-divider direction="vertical" />
             <el-button type="primary" link @click="$emit('schedule', row)">定时导出</el-button>

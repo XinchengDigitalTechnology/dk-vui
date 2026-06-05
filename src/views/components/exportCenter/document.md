@@ -9,6 +9,21 @@
 />
 ```
 
+## 弹窗模式
+
+默认 `type` 为 `button`，组件会渲染“导出”按钮。设置为 `dialog` 后只保留导出弹窗，需要通过组件实例调用 `open()` 打开。
+
+```html
+<el-button type="primary" @click="exportCenterRef.open()">打开导出中心</el-button>
+
+<VExportCenter
+  ref="exportCenterRef"
+  type="dialog"
+  tag_name="demo_export_center"
+  :get-form-data="getFormData"
+/>
+```
+
 ## 开启定时导出
 
 设置 `schedule` 后，模板列表会展示“定时导出”入口。
@@ -53,6 +68,7 @@
 
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
+| `type` | `String` | `"button"` | 展示模式。`button` 渲染默认导出按钮；`dialog` 不渲染入口按钮，需要通过组件实例 `open()` 打开弹窗。 |
 | `tag_name` | `String` | `""` | 模块名称，必传。用于请求当前模块的导出配置。 |
 | `getFormData` | `Function` | `() => {}` | 获取当前页面筛选条件。导出、保存模板、定时导出时都会重新调用。 |
 | `hasPermi` | `String` | `""` | 权限标识，会传给入口按钮的 `v-hasPermi`。 |

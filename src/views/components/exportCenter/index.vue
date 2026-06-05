@@ -20,6 +20,7 @@ DKVui.setup({
 - \`action.setGlobalState\`：导出完成提示中的“个人中心”链接会调用它，并传入 \`{ changeMicoTabsPath: { path: "/user/profile", type: "push" } }\`。
 `)
 const content = ref(doc)
+const dialogExportCenterRef = ref()
 
 const { form, scheduleOption, getFormData, handleExportCallback } = useExportCenterDemo()
 </script>
@@ -46,6 +47,10 @@ const { form, scheduleOption, getFormData, handleExportCallback } = useExportCen
 
       <h2>基础用法</h2>
       <VExportCenter tag_name="demo_export_center" title-append="示例导出" :get-form-data="getFormData" @callback="handleExportCallback" />
+
+      <h2>弹窗模式</h2>
+      <el-button type="primary" @click="dialogExportCenterRef.open()">打开导出中心</el-button>
+      <VExportCenter ref="dialogExportCenterRef" type="dialog" tag_name="demo_export_center" :get-form-data="getFormData" />
 
       <h2>开启定时导出</h2>
       <VExportCenter tag_name="demo_export_center" :schedule="true" :schedule-option="scheduleOption" :get-form-data="getFormData" />

@@ -33,6 +33,8 @@ DKVui.setup({
 
 ## 2. 最小接入示例
 
+按钮模式会渲染默认“导出”按钮：
+
 ```vue
 <template>
   <ExportCenter tag_name="order_list" title-append="订单导出" has-permi="order:export" :home_system="null" :get-form-data="getExportCondition" @callback="handleExportSuccess" />
@@ -56,10 +58,33 @@ const handleExportSuccess = () => {
 </script>
 ```
 
+弹窗模式不会渲染默认入口，需要通过组件实例调用 `open()`：
+
+```vue
+<template>
+  <el-button type="primary" @click="exportCenterRef.open()">打开导出中心</el-button>
+  <ExportCenter ref="exportCenterRef" type="dialog" tag_name="order_list" :get-form-data="getExportCondition" />
+</template>
+
+<script setup>
+import ExportCenter from "@/packages/components/ExportCenter/index.vue"
+
+const exportCenterRef = ref()
+
+const getExportCondition = () => {
+  return {
+    keyword: searchForm.keyword,
+    status: searchForm.status,
+  }
+}
+</script>
+```
+
 ## 3. Props 使用规则
 
 | Prop             | 必填                 | 建议写法              | AI 接入说明                                               |
 | ---------------- | -------------------- | --------------------- | --------------------------------------------------------- |
+| `type`           | 否                   | `"button"` / `"dialog"` | 默认 `"button"` 渲染组件内置导出按钮；传 `"dialog"` 时不渲染入口，需要父组件通过 `ref.open()` 打开弹窗。 |
 | `tag_name`       | 是                   | 业务模块唯一标识      | 缺少时组件会提示“缺少必要参数”，不会请求配置。            |
 | `getFormData`    | 强烈建议             | 返回当前查询条件对象  | 组件每次操作都会重新调用，不要返回缓存对象。              |
 | `hasPermi`       | 按业务               | 权限码字符串          | 会传给入口按钮的 `v-hasPermi`。                           |
