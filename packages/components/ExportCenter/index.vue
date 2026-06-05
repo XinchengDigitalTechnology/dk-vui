@@ -9,16 +9,16 @@
       <ExportFieldList ref="tableRef" :fields="exportFields" @selection-change="handleSelectionChange" @fields-change="handleFieldsChange" />
 
       <div class="dk-export-center__right">
-        <!-- 外部传入 importBtn 插槽时，提示信息放到按钮区上方，避免和自定义按钮布局挤在一起。 -->
-        <div class="dk-export-center__custom-tip" v-if="hasImportBtnSlot">
+        <!-- 外部传入 exportButton 插槽时，提示信息放到按钮区上方，避免和自定义按钮布局挤在一起。 -->
+        <div class="dk-export-center__custom-tip" v-if="hasExportButtonSlot">
           <el-tag type="danger">提示:</el-tag>
           <!-- <div class="dk-iconfont icon-Warning"></div> -->
           导出结果在 <el-link type="primary" :underline="false" @click="navPersonal">个人中心</el-link> 查看
         </div>
 
         <div class="dk-export-center__action-bar" v-loading="loading">
-          <!-- 支持外部接管导出按钮；未提供 importBtn 插槽时使用默认导出按钮。 -->
-          <slot v-if="hasImportBtnSlot" name="importBtn" v-bind="{ outerExport, loading }"></slot>
+          <!-- 支持外部接管导出按钮；未提供 exportButton 插槽时使用默认导出按钮。 -->
+          <slot v-if="hasExportButtonSlot" name="exportButton" v-bind="{ outerExport }"></slot>
           <template v-else>
             <div class="dk-export-center__export-button">
               <el-button type="primary" @click="handleImport" :disabled="loading">导出</el-button>
@@ -80,7 +80,7 @@ const props = defineProps({
 })
 
 const slots = useSlots()
-const hasImportBtnSlot = computed(() => Boolean(slots.importBtn))
+const hasExportButtonSlot = computed(() => Boolean(slots.exportButton))
 
 const {
   loading,

@@ -35,9 +35,9 @@ const { form, scheduleOption, getFormData, handleExportCallback } = useExportCen
 
       <h2>自定义导出按钮</h2>
       <VExportCenter tag_name="demo_export_center" :get-form-data="getFormData">
-        <template #importBtn="{ outerExport, loading }">
-          <el-button type="primary" :loading="loading" @click="outerExport('demo_export_center', '示例订单', 'all')"> 导出全部字段 </el-button>
-          <el-button :loading="loading" @click="outerExport('demo_export_center', '示例订单')"> 导出已选字段 </el-button>
+        <template #exportButton="{ outerExport }">
+          <el-button type="primary" @click="outerExport('demo_export_center', '示例订单', 'all')"> 导出全部字段 </el-button>
+          <el-button @click="outerExport('demo_export_center', '示例订单')"> 导出已选字段 </el-button>
         </template>
       </VExportCenter>
 

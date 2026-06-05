@@ -8,7 +8,7 @@
 - 支持用户勾选导出字段、调整字段顺序，并发起即时导出。
 - 支持保存导出模板、选择模板回显字段、更新模板字段、删除本人创建的模板。
 - 可选接入定时导出入口，将模板和当前页面查询条件传给 `ScheduledExport`。
-- 可通过 `importBtn` 插槽让外部接管导出按钮区域，并暴露 `outerExport` 供外部按钮调用。
+- 可通过 `exportButton` 插槽让外部接管导出按钮区域，并暴露 `outerExport` 供外部按钮调用。
 
 该组件依赖 ERP 运行时环境中的全局能力：
 
@@ -175,7 +175,7 @@ scheduledExportRef.value?.open({ ...row, condition: getLatestCondition() })
 
 ### 4.9 外部导出插槽
 
-如果父组件传入 `#importBtn` 插槽，默认导出按钮不会渲染，插槽会收到：
+如果父组件传入 `#exportButton` 插槽，默认导出按钮不会渲染，插槽会收到：
 
 ```js
 {
@@ -215,7 +215,7 @@ scheduledExportRef.value?.open({ ...row, condition: getLatestCondition() })
 
 | 插槽        | Slot Props        | 说明                                                               |
 | ----------- | ----------------- | ------------------------------------------------------------------ |
-| `importBtn` | `{ outerExport }` | 外部接管默认导出按钮区域。传入后默认导出按钮和默认提示布局被替换。 |
+| `exportButton` | `{ outerExport }` | 外部接管默认导出按钮区域。传入后默认导出按钮和默认提示布局被替换。 |
 
 ## 7. 关键设计点
 

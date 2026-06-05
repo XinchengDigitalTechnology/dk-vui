@@ -198,11 +198,12 @@ const getExportCondition = () => ({
 
 ## 5. 自定义导出按钮
 
-如果业务需要多个导出按钮，或需要外部控制按钮布局，可以使用 `importBtn` 插槽。
+如果业务需要多个导出按钮，或需要外部控制按钮布局，可以使用 `exportButton` 插槽。
+插槽只暴露 `outerExport` 方法；导出中的 loading 和防重复提交由组件内部管理，不再作为 slot prop 透出。
 
 ```vue
 <ExportCenter tag_name="order_list" :get-form-data="getExportCondition">
-  <template #importBtn="{ outerExport }">
+  <template #exportButton="{ outerExport }">
     <el-button type="primary" @click="outerExport('order_list', '订单列表')">
       导出已选字段
     </el-button>
@@ -225,6 +226,7 @@ const getExportCondition = () => ({
 注意：
 
 - 使用插槽后，默认导出按钮不会渲染。
+- `outerExport` 返回 `Promise`，内部会处理 loading 状态和重复点击拦截。
 - 非 `"all"` 模式不会自动校验是否勾选字段，外部按钮如有需要应自行限制。
 
 ## 6. 常见修改入口
@@ -315,4 +317,4 @@ const getExportCondition = () => ({
 - 选择模板后修改字段，该模板行出现“保存”入口。
 - 本人创建的模板显示删除按钮，非本人模板不显示。
 - `schedule = true` 时显示“定时导出”，否则不显示。
-- 使用 `importBtn` 插槽后默认导出按钮不显示，`outerExport(..., "all")` 会导出所有字段。
+- 使用 `exportButton` 插槽后默认导出按钮不显示，`outerExport(..., "all")` 会导出所有字段。

@@ -356,7 +356,7 @@ export const useExportCenter = (props, emit) => {
   }
 
   /**
-   * 给 importBtn 插槽使用的外部导出方法。
+   * 给 exportButton 插槽使用的外部导出方法。
    * 方法带 500ms 防抖，连续点击只执行最后一次导出。
    * 支持导出指定模块的全部字段，或使用当前弹窗中已勾选的字段。
    * @param {string} module - 要导出的模块标识
