@@ -43,6 +43,15 @@ export const useExportCenterDemo = () => {
     ElMessage.success("导出回调已触发")
   }
 
+  const restriction = async () => {
+    if (form.status === "cancelled") {
+      ElMessage.warning("已取消订单不允许打开导出中心")
+      return false
+    }
+
+    return true
+  }
+
   const getTemplateResponse = () => ({
     code: 200,
     data: {
@@ -181,6 +190,7 @@ export const useExportCenterDemo = () => {
     form,
     scheduleOption,
     getFormData,
+    restriction,
     handleExportCallback,
   }
 }

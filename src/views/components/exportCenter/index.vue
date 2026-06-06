@@ -22,7 +22,7 @@ DKVui.setup({
 const content = ref(doc)
 const dialogExportCenterRef = ref()
 
-const { form, scheduleOption, getFormData, handleExportCallback } = useExportCenterDemo()
+const { form, scheduleOption, getFormData, restriction, handleExportCallback } = useExportCenterDemo()
 </script>
 
 <template>
@@ -46,7 +46,7 @@ const { form, scheduleOption, getFormData, handleExportCallback } = useExportCen
       </el-form>
 
       <h2>基础用法</h2>
-      <VExportCenter tag_name="demo_export_center" title-append="示例导出" :get-form-data="getFormData" @callback="handleExportCallback" />
+      <VExportCenter tag_name="demo_export_center" title-append="示例导出" :get-form-data="getFormData" :restriction="restriction" @callback="handleExportCallback" />
 
       <h2>弹窗模式</h2>
       <el-button type="primary" @click="dialogExportCenterRef.open()">打开导出中心</el-button>

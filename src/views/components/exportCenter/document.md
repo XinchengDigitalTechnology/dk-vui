@@ -5,8 +5,22 @@
   tag_name="demo_export_center"
   title-append="示例导出"
   :get-form-data="getFormData"
+  :restriction="restriction"
   @callback="handleExportCallback"
 />
+```
+
+`restriction` 会在打开弹窗前执行。未传时直接打开；返回 `true` 时继续打开；返回 `false` 时阻止打开。
+
+```js
+const restriction = async () => {
+  if (form.status === "cancelled") {
+    ElMessage.warning("已取消订单不允许打开导出中心")
+    return false
+  }
+
+  return true
+}
 ```
 
 ## 弹窗模式
@@ -72,6 +86,7 @@
 | `type` | `String` | `"button"` | 展示模式。`button` 渲染默认导出按钮；`dialog` 不渲染入口按钮，需要通过组件实例 `open()` 打开弹窗。 |
 | `tag_name` | `String` | `""` | 模块名称，必传。用于请求当前模块的导出配置。 |
 | `getFormData` | `Function` | `() => {}` | 获取当前页面筛选条件。导出、保存模板、定时导出时都会重新调用。 |
+| `restriction` | `Function` | - | 打开弹窗前的业务拦截方法。未传或返回 `true` 时打开，返回 `false` 时不打开，支持 `Promise<boolean>`。 |
 | `hasPermi` | `String` | `""` | 权限标识，会传给入口按钮的 `v-hasPermi`。 |
 | `home_system` | `Number` | `null` | 系统标识。未传或传 `null` 时使用 `GlobalConfig.derived.home_system`，再兜底为 0。 |
 | `titleAppend` | `String` | `""` | 导出标题后缀。最终标题格式为：名称 + 当前用户真实姓名 + titleAppend。 |

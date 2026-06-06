@@ -37,7 +37,7 @@ DKVui.setup({
 
 ```vue
 <template>
-  <ExportCenter tag_name="order_list" title-append="订单导出" has-permi="order:export" :home_system="null" :get-form-data="getExportCondition" @callback="handleExportSuccess" />
+  <ExportCenter tag_name="order_list" title-append="订单导出" has-permi="order:export" :home_system="null" :get-form-data="getExportCondition" :restriction="restriction" @callback="handleExportSuccess" />
 </template>
 
 <script setup>
@@ -50,6 +50,11 @@ const getExportCondition = () => {
     start_time: searchForm.dateRange?.[0],
     end_time: searchForm.dateRange?.[1],
   }
+}
+
+const restriction = async () => {
+  // 返回 false 时阻止打开导出中心；未传或返回 true 时继续打开。
+  return searchForm.status !== "cancelled"
 }
 
 const handleExportSuccess = () => {
@@ -87,6 +92,7 @@ const getExportCondition = () => {
 | `type`           | 否                   | `"button"` / `"dialog"` | 默认 `"button"` 渲染组件内置导出按钮；传 `"dialog"` 时不渲染入口，需要父组件通过 `ref.open()` 打开弹窗。 |
 | `tag_name`       | 是                   | 业务模块唯一标识      | 缺少时组件会提示“缺少必要参数”，不会请求配置。            |
 | `getFormData`    | 强烈建议             | 返回当前查询条件对象  | 组件每次操作都会重新调用，不要返回缓存对象。              |
+| `restriction`    | 按业务               | `() => true`          | 打开弹窗前的业务拦截方法；返回 `false` 时不打开，支持 Promise。 |
 | `hasPermi`       | 按业务               | 权限码字符串          | 会传给入口按钮的 `v-hasPermi`。                           |
 | `home_system`    | 按业务               | 数字系统 ID 或 `null` | 不传或传 `null` 时走 `GlobalConfig.derived.home_system`。 |
 | `titleAppend`    | 按业务               | 标题后缀              | 导出标题格式为：名称 + 当前用户真实姓名 + 后缀。          |
