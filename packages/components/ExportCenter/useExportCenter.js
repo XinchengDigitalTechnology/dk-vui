@@ -238,6 +238,10 @@ export const useExportCenter = (props, emit) => {
       return
     }
 
+    // 打开前给业务方一次拦截机会；未传或返回 true 时继续打开，返回 false 时阻止打开。
+    const canOpen = props.restriction ? await props.restriction() : true
+    if (canOpen === false) return
+
     visible.value = true
 
     try {

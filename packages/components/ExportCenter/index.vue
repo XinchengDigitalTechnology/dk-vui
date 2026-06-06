@@ -70,6 +70,7 @@ const emit = defineEmits(["callback"])
 const props = defineProps({
   type: { type: String, default: "button" }, // button: 按钮模式, dialog: 弹窗模式
   tag_name: { type: String, required: true }, // 模块名称
+  restriction: Function, // 导出限制，type Promise
   // 控制定时导出入口是否展示
   schedule: { type: Boolean, default: false },
   // 作为定时导出弹窗配置透传给 ScheduledExport 组件
