@@ -4,7 +4,16 @@
       导出
   </VButton>
 
-  <el-dialog v-model="visible" title="导出中心" width="950" draggable :close-on-click-modal="false" :close-on-press-escape="false" :before-close="handleClose" :destroy-on-close="true">
+  <el-dialog
+    v-model="visible"
+    :title="`导出中心${config_name ? ' - ' + config_name : ''}`"
+    width="950"
+    draggable
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :before-close="handleClose"
+    :destroy-on-close="true"
+  >
     <div class="dk-export-center">
       <ExportFieldList ref="tableRef" :fields="exportFields" @selection-change="handleSelectionChange" @fields-change="handleFieldsChange" />
 
@@ -69,6 +78,7 @@ import ScheduledExport from "../ScheduledExport/index.vue"
 const emit = defineEmits(["callback"])
 const props = defineProps({
   type: { type: String, default: "button" }, // button: 按钮模式, dialog: 弹窗模式
+  config_name: { type: String, default: "" }, // 配置名称
   tag_name: { type: String, required: true }, // 模块名称
   restriction: Function, // 导出限制，type Promise
   // 控制定时导出入口是否展示

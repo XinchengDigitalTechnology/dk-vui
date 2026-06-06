@@ -37,7 +37,7 @@ DKVui.setup({
 
 ```vue
 <template>
-  <ExportCenter tag_name="order_list" title-append="订单导出" has-permi="order:export" :home_system="null" :get-form-data="getExportCondition" :restriction="restriction" @callback="handleExportSuccess" />
+  <ExportCenter config_name="订单列表" tag_name="order_list" title-append="订单导出" has-permi="order:export" :home_system="null" :get-form-data="getExportCondition" :restriction="restriction" @callback="handleExportSuccess" />
 </template>
 
 <script setup>
@@ -68,7 +68,7 @@ const handleExportSuccess = () => {
 ```vue
 <template>
   <el-button type="primary" @click="exportCenterRef.open()">打开导出中心</el-button>
-  <ExportCenter ref="exportCenterRef" type="dialog" tag_name="order_list" :get-form-data="getExportCondition" />
+  <ExportCenter ref="exportCenterRef" type="dialog" config_name="订单列表" tag_name="order_list" :get-form-data="getExportCondition" />
 </template>
 
 <script setup>
@@ -90,6 +90,7 @@ const getExportCondition = () => {
 | Prop             | 必填                 | 建议写法              | AI 接入说明                                               |
 | ---------------- | -------------------- | --------------------- | --------------------------------------------------------- |
 | `type`           | 否                   | `"button"` / `"dialog"` | 默认 `"button"` 渲染组件内置导出按钮；传 `"dialog"` 时不渲染入口，需要父组件通过 `ref.open()` 打开弹窗。 |
+| `config_name`    | 按业务               | 业务配置名称          | 用于标识当前导出配置，建议和后端配置名称保持一致。        |
 | `tag_name`       | 是                   | 业务模块唯一标识      | 缺少时组件会提示“缺少必要参数”，不会请求配置。            |
 | `getFormData`    | 强烈建议             | 返回当前查询条件对象  | 组件每次操作都会重新调用，不要返回缓存对象。              |
 | `restriction`    | 按业务               | `() => true`          | 打开弹窗前的业务拦截方法；返回 `false` 时不打开，支持 Promise。 |

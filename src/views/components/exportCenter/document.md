@@ -2,6 +2,7 @@
 
 ```html
 <VExportCenter
+  config_name="示例订单"
   tag_name="demo_export_center"
   title-append="示例导出"
   :get-form-data="getFormData"
@@ -33,6 +34,7 @@ const restriction = async () => {
 <VExportCenter
   ref="exportCenterRef"
   type="dialog"
+  config_name="示例订单"
   tag_name="demo_export_center"
   :get-form-data="getFormData"
 />
@@ -45,6 +47,7 @@ const restriction = async () => {
 
 ```html
 <VExportCenter
+  config_name="示例订单"
   tag_name="demo_export_center"
   :schedule="true"
   :schedule-option="scheduleOption"
@@ -58,6 +61,7 @@ const restriction = async () => {
 
 ```html
 <VExportCenter
+  config_name="示例订单"
   tag_name="demo_export_center"
   :get-form-data="getFormData"
 >
@@ -84,6 +88,7 @@ const restriction = async () => {
 | 参数 | 类型 | 默认值 | 说明 |
 | --- | --- | --- | --- |
 | `type` | `String` | `"button"` | 展示模式。`button` 渲染默认导出按钮；`dialog` 不渲染入口按钮，需要通过组件实例 `open()` 打开弹窗。 |
+| `config_name` | `String` | `""` | 配置名称，用于标识当前导出配置。 |
 | `tag_name` | `String` | `""` | 模块名称，必传。用于请求当前模块的导出配置。 |
 | `getFormData` | `Function` | `() => {}` | 获取当前页面筛选条件。导出、保存模板、定时导出时都会重新调用。 |
 | `restriction` | `Function` | - | 打开弹窗前的业务拦截方法。未传或返回 `true` 时打开，返回 `false` 时不打开，支持 `Promise<boolean>`。 |
