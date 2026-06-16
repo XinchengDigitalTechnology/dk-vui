@@ -348,6 +348,7 @@ export const useExportCenter = (props, emit) => {
 
       const params = buildExportRecordParams({
         config_id: configData.config_id,
+        condition: getLatestCondition(),
         fields: type === "all" ? allFieldKeys : getSelectedFieldKeys(),
         title: buildExportTitle(moduleName),
         tag_name: module,
