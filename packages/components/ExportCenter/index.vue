@@ -1,5 +1,5 @@
 <template>
-  <VButton type="" @click="open" v-hasPermi="hasPermi ? [hasPermi] : []" v-if="type === 'button'">
+  <VButton :type="buttonType" @click="open" v-hasPermi="hasPermi ? [hasPermi] : []" v-if="type === 'button'">
     <div class="dk-iconfont icon-Upload"></div>
       导出
   </VButton>
@@ -78,6 +78,7 @@ import ScheduledExport from "../ScheduledExport/index.vue"
 const emit = defineEmits(["callback"])
 const props = defineProps({
   type: { type: String, default: "button" }, // button: 按钮模式, dialog: 弹窗模式
+  buttonType: { type: String, default: "" }, // 按钮类型
   config_name: { type: String, default: "" }, // 配置名称
   tag_name: { type: String, required: true }, // 模块名称
   restriction: Function, // 导出限制，type Promise
