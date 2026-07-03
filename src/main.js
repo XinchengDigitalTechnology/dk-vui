@@ -17,6 +17,9 @@ let num = 2
 app.use(DKVui)
 
 DKVui.setup({
+  derived: {
+    module_name: 'dk-vui-demo'
+  },
   table: {
     scrollHideForm: true
   },

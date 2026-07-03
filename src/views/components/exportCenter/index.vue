@@ -10,13 +10,15 @@ const setupContent = ref(`## 全局配置
 \`\`\`js
 DKVui.setup({
   derived: {
-    home_system: 3
+    home_system: 3,
+    module_name: "dk-vui-demo"
   },
   action: action, // 宿主项目在这里处理全局状态或路由跳转
 })
 \`\`\`
 
 - \`derived.home_system\`：导出配置所属系统 ID，会作为 \`/export_config/one\` 的 \`home_system\` 参数。
+- \`derived.module_name\`：导出记录所属模块名，会优先作为 \`/export_record\` 的 \`module\` 参数。
 - \`action.setGlobalState\`：导出完成提示中的“个人中心”链接会调用它，并传入 \`{ changeMicoTabsPath: { path: "/user/profile", type: "push" } }\`。
 `)
 const content = ref(doc)

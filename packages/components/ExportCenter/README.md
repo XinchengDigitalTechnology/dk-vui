@@ -10,6 +10,7 @@
 - `window.APP_GETEWAY.dexh`
 - `window.userInfo.user`
 - `GlobalConfig.derived.home_system`，除非已传非 `null` 的 `home_system`
+- `GlobalConfig.derived.module_name`，用于生成导出记录的 `module`
 - `GlobalConfig.action.setGlobalState`，用于点击“个人中心”时通知宿主项目跳转
 
 推荐在项目入口通过 `DKVui.setup` 配置：
@@ -17,18 +18,20 @@
 ```js
 DKVui.setup({
   derived: {
-    home_system: 3
+    home_system: 3,
+    module_name: "order-center",
   },
   action: {
     setGlobalState(payload) {
       // 宿主项目在这里处理全局状态或路由跳转
       console.log(payload)
-    }
-  }
+    },
+  },
 })
 ```
 
 - `derived.home_system` 会作为 `/export_config/one` 的 `home_system` 请求参数。
+- `derived.module_name` 会优先作为 `/export_record` 的 `module` 参数；未配置时再使用当前导出模块的 `tag_name`。
 - `action.setGlobalState` 会在点击“个人中心”链接时被调用，参数为 `{ changeMicoTabsPath: { path: "/user/profile", type: "push" } }`。
 
 ## 2. 最小接入示例
@@ -37,7 +40,16 @@ DKVui.setup({
 
 ```vue
 <template>
-  <ExportCenter config_name="订单列表" tag_name="order_list" title-append="订单导出" has-permi="order:export" :home_system="null" :get-form-data="getExportCondition" :restriction="restriction" @callback="handleExportSuccess" />
+  <ExportCenter
+    config_name="订单列表"
+    tag_name="order_list"
+    title-append="订单导出"
+    has-permi="order:export"
+    :home_system="null"
+    :get-form-data="getExportCondition"
+    :restriction="restriction"
+    @callback="handleExportSuccess"
+  />
 </template>
 
 <script setup>
@@ -87,18 +99,18 @@ const getExportCondition = () => {
 
 ## 3. Props 使用规则
 
-| Prop             | 必填                 | 建议写法              | AI 接入说明                                               |
-| ---------------- | -------------------- | --------------------- | --------------------------------------------------------- |
+| Prop             | 必填                 | 建议写法                | AI 接入说明                                                                                              |
+| ---------------- | -------------------- | ----------------------- | -------------------------------------------------------------------------------------------------------- |
 | `type`           | 否                   | `"button"` / `"dialog"` | 默认 `"button"` 渲染组件内置导出按钮；传 `"dialog"` 时不渲染入口，需要父组件通过 `ref.open()` 打开弹窗。 |
-| `config_name`    | 按业务               | 业务配置名称          | 用于标识当前导出配置，建议和后端配置名称保持一致。        |
-| `tag_name`       | 是                   | 业务模块唯一标识      | 缺少时组件会提示“缺少必要参数”，不会请求配置。            |
-| `getFormData`    | 强烈建议             | 返回当前查询条件对象  | 组件每次操作都会重新调用，不要返回缓存对象。              |
-| `restriction`    | 按业务               | `() => true`          | 打开弹窗前的业务拦截方法；返回 `false` 时不打开，支持 Promise。 |
-| `hasPermi`       | 按业务               | 权限码字符串          | 会传给入口按钮的 `v-hasPermi`。                           |
-| `home_system`    | 按业务               | 数字系统 ID 或 `null` | 不传或传 `null` 时走 `GlobalConfig.derived.home_system`。 |
-| `titleAppend`    | 按业务               | 标题后缀              | 导出标题格式为：名称 + 当前用户真实姓名 + 后缀。          |
-| `schedule`       | 按业务               | `true` / `false`      | 控制模板行是否展示“定时导出”。                            |
-| `scheduleOption` | 使用定时导出时建议传 | `[{ label, value }]`  | 用来从查询条件中识别定时导出的导出范围字段。              |
+| `config_name`    | 按业务               | 业务配置名称            | 用于标识当前导出配置，建议和后端配置名称保持一致。                                                       |
+| `tag_name`       | 是                   | 业务模块唯一标识        | 缺少时组件会提示“缺少必要参数”，不会请求配置。                                                           |
+| `getFormData`    | 强烈建议             | 返回当前查询条件对象    | 组件每次操作都会重新调用，不要返回缓存对象。                                                             |
+| `restriction`    | 按业务               | `() => true`            | 打开弹窗前的业务拦截方法；返回 `false` 时不打开，支持 Promise。                                          |
+| `hasPermi`       | 按业务               | 权限码字符串            | 会传给入口按钮的 `v-hasPermi`。                                                                          |
+| `home_system`    | 按业务               | 数字系统 ID 或 `null`   | 不传或传 `null` 时走 `GlobalConfig.derived.home_system`。                                                |
+| `titleAppend`    | 按业务               | 标题后缀                | 导出标题格式为：名称 + 当前用户真实姓名 + 后缀。                                                         |
+| `schedule`       | 按业务               | `true` / `false`        | 控制模板行是否展示“定时导出”。                                                                           |
+| `scheduleOption` | 使用定时导出时建议传 | `[{ label, value }]`    | 用来从查询条件中识别定时导出的导出范围字段。                                                             |
 
 ## 4. 后端数据协议
 
@@ -165,7 +177,7 @@ POST /export_record
   condition: { status: "paid" },
   fields: ["order_no", "status"],
   title: "订单列表张三订单导出",
-  module: "order_list"
+  module: "order-center"
 }
 ```
 
@@ -178,12 +190,13 @@ POST /export_record
   condition: { status: "paid" },
   fields: [],
   title: "常用字段张三订单导出",
-  module: "order_list",
+  module: "order-center",
   tpl_id: 2001
 }
 ```
 
 注意：模板导出时 `fields` 是空数组，后端需要根据 `tpl_id` 读取模板字段。
+`module` 参数优先取 `GlobalConfig.derived.module_name`；未配置时使用本次导出的 `tag_name`。
 
 ### 3.3 保存模板
 

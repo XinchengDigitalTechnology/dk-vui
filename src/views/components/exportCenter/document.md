@@ -1,3 +1,17 @@
+## 全局注册配置
+
+```js
+DKVui.setup({
+  derived: {
+    home_system: 3,
+    module_name: "dk-vui-demo"
+  }
+})
+```
+
+- `derived.home_system` 会作为 `/export_config/one` 的 `home_system` 参数。
+- `derived.module_name` 会优先作为 `/export_record` 的 `module` 参数；未配置时使用本次导出的 `tag_name`。
+
 ## 基础用法
 
 ```html

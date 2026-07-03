@@ -169,7 +169,7 @@ export const useExportCenter = (props, emit) => {
       condition: getLatestCondition(),
       fields,
       title,
-      module: tag_name || props.tag_name,
+      module: GlobalConfig.derived?.module_name || tag_name || props.tag_name,
     }
     if (tpl_id !== undefined) params.tpl_id = tpl_id
     if (tag_name !== undefined) params.tag_name = tag_name
