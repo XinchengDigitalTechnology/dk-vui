@@ -5,6 +5,7 @@ import type VAuth from './auth'
 import type VPage from './page'
 import type VSelect from './select'
 import type VTable from './table'
+import type VImportDataBase from './importDataBase'
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     VButton: typeof VButton
@@ -13,5 +14,6 @@ declare module '@vue/runtime-core' {
     VPage: typeof VPage
     VSelect: typeof VSelect
     VTable: typeof VTable
+    VImportDataBase: typeof VImportDataBase
   }
 }

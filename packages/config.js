@@ -136,4 +136,11 @@ export default {
     inline: true, // 列表是否在一行展示，默认一行展示三个，传入数字可控制一行展示数量
     upload: async() => ({}), //上传方法
   },
+  importDataBase: {
+    auth: authString => window.BTN_AUTH?.includes(authString) ?? false,
+    title: '导入数据',
+    multiple: false,
+    templateName: '导入模板.xlsx',
+    width: 550,
+  }
 }
