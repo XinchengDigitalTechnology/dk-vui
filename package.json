@@ -10,7 +10,9 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --mode prod",
-    "preview": "vite preview"
+    "build:demo": "vite build --config vite.config.demo.js",
+    "preview": "vite preview",
+    "preview:demo": "vite preview --config vite.config.demo.js"
   },
   "repository": {
     "type": "git",
