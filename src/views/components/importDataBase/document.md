@@ -6,13 +6,26 @@
 
 ```html
 <VImportDataBase
-  v-model="visible"
   title="用户导入"
   :template-link="templateLink"
   template-name="用户导入模板.xlsx"
   :xlsx-match="xlsxMatch"
   :on-change="handleImport"
 />
+```
+
+组件内部管理弹窗状态。未提供默认插槽时，会显示一个“导入”按钮，点击后打开弹窗。
+
+通过默认插槽可以自定义触发内容：
+
+```html
+<VImportDataBase
+  title="用户导入"
+  :template-link="templateLink"
+  :on-change="handleImport"
+>
+  <el-button type="success">导入用户</el-button>
+</VImportDataBase>
 ```
 
 ## 模板文件
@@ -37,7 +50,6 @@ const templateFile = new File(
 
 ```html
 <VImportDataBase
-  v-model="visible"
   :template-link="templateFile"
   template-name="用户导入模板.xlsx"
 />
@@ -78,7 +90,6 @@ const handleImport = async (data, callback) => {
 
 ```html
 <VImportDataBase
-  v-model="visible"
   :template-link="templateLink"
   :upload="uploadImportFile"
 />
@@ -96,7 +107,7 @@ const uploadImportFile = async formData => {
 
 | 属性名 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
-| modelValue | 控制弹窗显示隐藏，支持 `v-model` | boolean | false |
+| auth | 按钮权限标识；不传时直接展示 | string | - |
 | title | 导入弹窗标题 | string | 导入数据 |
 | multiple | 是否允许多文件导入 | boolean | false |
 | templateLink | 模板远程链接或本地模板文件 | string / File / Blob | - |
@@ -110,8 +121,6 @@ const uploadImportFile = async formData => {
 
 | 名称 | 说明 | 回调参数 |
 | --- | --- | --- |
-| update:modelValue | 弹窗显示状态变化 | visible |
-| change | 前端解析完成后触发 | data |
 | success | 导入流程成功后触发 | data |
 | refresh | 导入流程成功后触发，可用于刷新列表 | - |
 
@@ -119,7 +128,30 @@ const uploadImportFile = async formData => {
 
 | 名称 | 说明 | 参数 |
 | --- | --- | --- |
+| default | 自定义打开弹窗的触发内容；默认显示“导入”按钮 | - |
 | msg | 自定义导入结果展示 | `{ list, data }` |
+
+## 权限配置
+
+传入 `auth` 后，组件会通过全局配置中的 `importDataBase.auth` 判断是否展示。默认配置为：
+
+```js
+{
+  importDataBase: {
+    auth: authString => window.BTN_AUTH?.includes(authString) ?? false
+  }
+}
+```
+
+```html
+<VImportDataBase
+  auth="warehouse:whitelist:import"
+  :template-link="templateLink"
+  :on-change="handleImport"
+/>
+```
+
+可在安装组件库时覆盖 `importDataBase.auth`，以适配项目自身的权限数据结构。
 
 ## 导入结果格式
 
@@ -153,7 +185,7 @@ const uploadImportFile = async formData => {
 ## 自定义结果展示
 
 ```html
-<VImportDataBase v-model="visible" :template-link="templateLink" :on-change="handleImport">
+<VImportDataBase :template-link="templateLink" :on-change="handleImport">
   <template #msg="{ list, data }">
     <el-alert type="warning" :closable="false" show-icon>
       共处理 {{ data.total }} 条数据

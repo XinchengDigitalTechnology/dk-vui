@@ -137,6 +137,7 @@ export default {
     upload: async() => ({}), //上传方法
   },
   importDataBase: {
+    auth: authString => window.BTN_AUTH?.includes(authString) ?? false,
     title: '导入数据',
     multiple: false,
     templateName: '导入模板.xlsx',

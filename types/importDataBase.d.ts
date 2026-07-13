@@ -18,7 +18,7 @@ export type ImportDataBaseCallback = (res: ImportDataBaseResult) => ImportDataBa
 export default /*#__PURE__*/ defineComponent(
   {
     props: {
-      modelValue: Boolean,
+      auth: String,
       title: String,
       multiple: Boolean,
       templateLink: [String, Object],
@@ -28,6 +28,6 @@ export default /*#__PURE__*/ defineComponent(
       upload: Function,
       width: [String, Number],
     },
-    emits: ['update:modelValue', 'change', 'success', 'refresh']
+    emits: ['success', 'refresh']
   }
 )

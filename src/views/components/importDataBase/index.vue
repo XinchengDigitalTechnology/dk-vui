@@ -4,9 +4,6 @@ import doc from './document.md?raw'
 import * as XLSX from 'xlsx'
 
 const content = ref(doc)
-const frontendVisible = ref(false)
-const backendVisible = ref(false)
-const customMsgVisible = ref(false)
 const templateLink = ref('')
 const templateFile = shallowRef(null)
 const frontendRows = ref([])
@@ -93,7 +90,6 @@ const templateFile = new File(
 
 \`\`\`html
 <VImportDataBase
-  v-model="visible"
   title="用户导入"
   :template-link="templateFile"
   template-name="用户导入模板.xlsx"
@@ -110,19 +106,19 @@ const templateLink = 'https://example.com/templates/backend-import.xlsx'
 
 \`\`\`html
 <VImportDataBase
-  v-model="visible"
   title="后端解析导入"
   :template-link="templateLink"
   template-name="后端解析模板.xlsx"
   :upload="backendUpload"
-/>
+>
+  <el-button type="success">自定义导入按钮</el-button>
+</VImportDataBase>
 \`\`\`
 `
 
 const customMsgCode = `
 \`\`\`html
 <VImportDataBase
-  v-model="visible"
   title="自定义结果展示"
   :template-link="templateLink"
   :on-change="customMsgImport"
@@ -147,9 +143,7 @@ const customMsgCode = `
       <p>示例使用前端动态生成的 xlsx 模板文件，演示本地 File 对象和 URL 字符串两种模板下载方式。</p>
 
       <h2>本地模板文件、前端解析 xlsx 后提交</h2>
-      <el-button type="primary" @click="frontendVisible = true">打开前端解析导入</el-button>
       <VImportDataBase
-        v-model="frontendVisible"
         title="用户导入"
         :template-link="templateFile"
         template-name="用户导入模板.xlsx"
@@ -163,20 +157,18 @@ const customMsgCode = `
       <Md v-model="frontendCode" view />
 
       <h2>远程模板链接、直接上传 xlsx 给后端解析</h2>
-      <el-button type="primary" @click="backendVisible = true">打开后端解析导入</el-button>
       <VImportDataBase
-        v-model="backendVisible"
         title="后端解析导入"
         :template-link="templateLink"
         template-name="后端解析模板.xlsx"
         :upload="backendUpload"
-      />
+      >
+        <el-button type="success">自定义导入按钮</el-button>
+      </VImportDataBase>
       <Md v-model="backendCode" view />
 
       <h2>自定义导入结果展示</h2>
-      <el-button type="primary" @click="customMsgVisible = true">打开自定义结果导入</el-button>
       <VImportDataBase
-        v-model="customMsgVisible"
         title="自定义结果展示"
         :template-link="templateLink"
         template-name="自定义结果模板.xlsx"
