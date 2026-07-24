@@ -57,6 +57,7 @@ export const useExportTemplate = ({
   validateSelectedFields,
   getLatestCondition,
   getSortedSelectedFieldKeys,
+  prependDefaultFields,
   buildExportTitle,
   buildExportRecordParams,
   getTemplate,
@@ -107,7 +108,7 @@ export const useExportTemplate = ({
       const res = await api.exporttpl({
         config_id: form.value.config_id,
         name: templateName,
-        fields: getSortedSelectedFieldKeys(),
+        fields: prependDefaultFields(getSortedSelectedFieldKeys()),
         condition: getLatestCondition(),
       })
       ElMessage.success(res.data.message)
@@ -126,7 +127,7 @@ export const useExportTemplate = ({
     const params = {
       id: row.tpl_id,
       name: row.name,
-      fields: getSortedSelectedFieldKeys(),
+      fields: prependDefaultFields(getSortedSelectedFieldKeys()),
     }
 
     try {

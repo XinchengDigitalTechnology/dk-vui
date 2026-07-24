@@ -46,6 +46,7 @@ DKVui.setup({
     title-append="订单导出"
     has-permi="order:export"
     :home_system="null"
+    :default-fields="defaultFields"
     :get-form-data="getExportCondition"
     :restriction="restriction"
     @callback="handleExportSuccess"
@@ -54,6 +55,9 @@ DKVui.setup({
 
 <script setup>
 import ExportCenter from "@/packages/components/ExportCenter/index.vue"
+
+// 默认导出字段，保存模版 / 导出时会自动放到 fields 最前面，并与已选字段去重
+const defaultFields = ["order_id", "created_at"]
 
 const getExportCondition = () => {
   return {
@@ -111,6 +115,7 @@ const getExportCondition = () => {
 | `titleAppend`    | 按业务               | 标题后缀                | 导出标题格式为：名称 + 当前用户真实姓名 + 后缀。                                                         |
 | `schedule`       | 按业务               | `true` / `false`        | 控制模板行是否展示“定时导出”。                                                                           |
 | `scheduleOption` | 使用定时导出时建议传 | `[{ label, value }]`    | 用来从查询条件中识别定时导出的导出范围字段。                                                             |
+| `defaultFields`  | 否                   | `["order_id"]`          | 默认导出字段 key 列表；保存模版、更新模版、即时导出时会插入到 `fields` 最前面，并与已选字段去重。         |
 
 ## 4. 后端数据协议
 
