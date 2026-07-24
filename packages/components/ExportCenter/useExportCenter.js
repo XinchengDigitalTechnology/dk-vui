@@ -187,20 +187,6 @@ export const useExportCenter = (props, emit) => {
   }
 
   /**
-   * 将父组件传入的默认导出字段放到 fields 最前面。
-   * 已选字段中若包含相同 key，会去重，避免重复提交。
-   * @param {Array<string>} fields - 当前已选字段 key 列表
-   * @returns {Array<string>}
-   */
-  const prependDefaultFields = (fields = []) => {
-    const defaults = toArray(props.defaultFields).filter(Boolean)
-    if (!defaults.length) return fields
-
-    const defaultSet = new Set(defaults)
-    return [...defaults, ...fields.filter((key) => !defaultSet.has(key))]
-  }
-
-  /**
    * 按模块标识获取后端导出配置。
    * @param {string} tagName - 业务模块标识
    * @returns {Promise<Object>}
@@ -286,7 +272,7 @@ export const useExportCenter = (props, emit) => {
 
   const executeImport = async () => {
     const params = buildExportRecordParams({
-      fields: prependDefaultFields(getSelectedFieldKeys()),
+      fields: getSelectedFieldKeys(),
       title: buildExportTitle(form.value.config_name),
     })
 
@@ -420,7 +406,6 @@ export const useExportCenter = (props, emit) => {
     buildExportTitle,
     buildExportRecordParams,
     getSortedSelectedFieldKeys,
-    prependDefaultFields,
     open,
     handleSelectionChange,
     handleFieldsChange,

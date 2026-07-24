@@ -4,11 +4,18 @@
       导出
   </VButton>
 
-  <el-dialog v-model="visible" :title="`导出中心${config_name ? ' - ' + config_name : ''}`" width="950" draggable
-    :close-on-click-modal="false" :close-on-press-escape="false" :before-close="handleClose" :destroy-on-close="true">
+  <el-dialog
+    v-model="visible"
+    :title="`导出中心${config_name ? ' - ' + config_name : ''}`"
+    width="950"
+    draggable
+    :close-on-click-modal="false"
+    :close-on-press-escape="false"
+    :before-close="handleClose"
+    :destroy-on-close="true"
+  >
     <div class="dk-export-center">
-      <ExportFieldList ref="tableRef" :fields="exportFields" @selection-change="handleSelectionChange"
-        @fields-change="handleFieldsChange" />
+      <ExportFieldList ref="tableRef" :fields="exportFields" @selection-change="handleSelectionChange" @fields-change="handleFieldsChange" />
 
       <div class="dk-export-center__right">
         <!-- 外部传入 exportButton 插槽时，提示信息放到按钮区上方，避免和自定义按钮布局挤在一起。 -->
@@ -34,13 +41,21 @@
         </div>
         <div class="dk-export-center__template-save">
           <el-input v-model="exportName" class="dk-export-center__template-name" placeholder="请输入名称" />
-          <el-button class="dk-export-center__template-save-button" type="primary" plain
-            @click="saveTemplate">保存模版</el-button>
+          <el-button class="dk-export-center__template-save-button" type="primary" plain @click="saveTemplate">保存模版</el-button>
         </div>
 
-        <ExportTemplateList :templates="templates" :schedule="schedule" :user-id="userId"
-          :loading="templateExportLoading" :is-editing-template="isEditingTemplate" @select="selectField"
-          @update="updateTemplate" @export="exportRow" @schedule="openScheduledExport" @delete="exportDelete" />
+        <ExportTemplateList
+          :templates="templates"
+          :schedule="schedule"
+          :user-id="userId"
+          :loading="templateExportLoading"
+          :is-editing-template="isEditingTemplate"
+          @select="selectField"
+          @update="updateTemplate"
+          @export="exportRow"
+          @schedule="openScheduledExport"
+          @delete="exportDelete"
+        />
       </div>
     </div>
     <template #footer>
@@ -74,9 +89,7 @@ const props = defineProps({
   home_system: { type: Number, default: null },
   titleAppend: { type: String, default: "" }, // 导出标题后缀
   hasPermi: { type: String, default: "" }, // 权限
-  getFormData: { type: Function, default: () => { } }, // 获取表单数据
-  defaultFields: { type: Array, default: () => [] }, // 默认导出字段
-
+  getFormData: { type: Function, default: () => {} }, // 获取表单数据
 })
 
 const slots = useSlots()
@@ -101,7 +114,6 @@ const {
   buildExportTitle,
   buildExportRecordParams,
   getSortedSelectedFieldKeys,
-  prependDefaultFields,
   open,
   handleSelectionChange,
   handleFieldsChange,
@@ -122,7 +134,6 @@ const { templateExportLoading, selectField, saveTemplate, updateTemplate, export
   validateSelectedFields,
   getLatestCondition,
   getSortedSelectedFieldKeys,
-  prependDefaultFields,
   buildExportTitle,
   buildExportRecordParams,
   getTemplate,
