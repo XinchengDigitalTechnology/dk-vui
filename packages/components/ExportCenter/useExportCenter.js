@@ -168,6 +168,7 @@ export const useExportCenter = (props, emit) => {
       config_name: form.value.config_name,
       condition: getLatestCondition(),
       fields,
+      dynamic_fields: toArray(props.dynamic_fields),
       title,
       module: GlobalConfig.derived?.module_name || tag_name || props.tag_name,
     }

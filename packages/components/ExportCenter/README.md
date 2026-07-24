@@ -46,6 +46,7 @@ DKVui.setup({
     title-append="订单导出"
     has-permi="order:export"
     :home_system="null"
+    :dynamic_fields="dynamicFields"
     :get-form-data="getExportCondition"
     :restriction="restriction"
     @callback="handleExportSuccess"
@@ -54,6 +55,9 @@ DKVui.setup({
 
 <script setup>
 import ExportCenter from "@/packages/components/ExportCenter/index.vue"
+
+// 动态字段，导出 / 模版导出时与 fields 同级提交给后端
+const dynamicFields = [{ field_key: "extra_col", field_name: "扩展列" }]
 
 const getExportCondition = () => {
   return {
@@ -111,6 +115,7 @@ const getExportCondition = () => {
 | `titleAppend`    | 按业务               | 标题后缀                | 导出标题格式为：名称 + 当前用户真实姓名 + 后缀。                                                         |
 | `schedule`       | 按业务               | `true` / `false`        | 控制模板行是否展示“定时导出”。                                                                           |
 | `scheduleOption` | 使用定时导出时建议传 | `[{ label, value }]`    | 用来从查询条件中识别定时导出的导出范围字段。                                                             |
+| `dynamic_fields` | 否                   | `[{ field_key, field_name }]` | 动态字段列表；即时导出、模版导出时与 `fields` 同级提交给 `/export_record`。                         |
 
 ## 4. 后端数据协议
 
@@ -176,6 +181,7 @@ POST /export_record
   config_name: "订单列表",
   condition: { status: "paid" },
   fields: ["order_no", "status"],
+  dynamic_fields: [{ field_key: "extra_col", field_name: "扩展列" }],
   title: "订单列表张三订单导出",
   module: "order-center"
 }
@@ -189,6 +195,7 @@ POST /export_record
   config_name: "订单列表",
   condition: { status: "paid" },
   fields: [],
+  dynamic_fields: [{ field_key: "extra_col", field_name: "扩展列" }],
   title: "常用字段张三订单导出",
   module: "order-center",
   tpl_id: 2001
@@ -196,6 +203,7 @@ POST /export_record
 ```
 
 注意：模板导出时 `fields` 是空数组，后端需要根据 `tpl_id` 读取模板字段。
+`dynamic_fields` 来自父组件 props，即时导出和模版导出都会原样透传。
 `module` 参数优先取 `GlobalConfig.derived.module_name`；未配置时使用本次导出的 `tag_name`。
 
 ### 3.3 保存模板
