@@ -1,10 +1,10 @@
 <template>
-  <VButton :type="buttonType" @click="open" v-hasPermi="hasPermi ? [hasPermi] : []" v-if="type === 'button'">
+  <VButton :type="buttonType" @click="open" :auth="hasPermi" v-if="type === 'button'">
     <div class="dk-iconfont icon-Upload"></div>
       导出
   </VButton>
 
-  <el-dialog v-model="visible" :title="`导出中心${config_name ? ' - ' + config_name : ''}`" width="950" draggable
+  <el-dialog v-model="visible" :title="`导出中心${dialogConfigName ? ' - ' + dialogConfigName : ''}`" width="950" draggable
     :close-on-click-modal="false" :close-on-press-escape="false" :before-close="handleClose" :destroy-on-close="true">
     <div class="dk-export-center">
       <ExportFieldList ref="tableRef" :fields="exportFields" @selection-change="handleSelectionChange"
@@ -109,6 +109,9 @@ const {
   handleBeforeClose,
   outerExport,
 } = useExportCenter(props, emit)
+
+// 弹窗标题：优先用 prop，未传时取 /export_config/one 返回的 config_name
+const dialogConfigName = computed(() => props.config_name || form.value.config_name || "")
 
 const { templateExportLoading, selectField, saveTemplate, updateTemplate, exportRow, cancelPendingTemplateExport, exportDelete, openScheduledExport } = useExportTemplate({
   tableRef,
