@@ -89,6 +89,11 @@ DKVui.setup({
     clearable: true, // 是否可清空
     types: {} // 配置选项
   },
+  cascader: {
+    filterable: true, // 是否可筛选
+    clearable: true, // 是否可清空
+    types: {} // 配置选项
+  },
   batchInput: {
     rows: 200, // 限制行数
   },

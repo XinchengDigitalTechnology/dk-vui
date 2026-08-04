@@ -2,6 +2,7 @@ import component from './components'
 import directive from './directives'
 import { getRoutes, setup } from './utils'
 import { updateSelectOptions } from './components/Select/store'
+import { updateCascaderOptions } from './components/Cascader/store'
 
 
 const install = (app, options) => {
@@ -19,5 +20,6 @@ export default {
   install,
   getRoutes,
   setup,
-  updateSelectOptions
+  updateSelectOptions,
+  updateCascaderOptions
 }
