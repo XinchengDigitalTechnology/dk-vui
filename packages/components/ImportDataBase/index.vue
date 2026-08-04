@@ -18,6 +18,7 @@ const emit = defineEmits(['success', 'refresh'])
 
 const props = defineProps({
   auth: { type: String, default: '' }, // 按钮权限标识
+  className: { type: String, default: '' },
   title: { type: String, default: () => GlobalConfig.importDataBase.title }, // 导入标题
   multiple: { type: Boolean, default: () => GlobalConfig.importDataBase.multiple }, // 是否允许多文件
   templateLink: { type: [String, Object], default: '' }, // 模板远程链接或本地 File/Blob
@@ -157,7 +158,7 @@ defineExpose({ open: handleOpen, reset, submit: handleSubmit })
 
 <template>
   <template v-if="hasAuth">
-    <span class="v-import-data-base-trigger" @click="handleOpen">
+    <span class="v-import-data-base-trigger" :class="className" @click="handleOpen">
       <slot>
         <el-button type="primary">导入</el-button>
       </slot>
