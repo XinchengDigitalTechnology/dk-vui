@@ -82,6 +82,24 @@ const handleImport = async (data, callback) => {
 
 `callback(res.data)` 会把接口返回的数据回传给组件，用于导入结果展示。
 
+`onChange` 的完整调用参数为 `(data, callback, context)`：
+
+- `data`：从所有已选文件中解析、合并后的数据。
+- `callback`：将处理结果回传给组件，用于展示导入结果。
+- `context`：文件上下文，结构为 `{ file, files }`；`file` 是首个文件，`files` 是全部文件。
+
+除了调用 `callback`，也可以直接返回处理结果：
+
+```js
+const handleImport = async (data, callback, { file, files }) => {
+  console.log('当前文件', file)
+  console.log('全部文件', files)
+  return await importApi(data)
+}
+```
+
+如果已经调用 `callback`，组件不会再处理 `onChange` 的返回值。
+
 传入 `xlsxMatch` 后，解析结果会把表头转换成映射字段。例如 `备库单号*` 会转换成 `order_no`。
 
 ## 后端解析
@@ -108,12 +126,13 @@ const uploadImportFile = async formData => {
 | 属性名 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | auth | 按钮权限标识；不传时直接展示 | string | - |
+| className | 触发器容器的自定义类名，不作用于弹窗 | string | - |
 | title | 导入弹窗标题 | string | 导入数据 |
 | multiple | 是否允许多文件导入 | boolean | false |
 | templateLink | 模板远程链接或本地模板文件 | string / File / Blob | - |
 | templateName | 模板下载文件名 | string | 导入模板.xlsx |
 | xlsxMatch | xlsx 表头与提交字段的映射对象 | object | {} |
-| onChange | 前端解析成功后的回调 | function(data, callback) | - |
+| onChange | 前端解析成功后的回调，可调用 callback 或直接返回处理结果 | function(data, callback, context) | - |
 | upload | 直接上传 xlsx 给后端解析的方法 | function(formData, files) | - |
 | width | 弹窗宽度 | string / number | 550 |
 

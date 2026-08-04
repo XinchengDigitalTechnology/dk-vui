@@ -1,6 +1,11 @@
 import * as XLSX from 'xlsx'
 
-export const xlsxAccept = '.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+export const xlsxAccept = [
+  '.xls',
+  '.xlsx',
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+].join(',')
 
 export const getFileName = (source, defaultName = '导入模板.xlsx') => {
   if (!source) return defaultName
@@ -46,7 +51,7 @@ export const downloadTemplate = async (source, filename) => {
   }
 }
 
-export const isXlsxFile = file => /\.xlsx$/i.test(file?.name || '')
+export const isXlsxFile = file => /\.xlsx?$/i.test(file?.name || '')
 
 export const resolveResponseData = res => {
   if (res && Object.prototype.hasOwnProperty.call(res, 'data')) return res.data

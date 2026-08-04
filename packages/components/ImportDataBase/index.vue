@@ -58,7 +58,7 @@ const handleFileChange = (uploadFile, uploadFiles) => {
   resultData.value = []
   const files = (uploadFiles || []).filter(file => isXlsxFile(file))
   if (!isXlsxFile(uploadFile)) {
-    ElMessage.error('请上传 xlsx 格式文件')
+    ElMessage.error('请上传 xls 或 xlsx 格式文件')
   }
   fileList.value = props.multiple ? files : files.slice(-1)
 }
@@ -66,7 +66,7 @@ const handleFileChange = (uploadFile, uploadFiles) => {
 const handleExceed = files => {
   const [file] = files
   if (!file || !isXlsxFile(file)) {
-    ElMessage.error('请上传 xlsx 格式文件')
+    ElMessage.error('请上传 xls 或 xlsx 格式文件')
     return
   }
   fileList.value = [{
@@ -110,7 +110,10 @@ const submitWithFrontendParse = async files => {
     hasCallback = true
     return handleImportResult(res)
   }
-  const res = await props.onChange(data, callback)
+  const res = await props.onChange(data, callback, {
+    file: files[0],
+    files,
+  })
   if (!hasCallback && res !== undefined) {
     return handleImportResult(res)
   }
@@ -153,7 +156,7 @@ const handleCancel = () => {
   visible.value = false
 }
 
-defineExpose({ open: handleOpen, reset, submit: handleSubmit })
+defineExpose({ open: handleOpen, reset, submit: handleSubmit, close: handleCancel })
 </script>
 
 <template>
@@ -217,7 +220,7 @@ defineExpose({ open: handleOpen, reset, submit: handleSubmit })
             <div v-if="fileList.length" class="v-import-data-base-file-list">
               <span class="v-import-data-base-file-tip">已上传文件</span>
               <div v-for="(file, index) in fileList" :key="`${file.name}-${index}`" class="v-import-data-base-file-item">
-                <span class="v-import-data-base-file-icon">XLSX</span>
+                <span class="v-import-data-base-file-icon">EXCEL</span>
                 <span class="v-import-data-base-file-name">{{ file.name }}</span>
                 <el-button type="danger" link @click="handleDelFile(index)">删除</el-button>
               </div>
