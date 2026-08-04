@@ -31,6 +31,36 @@ DKVui.setup({
         return await Array.from(Array(num++).keys()).map(value => ((value += 1) && ({ label: `角色${value}`, value })))
       }
     }
+  },
+  cascader: {
+    types: {
+      department: {
+        options: async () => {
+          await new Promise(resolve => setTimeout(() => resolve(), 300))
+          ElMessage.success('更新department options成功')
+          return [
+            {
+              name: '技术部',
+              sub: [
+                { name: '前端组' },
+                { name: '后端组' },
+              ],
+            },
+            {
+              name: '产品部',
+              sub: [
+                { name: '设计组' },
+                { name: '运营组' },
+              ],
+            },
+          ]
+        },
+        value: 'name',
+        children: 'sub',
+        emitPath: true,
+        joinPath: '/',
+      },
+    }
   }
 })
 app.use(router)
