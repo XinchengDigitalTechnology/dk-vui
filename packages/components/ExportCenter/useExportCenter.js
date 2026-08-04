@@ -273,7 +273,7 @@ export const useExportCenter = (props, emit) => {
 
   const executeImport = async () => {
     const params = buildExportRecordParams({
-      fields: getSelectedFieldKeys(),
+      fields: getSortedSelectedFieldKeys(),
       title: buildExportTitle(form.value.config_name),
     })
 
@@ -350,7 +350,7 @@ export const useExportCenter = (props, emit) => {
       const params = buildExportRecordParams({
         config_id: configData.config_id,
         condition: getLatestCondition(),
-        fields: type === "all" ? allFieldKeys : getSelectedFieldKeys(),
+        fields: type === "all" ? allFieldKeys : getSortedSelectedFieldKeys(),
         title: buildExportTitle(moduleName),
         tag_name: module,
       })
