@@ -44,8 +44,8 @@ const rowConfig = {
 
 // reserve 对齐原 el-table reserve-selection，字段重排 / 刷新后保留勾选
 const checkboxConfig = {
-  reserve: true,
-  highlight: true,
+  // reserve: true,
+  // highlight: true,
 }
 
 const getSelection = () => {
