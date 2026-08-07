@@ -173,7 +173,7 @@ defineExpose({ open: handleOpen, reset, submit: handleSubmit, close: handleCance
       :width="width"
       destroy-on-close
       append-to-body
-      class="v-import-data-base"
+      :class="`v-import-data-base v-import-data-base_${className}`"
       @close="handleCancel"
     >
       <div v-loading="loading">
@@ -227,6 +227,8 @@ defineExpose({ open: handleOpen, reset, submit: handleSubmit, close: handleCance
             </div>
           </div>
         </div>
+
+        <slot name="tips" />
 
         <ImportResult v-if="slots.msg" :list="uploadResult" :data="resultData">
           <template #msg="slotProps">

@@ -148,7 +148,16 @@ const uploadImportFile = async formData => {
 | 名称 | 说明 | 参数 |
 | --- | --- | --- |
 | default | 自定义打开弹窗的触发内容；默认显示“导入”按钮 | - |
+| tips | 自定义上传区域下方、导入结果上方的提示内容 | - |
 | msg | 自定义导入结果展示 | `{ list, data }` |
+
+```html
+<VImportDataBase :template-link="templateLink" :on-change="handleImport">
+  <template #tips>
+    <el-alert title="请确认文件内容符合模板要求" type="info" :closable="false" />
+  </template>
+</VImportDataBase>
+```
 
 ## 权限配置
 
