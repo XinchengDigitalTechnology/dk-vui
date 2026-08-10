@@ -141,6 +141,6 @@ export default {
     title: '导入数据',
     multiple: false,
     templateName: '导入模板.xlsx',
-    width: 550,
+    width: 700,
   }
 }

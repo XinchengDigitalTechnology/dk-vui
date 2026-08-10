@@ -21,6 +21,7 @@ const props = defineProps({
   className: { type: String, default: '' },
   title: { type: String, default: () => GlobalConfig.importDataBase.title }, // 导入标题
   multiple: { type: Boolean, default: () => GlobalConfig.importDataBase.multiple }, // 是否允许多文件
+  showSubmit: { type: Boolean, default: true }, // 是否显示保存按钮
   templateLink: { type: [String, Object], default: '' }, // 模板远程链接或本地 File/Blob
   templateName: { type: String, default: () => GlobalConfig.importDataBase.templateName }, // 模板名称
   xlsxMatch: { type: Object, default: () => ({}) }, // xlsx 表头与提交字段的映射
@@ -241,7 +242,7 @@ defineExpose({ open: handleOpen, reset, submit: handleSubmit, close: handleCance
       <template #footer>
         <div class="v-import-data-base-footer">
           <el-button @click="handleCancel">关闭</el-button>
-          <el-button type="primary" :loading="loading" @click="handleSubmit">保存</el-button>
+          <el-button v-if="showSubmit" type="primary" :loading="loading" @click="handleSubmit">保存</el-button>
         </div>
       </template>
     </el-dialog>

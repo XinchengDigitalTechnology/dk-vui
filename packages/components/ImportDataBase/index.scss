@@ -13,13 +13,14 @@
     display: block;
     padding: 8px 0;
     font-size: 14px;
+    font-weight: bold;
     color: var(--base-text-color, var(--el-text-color-primary));
   }
 
   &-template {
     line-height: 44px;
     text-align: center;
-    background: var(--base-dialog-bg-color);
+    background: var(--base-bg-color);
     border: 1px solid var(--base-bg-color, var(--el-border-color));
     -webkit-user-select: none;
   }

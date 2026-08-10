@@ -129,6 +129,7 @@ const uploadImportFile = async formData => {
 | className | 触发器容器的自定义类名，不作用于弹窗 | string | - |
 | title | 导入弹窗标题 | string | 导入数据 |
 | multiple | 是否允许多文件导入 | boolean | false |
+| showSubmit | 是否显示保存按钮 | boolean | true |
 | templateLink | 模板远程链接或本地模板文件 | string / File / Blob | - |
 | templateName | 模板下载文件名 | string | 导入模板.xlsx |
 | xlsxMatch | xlsx 表头与提交字段的映射对象 | object | {} |
