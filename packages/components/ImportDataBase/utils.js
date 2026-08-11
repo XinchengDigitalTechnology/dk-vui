@@ -1,11 +1,16 @@
 import * as XLSX from 'xlsx'
 
-export const xlsxAccept = [
-  '.xls',
-  '.xlsx',
-  'application/vnd.ms-excel',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-].join(',')
+export const defaultImportFileTypes = ['xlsx', 'xls']
+
+export const normalizeFileTypes = (listType = defaultImportFileTypes) => (
+  listType
+    .map(type => `${type}`.trim().replace(/^\./, '').toLowerCase())
+    .filter(Boolean)
+)
+
+export const getFileAccept = listType => (
+  normalizeFileTypes(listType).map(type => `.${type}`).join(',')
+)
 
 export const getFileName = (source, defaultName = '导入模板.xlsx') => {
   if (!source) return defaultName
@@ -51,7 +56,11 @@ export const downloadTemplate = async (source, filename) => {
   }
 }
 
-export const isXlsxFile = file => /\.xlsx?$/i.test(file?.name || '')
+export const isAllowedFile = (file, listType) => {
+  const fileName = file?.name || ''
+  const extension = fileName.includes('.') ? fileName.split('.').pop().toLowerCase() : ''
+  return normalizeFileTypes(listType).includes(extension)
+}
 
 export const resolveResponseData = res => {
   if (res && Object.prototype.hasOwnProperty.call(res, 'data')) return res.data

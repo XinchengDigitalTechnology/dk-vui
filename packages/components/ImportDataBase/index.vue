@@ -3,13 +3,15 @@ import { ElMessage } from 'element-plus'
 import GlobalConfig from '~/packages/config'
 import {
   createUploadFormData,
+  defaultImportFileTypes,
   downloadTemplate,
+  getFileAccept,
   getFileName,
-  isXlsxFile,
+  isAllowedFile,
   normalizeResultList,
+  normalizeFileTypes,
   parseXlsxFiles,
   resolveResponseData,
-  xlsxAccept,
 } from './utils'
 import ImportResult from './components/ImportResult.vue'
 import './index.scss'
@@ -18,14 +20,16 @@ const emit = defineEmits(['success', 'refresh'])
 
 const props = defineProps({
   auth: { type: String, default: '' }, // 按钮权限标识
+  autoSubmit: { type: Boolean, default: false }, // 选择文件后是否自动提交
   className: { type: String, default: '' },
   title: { type: String, default: () => GlobalConfig.importDataBase.title }, // 导入标题
+  listType: { type: Array, default: () => [...defaultImportFileTypes] }, // 后端上传允许的文件扩展名
   multiple: { type: Boolean, default: () => GlobalConfig.importDataBase.multiple }, // 是否允许多文件
-  showSubmit: { type: Boolean, default: true }, // 是否显示保存按钮
+  showSubmit: { type: Boolean, default: false }, // 自动提交时是否仍显示保存按钮
   templateLink: { type: [String, Object], default: '' }, // 模板远程链接或本地 File/Blob
   templateName: { type: String, default: () => GlobalConfig.importDataBase.templateName }, // 模板名称
   xlsxMatch: { type: Object, default: () => ({}) }, // xlsx 表头与提交字段的映射
-  onChange: { type: Function, default: null }, // 前端解析后回调
+  onChange: { type: Function, default: null }, // 文件处理回调
   upload: { type: Function, default: null }, // 后端解析上传方法
   width: { type: [String, Number], default: () => GlobalConfig.importDataBase.width },
 })
@@ -40,6 +44,12 @@ const visible = ref(false)
 const hasAuth = computed(() => !props.auth || GlobalConfig.importDataBase.auth(props.auth))
 
 const rawFiles = computed(() => fileList.value.map(file => file.raw).filter(Boolean))
+const allowedFileTypes = computed(() => (
+  props.upload ? normalizeFileTypes(props.listType) : defaultImportFileTypes
+))
+const fileAccept = computed(() => getFileAccept(allowedFileTypes.value))
+const fileTypeLabel = computed(() => allowedFileTypes.value.join('、'))
+let autoSubmitTimer = null
 
 const handleOpen = () => {
   visible.value = true
@@ -54,20 +64,41 @@ const handleDownloadTemplate = async () => {
   await downloadTemplate(props.templateLink, filename)
 }
 
+const triggerAutoSubmit = () => {
+  if (!props.autoSubmit) return
+  clearTimeout(autoSubmitTimer)
+  autoSubmitTimer = setTimeout(() => {
+    autoSubmitTimer = null
+    handleSubmit()
+  })
+}
+
+const isSupportedFile = file => isAllowedFile(file, allowedFileTypes.value)
+
+const showFileTypeError = () => {
+  const message = fileTypeLabel.value
+    ? `请上传 ${fileTypeLabel.value} 格式文件`
+    : '未配置允许上传的文件格式'
+  ElMessage.error(message)
+}
+
 const handleFileChange = (uploadFile, uploadFiles) => {
   uploadResult.value = []
   resultData.value = []
-  const files = (uploadFiles || []).filter(file => isXlsxFile(file))
-  if (!isXlsxFile(uploadFile)) {
-    ElMessage.error('请上传 xls 或 xlsx 格式文件')
+  const files = (uploadFiles || []).filter(file => isSupportedFile(file))
+  if (!isSupportedFile(uploadFile)) {
+    showFileTypeError()
+    fileList.value = props.multiple ? files : files.slice(-1)
+    return
   }
   fileList.value = props.multiple ? files : files.slice(-1)
+  triggerAutoSubmit()
 }
 
 const handleExceed = files => {
   const [file] = files
-  if (!file || !isXlsxFile(file)) {
-    ElMessage.error('请上传 xls 或 xlsx 格式文件')
+  if (!file || !isSupportedFile(file)) {
+    showFileTypeError()
     return
   }
   fileList.value = [{
@@ -75,6 +106,7 @@ const handleExceed = files => {
     raw: file,
     status: 'ready',
   }]
+  triggerAutoSubmit()
 }
 
 const handleDelFile = index => {
@@ -92,6 +124,12 @@ const handleImportResult = data => {
 }
 
 const submitWithUpload = async files => {
+  if (props.onChange) {
+    await props.onChange({
+      file: files[0],
+      files,
+    })
+  }
   const formData = createUploadFormData(files)
   const res = await props.upload(formData, files)
   return handleImportResult(res)
@@ -146,6 +184,8 @@ const handleSubmit = async () => {
 }
 
 const reset = () => {
+  clearTimeout(autoSubmitTimer)
+  autoSubmitTimer = null
   fileList.value = []
   uploadResult.value = []
   resultData.value = []
@@ -207,7 +247,7 @@ defineExpose({ open: handleOpen, reset, submit: handleSubmit, close: handleCance
               :auto-upload="false"
               :multiple="multiple"
               :limit="multiple ? undefined : 1"
-              :accept="xlsxAccept"
+              :accept="fileAccept"
               :show-file-list="false"
               :on-change="handleFileChange"
               :on-exceed="handleExceed"
@@ -242,7 +282,7 @@ defineExpose({ open: handleOpen, reset, submit: handleSubmit, close: handleCance
       <template #footer>
         <div class="v-import-data-base-footer">
           <el-button @click="handleCancel">关闭</el-button>
-          <el-button v-if="showSubmit" type="primary" :loading="loading" @click="handleSubmit">保存</el-button>
+          <el-button v-if="showSubmit || !autoSubmit" type="primary" :loading="loading" @click="handleSubmit">保存</el-button>
         </div>
       </template>
     </el-dialog>

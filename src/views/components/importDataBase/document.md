@@ -104,37 +104,47 @@ const handleImport = async (data, callback, { file, files }) => {
 
 ## 后端解析
 
-传入 `upload` 时，组件不会解析 xlsx，会把文件追加到 `FormData` 后交给父组件传入的方法。
+传入 `upload` 时，组件不会解析文件，会把文件追加到 `FormData` 后交给父组件传入的方法。可通过 `listType` 配置允许上传的文件扩展名，默认为 `['xlsx', 'xls']`。
 
 ```html
 <VImportDataBase
   :template-link="templateLink"
+  :list-type="['xlsx', 'xls', 'csv']"
+  :on-change="handleUploadChange"
   :upload="uploadImportFile"
+  auto-submit
 />
 ```
 
 ```js
+const handleUploadChange = ({ file, files }) => {
+  console.log('当前文件', file)
+  console.log('全部文件', files)
+}
+
 const uploadImportFile = async formData => {
   return await uploadApi(formData)
 }
 ```
 
-组件默认从接口返回值中读取 `res.data`，并展示 `data` 或 `data.list`。
+后端上传前会调用 `onChange({ file, files })`。组件默认从接口返回值中读取 `res.data`，并展示 `data` 或 `data.list`。启用 `autoSubmit` 后，选择文件会立即提交并隐藏保存按钮；同时设置 `showSubmit` 时仍会显示保存按钮。
 
 ## Props
 
 | 属性名 | 说明 | 类型 | 默认值 |
 | --- | --- | --- | --- |
 | auth | 按钮权限标识；不传时直接展示 | string | - |
+| autoSubmit | 选择文件后是否自动提交；启用时隐藏保存按钮 | boolean | false |
 | className | 触发器容器的自定义类名，不作用于弹窗 | string | - |
 | title | 导入弹窗标题 | string | 导入数据 |
+| listType | 后端上传允许的文件扩展名 | string[] | `['xlsx', 'xls']` |
 | multiple | 是否允许多文件导入 | boolean | false |
-| showSubmit | 是否显示保存按钮 | boolean | true |
+| showSubmit | 自动提交时是否仍显示保存按钮，优先级高于 `autoSubmit` 的隐藏逻辑 | boolean | false |
 | templateLink | 模板远程链接或本地模板文件 | string / File / Blob | - |
 | templateName | 模板下载文件名 | string | 导入模板.xlsx |
 | xlsxMatch | xlsx 表头与提交字段的映射对象 | object | {} |
-| onChange | 前端解析成功后的回调，可调用 callback 或直接返回处理结果 | function(data, callback, context) | - |
-| upload | 直接上传 xlsx 给后端解析的方法 | function(formData, files) | - |
+| onChange | 文件处理回调；前端解析时接收 `(data, callback, context)`，后端上传时接收 `({ file, files })` | function | - |
+| upload | 直接上传文件给后端解析的方法 | function(formData, files) | - |
 | width | 弹窗宽度 | string / number | 550 |
 
 ## Events
