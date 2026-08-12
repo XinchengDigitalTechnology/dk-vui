@@ -177,7 +177,6 @@ const handleSubmit = async () => {
     }
   } catch (error) {
     console.error(error)
-    ElMessage.error('导入失败，请检查文件后重试')
   } finally {
     loading.value = false
   }
