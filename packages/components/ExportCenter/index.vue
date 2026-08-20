@@ -33,9 +33,12 @@
           </template>
         </div>
         <div class="dk-export-center__template-save">
-          <el-input v-model="exportName" class="dk-export-center__template-name" placeholder="请输入名称" />
-          <el-button class="dk-export-center__template-save-button" type="primary" plain
-            @click="saveTemplate">保存模版</el-button>
+          <VGroup style="width:100%;">
+            <el-input v-model="exportName" class="dk-export-center__template-name" placeholder="请输入名称" />
+            <el-button class="dk-export-center__template-save-button" type="primary" plain @click="saveTemplate"
+              style="height: 32px;">保存模版</el-button>
+          </VGroup>
+
         </div>
 
         <ExportTemplateList :templates="templates" :schedule="schedule" :user-id="userId"
