@@ -2,7 +2,7 @@
   <div class="dk-export-center-field">
     <div class="dk-export-center-field__title">字段列表</div>
     <div class="dk-export-center-field__table-wrap">
-      <vxe-table ref="tableRef" :data="fields" :height="690" border class="dk-export-center-field__table"
+      <vxe-table ref="tableRef" :data="fields" class="dk-export-center-field__table"
         :row-config="rowConfig" :checkbox-config="checkboxConfig" @checkbox-change="handleCheckboxChange"
         @checkbox-all="handleCheckboxChange">
         <vxe-column type="checkbox" width="50" />

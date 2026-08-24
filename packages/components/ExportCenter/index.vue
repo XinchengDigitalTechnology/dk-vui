@@ -5,40 +5,38 @@
   </VButton>
 
   <el-dialog v-model="visible" :title="`导出中心${dialogConfigName ? ' - ' + dialogConfigName : ''}`" width="950" draggable
-    :close-on-click-modal="false" :close-on-press-escape="false" :before-close="handleClose" :destroy-on-close="true">
+    align-center class="dk-export-center-dialog" :close-on-click-modal="false" :close-on-press-escape="false"
+    :before-close="handleClose" :destroy-on-close="true">
     <div class="dk-export-center">
       <ExportFieldList ref="tableRef" :fields="exportFields" @selection-change="handleSelectionChange"
         @fields-change="handleFieldsChange" />
 
-      <div class="dk-export-center__right">
-        <!-- 外部传入 exportButton 插槽时，提示信息放到按钮区上方，避免和自定义按钮布局挤在一起。 -->
-        <div class="dk-export-center__custom-tip" v-if="hasExportButtonSlot">
+      <div class="dk-export-center__toolbar" v-if="hasExportButtonSlot">
+        <div class="dk-export-center__custom-tip">
           <el-tag type="danger">提示:</el-tag>
-          <!-- <div class="dk-iconfont icon-Warning"></div> -->
           导出结果在 <el-link type="primary" :underline="false" @click="navPersonal">个人中心</el-link> 查看
         </div>
+      </div>
+      <div class="dk-export-center__toolbar" v-else v-loading="loading">
+        <div class="dk-export-center__export-button">
+          <el-button type="primary" @click="handleImport" :disabled="loading">导出</el-button>
 
-        <div class="dk-export-center__action-bar" v-loading="loading">
-          <!-- 支持外部接管导出按钮；未提供 exportButton 插槽时使用默认导出按钮。 -->
-          <slot v-if="hasExportButtonSlot" name="exportButton" v-bind="{ outerExport }"></slot>
-          <template v-else>
-            <div class="dk-export-center__export-button">
-              <el-button type="primary" @click="handleImport" :disabled="loading">导出</el-button>
+          <div class="dk-export-center__default-tip">
+            <div class="dk-iconfont icon-Warning"></div>
+            导出结果在 <el-link type="primary" :underline="false" @click="navPersonal">个人中心</el-link> 查看
+          </div>
+        </div>
+      </div>
 
-              <div class="dk-export-center__default-tip">
-                <div class="dk-iconfont icon-Warning"></div>
-                导出结果在 <el-link type="primary" :underline="false" @click="navPersonal">个人中心</el-link> 查看
-              </div>
-            </div>
-          </template>
+      <div class="dk-export-center__right-main">
+        <div class="dk-export-center__action-bar" v-if="hasExportButtonSlot" v-loading="loading">
+          <slot name="exportButton" v-bind="{ outerExport }"></slot>
         </div>
         <div class="dk-export-center__template-save">
-          <VGroup style="width:100%;">
+          <VGroup class="dk-export-center__template-group">
             <el-input v-model="exportName" class="dk-export-center__template-name" placeholder="请输入名称" />
-            <el-button class="dk-export-center__template-save-button" type="primary" plain @click="saveTemplate"
-              style="height: 32px;">保存模版</el-button>
+            <el-button class="dk-export-center__template-save-button" type="primary" plain @click="saveTemplate">保存模版</el-button>
           </VGroup>
-
         </div>
 
         <ExportTemplateList :templates="templates" :schedule="schedule" :user-id="userId"
@@ -56,7 +54,6 @@
 <script setup name="ExportCenter">
 import { computed, useSlots } from "vue"
 import GlobalConfig from "~/packages/config"
-// import action from "@/utils/action.js"
 import ExportFieldList from "./ExportFieldList.vue"
 import ExportTemplateList from "./ExportTemplateList.vue"
 import { useExportCenter } from "./useExportCenter.js"
