@@ -10,6 +10,8 @@ const options = [
   { label: '选项1', value: 1 },
   { label: '选项2', value: 2 },
   { label: '长长长长长长长长长长长长选项', value: 3 },
+  { label: 'a1', value: 4 },
+
 ]
 </script>
 
@@ -42,12 +44,14 @@ const options = [
 
       <h2>confusedPaste 模糊粘贴</h2>
       <p>multiple 多选模式下，可以使用 confusedPaste 模糊粘贴功能快速追加选项</p>
-      <VSelect v-model="form.field2" placeholder="店铺" multiple collapse-tags confusedPaste :options="options" class="w-400" />
+      <VSelect v-model="form.field2" placeholder="店铺" multiple collapse-tags confusedPaste :options="options"
+        class="w-400" />
       <Md v-model="paste" view />
 
       <h2>showCheckAll 全选</h2>
       <p>multiple 多选模式下，可以使用 showCheckAll 来支持全选功能</p>
-      <VSelect v-model="form.field2" placeholder="店铺" multiple collapse-tags showCheckAll :options="options" class="w-400" />
+      <VSelect v-model="form.field2" placeholder="店铺" multiple collapse-tags showCheckAll :options="options"
+        class="w-400" />
       <Md v-model="paste" view />
 
       <h2>配置选项</h2>
@@ -67,10 +71,10 @@ const options = [
 
 <style>
 .w-200 {
-  width: 200px!important;
+  width: 200px !important;
 }
 
 .w-400 {
-  width: 400px!important;
+  width: 400px !important;
 }
 </style>
