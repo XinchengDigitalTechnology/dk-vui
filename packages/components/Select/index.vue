@@ -102,20 +102,15 @@ const visibleChange = val => {
 }
 
 const pasteChange = (pastes) => {
-  const normalizedPastes = pastes.map(d => String(d).toLowerCase())
   const pastesValue = opts.value.reduce((acc, cur) => {
-    const label = String(cur.label).toLowerCase()
-    const matched = props.confusedPaste
-      ? normalizedPastes.some(d => label.includes(d))
-      : normalizedPastes.includes(label)
-    return matched ? acc.concat(cur.value) : acc
+    return (props.confusedPaste && pastes.some(d => cur.label.indexOf(d) > -1) || pastes.includes(cur.label)) ? acc.concat(cur.value) : acc
   }, [])
   selectValue.value = [...new Set((selectValue.value || []).concat(pastesValue))]
 }
 const showHeader = computed(() => props.multiple && props.showCheckAll)
 
 const _attrs = computed(() => {
-  const { select, filterable, clearable, multiple } = props
+  const {select, filterable, clearable, multiple} = props
   const ats = {
     showHeader: showHeader.value,
     options: filteredOptions.value,
