@@ -35,7 +35,8 @@
         <div class="dk-export-center__template-save">
           <VGroup class="dk-export-center__template-group">
             <el-input v-model="exportName" class="dk-export-center__template-name" placeholder="请输入名称" />
-            <el-button class="dk-export-center__template-save-button" type="primary" plain @click="saveTemplate">保存模版</el-button>
+            <el-button class="dk-export-center__template-save-button" type="primary" plain
+              @click="saveTemplate">保存模版</el-button>
           </VGroup>
         </div>
 
@@ -138,12 +139,21 @@ const handleClose = (done) => {
 
 // 跳转 个人中心
 const navPersonal = () => {
-  GlobalConfig?.action.setGlobalState({
-    changeMicoTabsPath: {
-      path: "/user/profile",
-      type: "push",
-    },
-  })
+  try {
+    GlobalConfig?.action.setGlobalState({
+      changeMicoTabsPath: {
+        path: "/user/profile",
+        type: "push",
+      },
+    })
+  } catch (error) {
+    if (GlobalConfig?.['personalcenter-url']) {
+      window.open(`${GlobalConfig?.['personalcenter-url']}/user/profile`, "_blank")
+    } else {
+      console.error(error);
+      console.error("个人中心地址未配置")
+    }
+  }
 }
 
 defineExpose({
